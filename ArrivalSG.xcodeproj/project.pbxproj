@@ -13,6 +13,7 @@
 		593D639527420DD300FDF440 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 593D639427420DD300FDF440 /* Preview Assets.xcassets */; };
 		593D639727420DD300FDF440 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593D639627420DD300FDF440 /* Persistence.swift */; };
 		593D639A27420DD300FDF440 /* ArrivalSG.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 593D639827420DD300FDF440 /* ArrivalSG.xcdatamodeld */; };
+		59F704BC27421395006B2D18 /* Snap in Frameworks */ = {isa = PBXBuildFile; productRef = 59F704BB27421395006B2D18 /* Snap */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59F704BC27421395006B2D18 /* Snap in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +91,9 @@
 			dependencies = (
 			);
 			name = ArrivalSG;
+			packageProductDependencies = (
+				59F704BB27421395006B2D18 /* Snap */,
+			);
 			productName = ArrivalSG;
 			productReference = 593D638A27420DD000FDF440 /* ArrivalSG.app */;
 			productType = "com.apple.product-type.application";
@@ -117,6 +122,9 @@
 				Base,
 			);
 			mainGroup = 593D638127420DD000FDF440;
+			packageReferences = (
+				59F704BA27421395006B2D18 /* XCRemoteSwiftPackageReference "Snap" */,
+			);
 			productRefGroup = 593D638B27420DD000FDF440 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -280,6 +288,7 @@
 				DEVELOPMENT_TEAM = 46YLK6L3QN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This App needs your location to display your location on the map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -309,6 +318,7 @@
 				DEVELOPMENT_TEAM = 46YLK6L3QN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This App needs your location to display your location on the map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -349,6 +359,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		59F704BA27421395006B2D18 /* XCRemoteSwiftPackageReference "Snap" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nerdsupremacist/Snap.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		59F704BB27421395006B2D18 /* Snap */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 59F704BA27421395006B2D18 /* XCRemoteSwiftPackageReference "Snap" */;
+			productName = Snap;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		593D639827420DD300FDF440 /* ArrivalSG.xcdatamodeld */ = {
