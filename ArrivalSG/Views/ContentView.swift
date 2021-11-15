@@ -12,10 +12,12 @@ import MapKit
 
 struct ContentView: View {
     @ObservedObject var fetchStops = FetchBusStops()
+    @ObservedObject var userSettings = UserSettings()
     
     // Variables
     @State var viewModel = ContentViewModel()
     @State public var currentlySelected = "Location"
+    @State var isSettingsOpen = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -25,21 +27,22 @@ struct ContentView: View {
                     .onAppear{
                         viewModel.checkIfLocationEnabled()
                     }
+                
                 SnapDrawer(large: .paddingToTop(400), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
-
+                    
+                }
+                
+                if (isSettingsOpen) {
+                    SettingsPopup()
                 }
                 
                 VStack(alignment: .trailing) {
                     HStack(alignment: .top) {
                         Spacer()
                             .offset(y: geometry.safeAreaInsets.top)
-                        OverlayControls()
+                        OverlayControls(isSettingsOpen: $isSettingsOpen)
                     }
                     Spacer()
-                }
-            }.onAppear{
-                if let stops = fetchStops.stops {
-                    print(stops)
                 }
             }
         }
@@ -47,6 +50,8 @@ struct ContentView: View {
 }
 
 struct OverlayControls: View {
+    @Binding var isSettingsOpen: Bool
+    
     var body: some View {
         VStack {
             VStack(spacing: 10) {
@@ -65,8 +70,67 @@ struct OverlayControls: View {
             .padding(.vertical, 9)
             .background(Color(uiColor:  .white))
             .cornerRadius(8)
+            
+            Button {
+                isSettingsOpen.toggle()
+            } label: {
+                Image(systemName: "gear")
+            }
+                .frame(width: 40)
+                .padding(.vertical, 9)
+                .background(Color(uiColor:  .white))
+                .cornerRadius(8)
         }
         .padding()
+    }
+}
+
+struct SettingsPopup: View {
+    @ObservedObject var fetchStops = FetchBusStops()
+    
+    init() {
+        prepareDataReload()
+    }
+    
+    var body: some View {
+        // Temp UI
+        VStack(alignment: .center, spacing: 3) {
+            Text("Settings")
+                .bold()
+                .font(.title)
+                .foregroundColor(.black)
+                .padding()
+            Button {
+                prepareDataReload()
+                
+            } label: {
+                Text("Reload Bus Data")
+            }
+                .padding()
+                .foregroundColor(.white)
+                .background(.cyan)
+                .cornerRadius(5)
+            
+        }
+        .padding()
+        .background(.white)
+        .cornerRadius(5)
+    }
+    
+    func prepareDataReload() {
+        var busStopArr:[String] = []
+        fetchStops.fetchBusStops()
+        print(fetchStops.stops)
+        
+        if let stops = fetchStops.stops {
+            let val = stops.value
+            for i in 0..<val.count {
+                busStopArr.append(val[i].BusStopCode)
+            }
+            print(busStopArr)
+        } else {
+            print("Awaiting for Bus Stop Data")
+        }
     }
 }
 

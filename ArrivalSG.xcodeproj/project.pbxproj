@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5929449F2742AE3C004F628A /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5929449E2742AE3C004F628A /* UserSettings.swift */; };
 		593D638E27420DD000FDF440 /* ArrivalSGApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593D638D27420DD000FDF440 /* ArrivalSGApp.swift */; };
 		593D639027420DD000FDF440 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593D638F27420DD000FDF440 /* ContentView.swift */; };
 		593D639227420DD300FDF440 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 593D639127420DD300FDF440 /* Assets.xcassets */; };
@@ -18,12 +19,13 @@
 		594A7637274228AC00E29B23 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A7636274228AC00E29B23 /* TabBar.swift */; };
 		59B48BF72742412D00554628 /* FetchBusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF62742412D00554628 /* FetchBusStops.swift */; };
 		59B48BF92742494A00554628 /* FetchBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF82742494A00554628 /* FetchBuses.swift */; };
-		59B48BFE274261F800554628 /* busStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFD274261F800554628 /* busStops.swift */; };
+		59B48BFE274261F800554628 /* BusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFD274261F800554628 /* BusStops.swift */; };
 		59B48C002742628F00554628 /* BusStopsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFF2742628F00554628 /* BusStopsData.swift */; };
 		59F704BC27421395006B2D18 /* Snap in Frameworks */ = {isa = PBXBuildFile; productRef = 59F704BB27421395006B2D18 /* Snap */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5929449E2742AE3C004F628A /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		593D638A27420DD000FDF440 /* ArrivalSG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArrivalSG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		593D638D27420DD000FDF440 /* ArrivalSGApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalSGApp.swift; sourceTree = "<group>"; };
 		593D638F27420DD000FDF440 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -37,7 +39,7 @@
 		59B48BF62742412D00554628 /* FetchBusStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchBusStops.swift; sourceTree = "<group>"; };
 		59B48BF82742494A00554628 /* FetchBuses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchBuses.swift; sourceTree = "<group>"; };
 		59B48BFA2742599700554628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		59B48BFD274261F800554628 /* busStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = busStops.swift; sourceTree = "<group>"; };
+		59B48BFD274261F800554628 /* BusStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStops.swift; sourceTree = "<group>"; };
 		59B48BFF2742628F00554628 /* BusStopsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopsData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -81,6 +83,7 @@
 				593D639827420DD300FDF440 /* ArrivalSG.xcdatamodeld */,
 				593D639327420DD300FDF440 /* Preview Content */,
 				594A7636274228AC00E29B23 /* TabBar.swift */,
+				5929449E2742AE3C004F628A /* UserSettings.swift */,
 			);
 			path = ArrivalSG;
 			sourceTree = "<group>";
@@ -108,7 +111,7 @@
 			children = (
 				59B48BF62742412D00554628 /* FetchBusStops.swift */,
 				59B48BF82742494A00554628 /* FetchBuses.swift */,
-				59B48BFD274261F800554628 /* busStops.swift */,
+				59B48BFD274261F800554628 /* BusStops.swift */,
 				59B48BFF2742628F00554628 /* BusStopsData.swift */,
 			);
 			path = APIHandler;
@@ -191,12 +194,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				593D639727420DD300FDF440 /* Persistence.swift in Sources */,
+				5929449F2742AE3C004F628A /* UserSettings.swift in Sources */,
 				593D639A27420DD300FDF440 /* ArrivalSG.xcdatamodeld in Sources */,
 				593D639027420DD000FDF440 /* ContentView.swift in Sources */,
 				594A76352742285F00E29B23 /* TrainMap.swift in Sources */,
 				594A76332742285500E29B23 /* TrainDisruption.swift in Sources */,
 				59B48BF92742494A00554628 /* FetchBuses.swift in Sources */,
-				59B48BFE274261F800554628 /* busStops.swift in Sources */,
+				59B48BFE274261F800554628 /* BusStops.swift in Sources */,
 				593D638E27420DD000FDF440 /* ArrivalSGApp.swift in Sources */,
 				59B48C002742628F00554628 /* BusStopsData.swift in Sources */,
 				59B48BF72742412D00554628 /* FetchBusStops.swift in Sources */,

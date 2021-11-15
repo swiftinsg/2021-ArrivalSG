@@ -9,8 +9,23 @@ import Foundation
 import SwiftUI
 
 struct TrainDisruption: View {
+    @ObservedObject var getBusStops = FetchBusStops()
+    
     var body: some View {
-        Text("Train Disruptions")
+        VStack {
+            Text("Train Disruptions")
+            if let stops = getBusStops.stops {
+                Text("Stopssss")
+                ForEach(stops.value, id: \.self) {
+                    Text("\($0.BusStopCode)")
+                }
+            } else {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+            }
+        }.onAppear{
+            getBusStops.fetchBusStops()
+        }
     }
 }
 

@@ -7,11 +7,12 @@
 
 import Foundation
 
-struct busStops: Decodable {
-    let value: [busStop]
+struct BusStops: Decodable {
+    let value: [BusStopLoc]
 }
 
-struct busStop: Decodable, Hashable {
+struct BusStopLoc: Decodable, Hashable {
+    let BusStopCode: String
     let RoadName: String
     let Description: String
     let Latitude: Float32

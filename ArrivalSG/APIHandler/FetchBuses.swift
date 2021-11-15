@@ -15,6 +15,7 @@ class FetchBuses: ObservableObject {
         
         var request = URLRequest(url: API_ENDPOINT)
         request.addValue(ProcessInfo.processInfo.environment["API_KEY"]!, forHTTPHeaderField: "AccountKey")
+        request.httpMethod = "GET"
         
         stopsData = nil
         

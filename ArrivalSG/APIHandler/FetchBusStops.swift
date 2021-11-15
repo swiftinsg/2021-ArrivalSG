@@ -8,13 +8,15 @@
 import Foundation
 
 class FetchBusStops: ObservableObject {
-    @Published var stops: busStops?
+    @Published var stops: BusStops?
+    @Published var busStopCodes = []
     
     func fetchBusStops() {
         let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/BusStops")!
         
         var request = URLRequest(url: API_ENDPOINT)
         request.addValue(ProcessInfo.processInfo.environment["API_KEY"]!, forHTTPHeaderField: "AccountKey")
+        request.httpMethod = "GET"
         
         stops = nil
         
@@ -22,11 +24,14 @@ class FetchBusStops: ObservableObject {
             if let data = data {
                 let decoder = JSONDecoder()
                 DispatchQueue.main.async {
-                    self.stops = try? decoder.decode(busStops.self, from: data)
+                    self.stops = try? decoder.decode(BusStops.self, from: data)
                 }
+            } else {
+                fatalError("An Error has Occured")
             }
         }.resume()
     }
+    
     
 }
     
