@@ -18,6 +18,8 @@
 		594A7637274228AC00E29B23 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A7636274228AC00E29B23 /* TabBar.swift */; };
 		59B48BF72742412D00554628 /* FetchBusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF62742412D00554628 /* FetchBusStops.swift */; };
 		59B48BF92742494A00554628 /* FetchBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF82742494A00554628 /* FetchBuses.swift */; };
+		59B48BFE274261F800554628 /* busStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFD274261F800554628 /* busStops.swift */; };
+		59B48C002742628F00554628 /* BusStopsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFF2742628F00554628 /* BusStopsData.swift */; };
 		59F704BC27421395006B2D18 /* Snap in Frameworks */ = {isa = PBXBuildFile; productRef = 59F704BB27421395006B2D18 /* Snap */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +36,9 @@
 		594A7636274228AC00E29B23 /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		59B48BF62742412D00554628 /* FetchBusStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchBusStops.swift; sourceTree = "<group>"; };
 		59B48BF82742494A00554628 /* FetchBuses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchBuses.swift; sourceTree = "<group>"; };
+		59B48BFA2742599700554628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		59B48BFD274261F800554628 /* busStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = busStops.swift; sourceTree = "<group>"; };
+		59B48BFF2742628F00554628 /* BusStopsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopsData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +72,7 @@
 		593D638C27420DD000FDF440 /* ArrivalSG */ = {
 			isa = PBXGroup;
 			children = (
+				59B48BFA2742599700554628 /* Info.plist */,
 				59B48BF52742411B00554628 /* APIHandler */,
 				594A76312742283D00E29B23 /* Views */,
 				593D638D27420DD000FDF440 /* ArrivalSGApp.swift */,
@@ -102,6 +108,8 @@
 			children = (
 				59B48BF62742412D00554628 /* FetchBusStops.swift */,
 				59B48BF82742494A00554628 /* FetchBuses.swift */,
+				59B48BFD274261F800554628 /* busStops.swift */,
+				59B48BFF2742628F00554628 /* BusStopsData.swift */,
 			);
 			path = APIHandler;
 			sourceTree = "<group>";
@@ -188,7 +196,9 @@
 				594A76352742285F00E29B23 /* TrainMap.swift in Sources */,
 				594A76332742285500E29B23 /* TrainDisruption.swift in Sources */,
 				59B48BF92742494A00554628 /* FetchBuses.swift in Sources */,
+				59B48BFE274261F800554628 /* busStops.swift in Sources */,
 				593D638E27420DD000FDF440 /* ArrivalSGApp.swift in Sources */,
+				59B48C002742628F00554628 /* BusStopsData.swift in Sources */,
 				59B48BF72742412D00554628 /* FetchBusStops.swift in Sources */,
 				594A7637274228AC00E29B23 /* TabBar.swift in Sources */,
 			);
@@ -324,6 +334,7 @@
 				DEVELOPMENT_TEAM = 46YLK6L3QN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ArrivalSG/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This App needs your location to display your location on the map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -354,6 +365,7 @@
 				DEVELOPMENT_TEAM = 46YLK6L3QN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ArrivalSG/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This App needs your location to display your location on the map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

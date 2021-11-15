@@ -7,45 +7,24 @@
 
 import Foundation
 
-struct BusStopsData: Codable {
-    let BusStopCode: Int
-    let Services: [BusStop]
-}
-
-struct BusStop: Codable, Hashable {
-    let ServiceNo: String
-    let Operator: String
-    let NextBus: [Bus]
-    let NextBus2: [Bus]
-    let NextBus3: [Bus]
-}
-
-struct Bus: Codable, Hashable {
-    let OriginCode: String
-    let DestinationCode: String
-    let EstimatedArrival: String
-    let Latitude: String
-    let Longitude: String
-    let VisitNumber: String
-    let Load: String
-    let Feature: String
-    let `Type`: String
-}
-
-struct FetchBuses {
-    enum FetchError: Error {
-        case invalidEndpoint
-        case missingData
-    }
+class FetchBuses: ObservableObject {
+    @Published var stopsData: BusStopsData?
     
-    static func fetchBuses(BusStopCode: Int) async throws -> [busStop] {
-        guard let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=\(BusStopCode)") else {
-            throw FetchError.invalidEndpoint
-        }
+    func fetchBusStops(BusStopCode: Int) {
+        let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=\(BusStopCode)")!
         
-        let (data, _) = try await URLSession.shared.data(from: API_ENDPOINT)
+        var request = URLRequest(url: API_ENDPOINT)
+        request.addValue(ProcessInfo.processInfo.environment["API_KEY"]!, forHTTPHeaderField: "AccountKey")
         
-        let busStopsResult = try JSONDecoder().decode(BusStopsData.self, from: data)
-        return busStopsResult.Services
+        stopsData = nil
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                let decoder = JSONDecoder()
+                DispatchQueue.main.async {
+                    self.stopsData = try? decoder.decode(BusStopsData.self, from: data)
+                }
+            }
+        }.resume()
     }
 }

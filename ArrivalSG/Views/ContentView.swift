@@ -11,10 +11,12 @@ import CoreData
 import MapKit
 
 struct ContentView: View {
+    @ObservedObject var fetchStops = FetchBusStops()
+    
     // Variables
     @State var viewModel = ContentViewModel()
     @State public var currentlySelected = "Location"
-        
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -34,6 +36,10 @@ struct ContentView: View {
                         OverlayControls()
                     }
                     Spacer()
+                }
+            }.onAppear{
+                if let stops = fetchStops.stops {
+                    print(stops)
                 }
             }
         }

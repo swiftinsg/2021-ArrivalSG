@@ -7,32 +7,25 @@
 
 import Foundation
 
-struct busStops: Codable {
-    let value: [busStop]
-}
-
-struct busStop: Codable, Hashable {
-    let RoadName: String
-    let Description: String
-    let Latitude: Float32
-    let Longitude: Float32
-}
-
-struct FetchBusStops {
-    enum FetchError: Error {
-        case invalidEndpoint
-        case missingData
-    }
+class FetchBusStops: ObservableObject {
+    @Published var stops: busStops?
     
-    static func fetchBusStops() async throws -> [busStop] {
-        guard let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/BusStops") else {
-            throw FetchError.invalidEndpoint
-        }
+    func fetchBusStops() {
+        let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/BusStops")!
         
-        let (data, _) = try await URLSession.shared.data(from: API_ENDPOINT)
+        var request = URLRequest(url: API_ENDPOINT)
+        request.addValue(ProcessInfo.processInfo.environment["API_KEY"]!, forHTTPHeaderField: "AccountKey")
         
-        let busStopsResult = try JSONDecoder().decode(busStops.self, from: data)
-        return busStopsResult.value
+        stops = nil
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                let decoder = JSONDecoder()
+                DispatchQueue.main.async {
+                    self.stops = try? decoder.decode(busStops.self, from: data)
+                }
+            }
+        }.resume()
     }
     
 }
