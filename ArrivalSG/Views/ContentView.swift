@@ -14,7 +14,7 @@ struct ContentView: View {
     // Variables
     @State var viewModel = ContentViewModel()
     @State public var currentlySelected = "Location"
-    
+        
     var body: some View {
         GeometryReader { geometry in
             ZStack {
