@@ -24,16 +24,35 @@ struct ContentView: View {
 
             }
             
+            VStack(alignment: .trailing) {
+                HStack(alignment: .top) {
+                    Spacer()
+                    OverlayControls()
+                }
+                Spacer()
+            }
         }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+struct OverlayControls: View {
+    var body: some View {
+        VStack {
+            VStack(spacing: 10) {
+                Image(systemName: "location")
+                Divider()
+                Image(systemName: "heart")
+            }
+            .frame(width: 40)
+            .padding(.vertical, 9)
+            .background(Color(uiColor:  .white))
+            .cornerRadius(8)
+        }
+        .padding()
     }
 }
 
+// Location Manager
 class ContentViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     var locationManager: CLLocationManager?
     
@@ -71,5 +90,11 @@ class ContentViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         checkLocationAuth()
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }

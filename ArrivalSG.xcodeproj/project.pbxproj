@@ -13,6 +13,9 @@
 		593D639527420DD300FDF440 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 593D639427420DD300FDF440 /* Preview Assets.xcassets */; };
 		593D639727420DD300FDF440 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593D639627420DD300FDF440 /* Persistence.swift */; };
 		593D639A27420DD300FDF440 /* ArrivalSG.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 593D639827420DD300FDF440 /* ArrivalSG.xcdatamodeld */; };
+		594A76332742285500E29B23 /* TrainDisruption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A76322742285500E29B23 /* TrainDisruption.swift */; };
+		594A76352742285F00E29B23 /* TrainMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A76342742285F00E29B23 /* TrainMap.swift */; };
+		594A7637274228AC00E29B23 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A7636274228AC00E29B23 /* TabBar.swift */; };
 		59F704BC27421395006B2D18 /* Snap in Frameworks */ = {isa = PBXBuildFile; productRef = 59F704BB27421395006B2D18 /* Snap */; };
 /* End PBXBuildFile section */
 
@@ -24,6 +27,9 @@
 		593D639427420DD300FDF440 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		593D639627420DD300FDF440 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		593D639927420DD300FDF440 /* ArrivalSG.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ArrivalSG.xcdatamodel; sourceTree = "<group>"; };
+		594A76322742285500E29B23 /* TrainDisruption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainDisruption.swift; sourceTree = "<group>"; };
+		594A76342742285F00E29B23 /* TrainMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainMap.swift; sourceTree = "<group>"; };
+		594A7636274228AC00E29B23 /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,12 +63,13 @@
 		593D638C27420DD000FDF440 /* ArrivalSG */ = {
 			isa = PBXGroup;
 			children = (
+				594A76312742283D00E29B23 /* Views */,
 				593D638D27420DD000FDF440 /* ArrivalSGApp.swift */,
-				593D638F27420DD000FDF440 /* ContentView.swift */,
 				593D639127420DD300FDF440 /* Assets.xcassets */,
 				593D639627420DD300FDF440 /* Persistence.swift */,
 				593D639827420DD300FDF440 /* ArrivalSG.xcdatamodeld */,
 				593D639327420DD300FDF440 /* Preview Content */,
+				594A7636274228AC00E29B23 /* TabBar.swift */,
 			);
 			path = ArrivalSG;
 			sourceTree = "<group>";
@@ -73,6 +80,16 @@
 				593D639427420DD300FDF440 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		594A76312742283D00E29B23 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				593D638F27420DD000FDF440 /* ContentView.swift */,
+				594A76342742285F00E29B23 /* TrainMap.swift */,
+				594A76322742285500E29B23 /* TrainDisruption.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,7 +171,10 @@
 				593D639727420DD300FDF440 /* Persistence.swift in Sources */,
 				593D639A27420DD300FDF440 /* ArrivalSG.xcdatamodeld in Sources */,
 				593D639027420DD000FDF440 /* ContentView.swift in Sources */,
+				594A76352742285F00E29B23 /* TrainMap.swift in Sources */,
+				594A76332742285500E29B23 /* TrainDisruption.swift in Sources */,
 				593D638E27420DD000FDF440 /* ArrivalSGApp.swift in Sources */,
+				594A7637274228AC00E29B23 /* TabBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
