@@ -205,54 +205,6 @@ struct SettingsPopup: View {
     }
 }
 
-// Location Manager
-class ContentViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
-    var locationManager: CLLocationManager?
-    @State private var isAlertPresented = false
-    
-    @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 1.3521, longitude: 103.8198), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)) // Placeholder Location
-    
-    func checkIfLocationEnabled() {
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager = CLLocationManager()
-            locationManager?.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager!.delegate = self
-        } else {
-            print("You have denied this app to use your location. Go into settings to resolve it.")
-        }
-    }
-    
-    func checkLocationAuth() {
-        guard let locationManager = locationManager else {
-            return
-        }
-        
-        switch locationManager.authorizationStatus {
-            
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        case .restricted:
-            Alert(title: Text("Restricted Location"),
-                  message: Text("Your Location is Restricted, possibly due to Parental Controls."),
-                  dismissButton: .default(Text("OK")) {
-            })
-        case .denied:
-            Alert(title: Text("Location Access Denied"),
-                  message: Text("You have denied this app to use your location. Go into settings to resolve it."),
-                  dismissButton: .default(Text("OK")) {
-            })
-        case .authorizedAlways, .authorizedWhenInUse:
-            region = MKCoordinateRegion(center: locationManager.location!.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
-        @unknown default:
-            break
-        }
-    }
-    
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        checkLocationAuth()
-    }
-}
-
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
