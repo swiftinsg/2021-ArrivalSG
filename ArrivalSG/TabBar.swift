@@ -58,6 +58,13 @@ struct TabBar: View {
         }
     }
     
+    init() {
+        if (userSettings.isFirstOpen) {
+            prepareDataReload()
+            userSettings.isFirstOpen = false
+        }
+    }
+    
     var body: some View {
         TabView(selection: $selectedTab) {
             ContentView()
