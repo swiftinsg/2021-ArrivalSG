@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import MapKit
 
 class FetchBuses: ObservableObject {
     @Published var stopsData: [String: Any] = [:]

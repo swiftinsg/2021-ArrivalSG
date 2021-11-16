@@ -58,11 +58,27 @@ struct TabBar: View {
         }
     }
     
+    func handleTrainDisruptions() {
+        @ObservedObject var userSettings = UserSettings()
+        @ObservedObject var getTrainDisruptions = TrainDisruptions()
+        
+        getTrainDisruptions.fetchDisruptions() { result in
+            switch result {
+            case .success(let disruptions):
+                userSettings.trainDisruptions = disruptions
+            case .failure(let error):
+                print("Error in Getting Bus Stops: \(error)")
+            }
+        }
+    }
+    
     init() {
         if (userSettings.isFirstOpen) {
             prepareDataReload()
             userSettings.isFirstOpen = false
         }
+        
+//        handleTrainDisruptions()
     }
     
     var body: some View {

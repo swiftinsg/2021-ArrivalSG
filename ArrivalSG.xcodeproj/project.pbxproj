@@ -23,6 +23,8 @@
 		59B48BF92742494A00554628 /* FetchBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF82742494A00554628 /* FetchBuses.swift */; };
 		59B48BFE274261F800554628 /* BusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFD274261F800554628 /* BusStops.swift */; };
 		59F58B2B2743B73C00E93DDE /* LocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2A2743B73C00E93DDE /* LocationViewModel.swift */; };
+		59F58B2D2743BFFC00E93DDE /* TrainDisruptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2C2743BFFC00E93DDE /* TrainDisruptions.swift */; };
+		59F58B2F2743C03500E93DDE /* TrainDisruptionsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2E2743C03500E93DDE /* TrainDisruptionsData.swift */; };
 		59F704BC27421395006B2D18 /* Snap in Frameworks */ = {isa = PBXBuildFile; productRef = 59F704BB27421395006B2D18 /* Snap */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +47,8 @@
 		59B48BFA2742599700554628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		59B48BFD274261F800554628 /* BusStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStops.swift; sourceTree = "<group>"; };
 		59F58B2A2743B73C00E93DDE /* LocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewModel.swift; sourceTree = "<group>"; };
+		59F58B2C2743BFFC00E93DDE /* TrainDisruptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainDisruptions.swift; sourceTree = "<group>"; };
+		59F58B2E2743C03500E93DDE /* TrainDisruptionsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainDisruptionsData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,18 +82,17 @@
 		593D638C27420DD000FDF440 /* ArrivalSG */ = {
 			isa = PBXGroup;
 			children = (
-				59908A24274349250010A786 /* DataFiles */,
 				59B48BFA2742599700554628 /* Info.plist */,
+				59F58B322743C12100E93DDE /* Models */,
+				59908A24274349250010A786 /* DataFiles */,
 				59B48BF52742411B00554628 /* APIHandler */,
 				594A76312742283D00E29B23 /* Views */,
 				593D638D27420DD000FDF440 /* ArrivalSGApp.swift */,
-				593D639127420DD300FDF440 /* Assets.xcassets */,
+				594A7636274228AC00E29B23 /* TabBar.swift */,
 				593D639627420DD300FDF440 /* Persistence.swift */,
+				593D639127420DD300FDF440 /* Assets.xcassets */,
 				593D639827420DD300FDF440 /* ArrivalSG.xcdatamodeld */,
 				593D639327420DD300FDF440 /* Preview Content */,
-				594A7636274228AC00E29B23 /* TabBar.swift */,
-				5929449E2742AE3C004F628A /* UserSettings.swift */,
-				59F58B2A2743B73C00E93DDE /* LocationViewModel.swift */,
 			);
 			path = ArrivalSG;
 			sourceTree = "<group>";
@@ -124,11 +127,22 @@
 		59B48BF52742411B00554628 /* APIHandler */ = {
 			isa = PBXGroup;
 			children = (
+				59B48BFD274261F800554628 /* BusStops.swift */,
+				59F58B2E2743C03500E93DDE /* TrainDisruptionsData.swift */,
 				59B48BF62742412D00554628 /* FetchBusStops.swift */,
 				59B48BF82742494A00554628 /* FetchBuses.swift */,
-				59B48BFD274261F800554628 /* BusStops.swift */,
+				59F58B2C2743BFFC00E93DDE /* TrainDisruptions.swift */,
 			);
 			path = APIHandler;
+			sourceTree = "<group>";
+		};
+		59F58B322743C12100E93DDE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				5929449E2742AE3C004F628A /* UserSettings.swift */,
+				59F58B2A2743B73C00E93DDE /* LocationViewModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -208,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				593D639727420DD300FDF440 /* Persistence.swift in Sources */,
+				59F58B2F2743C03500E93DDE /* TrainDisruptionsData.swift in Sources */,
 				5929449F2742AE3C004F628A /* UserSettings.swift in Sources */,
 				593D639A27420DD300FDF440 /* ArrivalSG.xcdatamodeld in Sources */,
 				593D639027420DD000FDF440 /* ContentView.swift in Sources */,
@@ -218,6 +233,7 @@
 				593D638E27420DD000FDF440 /* ArrivalSGApp.swift in Sources */,
 				59908A28274369860010A786 /* BusStopListDataFile.swift in Sources */,
 				59B48BF72742412D00554628 /* FetchBusStops.swift in Sources */,
+				59F58B2D2743BFFC00E93DDE /* TrainDisruptions.swift in Sources */,
 				59F58B2B2743B73C00E93DDE /* LocationViewModel.swift in Sources */,
 				594A7637274228AC00E29B23 /* TabBar.swift in Sources */,
 				59908A262743496D0010A786 /* BusStopDataFile.swift in Sources */,
