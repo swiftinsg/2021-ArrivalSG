@@ -10,9 +10,6 @@ import SwiftUI
 
 struct TabBar: View {
     
-    // Plist
-    @ObservedObject var busStopsData = BusStopsDataFile()
-    
     private enum Tabs: Hashable {
         case bus
         case train
@@ -20,17 +17,60 @@ struct TabBar: View {
     }
     
     @State private var selectedTab: Tabs = .bus
+    @ObservedObject var userSettings = UserSettings()
+    
+    func prepareDataReload() {
+        var busStopArr:[Int] = []
+        @ObservedObject var userSettings = UserSettings()
+        @ObservedObject var fetchStops = FetchBusStops()
+        @ObservedObject var fetchStopData = FetchBuses()
+        
+        fetchStops.fetchBusStops() { result in
+            switch result {
+            case .success(let stops):
+                let val = stops.value
+                for i in 0..<val.count {
+                    busStopArr.append(Int(val[i].BusStopCode) ?? 0)
+                }
+                userSettings.sgBusStops = busStopArr
+                reloadData()
+            case .failure(let error):
+                print("Error in Getting Bus Stops: \(error)")
+            }
+        }
+        
+        
+        func reloadData() {
+            let data = userSettings.sgBusStops
+            var dataa:[[String:Any]] = []
+            
+            for i in 0...data.count-1 {
+                fetchStopData.fetchBuses(BusStopCode: data[i]) { result in
+                    switch result {
+                    case .success(let stop):
+                        dataa.append(stop)
+                    case .failure(let error):
+                        print("Error in Getting Bus Stops: \(error)")
+                    }
+                }
+            }
+            userSettings.busStopData = dataa
+        }
+    }
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            ContentView(busStops: $busStopsData.busStopsData)
+            ContentView()
                 .tag(0)
                 .tabItem {
                     Text("Bus")
                     Image(systemName: "bus.fill")
                 }
                 .onAppear {
-                    busStopsData.load()
+                    if (userSettings.isFirstOpen) {
+                        prepareDataReload()
+                        userSettings.isFirstOpen = false
+                    }
                 }
             TrainMap()
                 .tag(1)
