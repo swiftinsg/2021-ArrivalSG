@@ -30,9 +30,56 @@ struct ContentView: View {
                     }
                 
                 SnapDrawer(large: .paddingToTop(400), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
-                    
+                    ScrollView{
+                        VStack(alignment: .leading) {
+                            Button(action: {
+                                print("Bus Option 1 Pressed")
+                            }) {
+                                Text("Option 1")
+                                    .frame(width: 400, height: 100)
+                                    .foregroundColor(Color.black)
+                                    .background(Color.red)
+                                    .cornerRadius(20)
+                            }
+                            Button(action: {
+                                print("Bus Option 2 Pressed")
+                            }) {
+                                Text("Option 2")
+                                    .frame(width: 400, height: 100)
+                                    .foregroundColor(Color.black)
+                                    .background(Color.red)
+                                    .cornerRadius(20)
+                            }
+                            Button(action: {
+                                print("Bus Option 3 Pressed")
+                            }) {
+                                Text("Option 3")
+                                    .frame(width: 400, height: 100)
+                                    .foregroundColor(Color.black)
+                                    .background(Color.red)
+                                    .cornerRadius(20)
+                            }
+                            Button(action: {
+                                print("Bus Option 4 Pressed")
+                            }) {
+                                Text("Option 4")
+                                    .frame(width: 400, height: 100)
+                                    .foregroundColor(Color.black)
+                                    .background(Color.red)
+                                    .cornerRadius(20)
+                            }
+                            Button(action: {
+                                print("Bus Option 5 Pressed")
+                            }) {
+                                Text("Option 5")
+                                    .frame(width: 400, height: 100)
+                                    .foregroundColor(Color.black)
+                                    .background(Color.red)
+                                    .cornerRadius(20)
+                            }
+                        }
+                    }
                 }
-                
                 if (isSettingsOpen) {
                     SettingsPopup()
                 }
