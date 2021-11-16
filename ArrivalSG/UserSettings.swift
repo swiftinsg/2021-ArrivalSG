@@ -18,14 +18,21 @@ class UserSettings: ObservableObject {
         }
     }
     
-    @Published var busStopData: [BusStopsData] {
+    @Published var busStopData: [[String:Any]] {
         didSet {
             userDefaults.set(busStopData, forKey: "busStopData")
         }
     }
     
+    @Published var isFirstOpen: Bool {
+        didSet {
+            userDefaults.set(busStopData, forKey: "isFirstOpen")
+        }
+    }
+    
     init() {
         self.sgBusStops = userDefaults.object(forKey: "sgBusStops") as? [Int] ?? [0]
-        self.busStopData = userDefaults.object(forKey: "busStopData") as? [BusStopsData] ?? []
+        self.busStopData = userDefaults.object(forKey: "busStopData") as? [[String:Any]] ?? []
+        self.isFirstOpen = userDefaults.bool(forKey: "busStopData") as? Bool ?? true
     }
 }

@@ -18,10 +18,10 @@
 		594A76352742285F00E29B23 /* TrainMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A76342742285F00E29B23 /* TrainMap.swift */; };
 		594A7637274228AC00E29B23 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A7636274228AC00E29B23 /* TabBar.swift */; };
 		59908A262743496D0010A786 /* BusStopDataFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59908A252743496D0010A786 /* BusStopDataFile.swift */; };
+		59908A28274369860010A786 /* BusStopListDataFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59908A27274369860010A786 /* BusStopListDataFile.swift */; };
 		59B48BF72742412D00554628 /* FetchBusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF62742412D00554628 /* FetchBusStops.swift */; };
 		59B48BF92742494A00554628 /* FetchBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF82742494A00554628 /* FetchBuses.swift */; };
 		59B48BFE274261F800554628 /* BusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFD274261F800554628 /* BusStops.swift */; };
-		59B48C002742628F00554628 /* BusStopsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFF2742628F00554628 /* BusStopsData.swift */; };
 		59F704BC27421395006B2D18 /* Snap in Frameworks */ = {isa = PBXBuildFile; productRef = 59F704BB27421395006B2D18 /* Snap */; };
 /* End PBXBuildFile section */
 
@@ -38,11 +38,11 @@
 		594A76342742285F00E29B23 /* TrainMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainMap.swift; sourceTree = "<group>"; };
 		594A7636274228AC00E29B23 /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		59908A252743496D0010A786 /* BusStopDataFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopDataFile.swift; sourceTree = "<group>"; };
+		59908A27274369860010A786 /* BusStopListDataFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopListDataFile.swift; sourceTree = "<group>"; };
 		59B48BF62742412D00554628 /* FetchBusStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchBusStops.swift; sourceTree = "<group>"; };
 		59B48BF82742494A00554628 /* FetchBuses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchBuses.swift; sourceTree = "<group>"; };
 		59B48BFA2742599700554628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		59B48BFD274261F800554628 /* BusStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStops.swift; sourceTree = "<group>"; };
-		59B48BFF2742628F00554628 /* BusStopsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopsData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				59908A252743496D0010A786 /* BusStopDataFile.swift */,
+				59908A27274369860010A786 /* BusStopListDataFile.swift */,
 			);
 			path = DataFiles;
 			sourceTree = "<group>";
@@ -123,7 +124,6 @@
 				59B48BF62742412D00554628 /* FetchBusStops.swift */,
 				59B48BF82742494A00554628 /* FetchBuses.swift */,
 				59B48BFD274261F800554628 /* BusStops.swift */,
-				59B48BFF2742628F00554628 /* BusStopsData.swift */,
 			);
 			path = APIHandler;
 			sourceTree = "<group>";
@@ -213,7 +213,7 @@
 				59B48BF92742494A00554628 /* FetchBuses.swift in Sources */,
 				59B48BFE274261F800554628 /* BusStops.swift in Sources */,
 				593D638E27420DD000FDF440 /* ArrivalSGApp.swift in Sources */,
-				59B48C002742628F00554628 /* BusStopsData.swift in Sources */,
+				59908A28274369860010A786 /* BusStopListDataFile.swift in Sources */,
 				59B48BF72742412D00554628 /* FetchBusStops.swift in Sources */,
 				594A7637274228AC00E29B23 /* TabBar.swift in Sources */,
 				59908A262743496D0010A786 /* BusStopDataFile.swift in Sources */,

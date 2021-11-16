@@ -18,7 +18,6 @@ struct ContentView: View {
     @State var viewModel = ContentViewModel()
     @State public var currentlySelected = "Location"
     @State var isSettingsOpen = false
-    @Binding var busStops: [BusStopsData]
 
     var body: some View {
         GeometryReader { geometry in
@@ -182,22 +181,18 @@ struct SettingsPopup: View {
         
         func reloadData() {
             let data = userSettings.sgBusStops
-            var dataa:[BusStopsData] = []
+            var dataa:[[String:Any]] = []
             
-            print(data.last)
             for i in 0...data.count-1 {
-                print("Sending \(data[i]), \(i)")
                 fetchStopData.fetchBuses(BusStopCode: data[i]) { result in
                     switch result {
                     case .success(let stop):
-                        print("here")
                         dataa.append(stop)
                     case .failure(let error):
                         print("Error in Getting Bus Stops: \(error)")
                     }
                 }
             }
-            print(dataa)
             userSettings.busStopData = dataa
         }
     }
@@ -253,6 +248,6 @@ class ContentViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(busStops: .constant([BusStopsData(BusStopCode: 0, Services: [])]))
+        ContentView()
     }
 }
