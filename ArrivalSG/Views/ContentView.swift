@@ -20,6 +20,8 @@ struct ContentView: View {
     @State var isSettingsOpen = false
 
     var body: some View {
+        
+        // Map
         GeometryReader { geometry in
             ZStack {
                 Map(coordinateRegion: $viewModel.region, showsUserLocation: true)
@@ -27,8 +29,10 @@ struct ContentView: View {
                     .onAppear{
                         viewModel.checkIfLocationEnabled()
                     }
-                
+                // Pop Up thing on the map
                 SnapDrawer(large: .paddingToTop(400), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
+                    // Selecting of Bus Stops
+                    // ToDo: Add Expendable Views
                     ScrollView{
                         VStack(alignment: .leading) {
                             Button(action: {
@@ -100,6 +104,7 @@ struct OverlayControls: View {
     @Binding var isSettingsOpen: Bool
     
     var body: some View {
+        // Buttons in the top right hand corner
         VStack {
             VStack(spacing: 10) {
                 Button {
