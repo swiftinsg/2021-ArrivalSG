@@ -30,7 +30,7 @@ struct ContentView: View {
                     }
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
-                    ScrollView{
+                    ScrollView {
                         VStack(alignment: .leading) {
                             Button(action: {
                                 print("Bus Option 1 Pressed")
