@@ -201,6 +201,7 @@ struct SettingsPopup: View {
                 }
             }
             userSettings.busStopData = dataa
+
         }
     }
 }

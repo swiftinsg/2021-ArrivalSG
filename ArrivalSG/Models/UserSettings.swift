@@ -24,7 +24,7 @@ class UserSettings: ObservableObject {
         }
     }
     
-    @Published var trainDisruptions: TrainDisruptionsData {
+    @Published var trainDisruptions: [String:Any] {
         didSet {
             userDefaults.set(trainDisruptions, forKey: "trainDisruptions")
         }
@@ -38,8 +38,8 @@ class UserSettings: ObservableObject {
     
     init() {
         self.sgBusStops = userDefaults.object(forKey: "sgBusStops") as? [Int] ?? [0]
-        self.busStopData = userDefaults.object(forKey: "busStopData") as? [[String:Any]] ?? []
-        self.trainDisruptions = (userDefaults.object(forKey: "trainDisruptions") as? TrainDisruptionsData ?? TrainDisruptionsData(value: [dataVal(Status: 1, Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "", Message: "")]))
+        self.busStopData = userDefaults.object(forKey: "busStopData") as? [[String:Any]] ?? [[:]]
+        self.trainDisruptions = userDefaults.object(forKey: "trainDisruptions") as? [String:Any] ?? ["Status": 1, "Line": "", "Direction": "", "Stations": "", "FreePublicBus": "", "FreeMRTShuttle": "", "MRTShuttleDirection": "", "Message": ""]
         self.isFirstOpen = userDefaults.bool(forKey: "busStopData") as? Bool ?? true
     }
 }

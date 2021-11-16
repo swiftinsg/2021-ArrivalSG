@@ -78,7 +78,7 @@ struct TabBar: View {
             userSettings.isFirstOpen = false
         }
         
-//        handleTrainDisruptions()
+        handleTrainDisruptions()
     }
     
     var body: some View {
