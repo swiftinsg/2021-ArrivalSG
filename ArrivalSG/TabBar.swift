@@ -10,6 +10,9 @@ import SwiftUI
 
 struct TabBar: View {
     
+    // Plist
+    @ObservedObject var busStopsData = BusStopsDataFile()
+    
     private enum Tabs: Hashable {
         case bus
         case train
@@ -20,11 +23,14 @@ struct TabBar: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            ContentView()
+            ContentView(busStops: $busStopsData.busStopsData)
                 .tag(0)
                 .tabItem {
                     Text("Bus")
                     Image(systemName: "bus.fill")
+                }
+                .onAppear {
+                    busStopsData.load()
                 }
             TrainMap()
                 .tag(1)

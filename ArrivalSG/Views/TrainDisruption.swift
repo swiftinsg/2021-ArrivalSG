@@ -24,7 +24,7 @@ struct TrainDisruption: View {
                     .progressViewStyle(CircularProgressViewStyle())
             }
         }.onAppear{
-            getBusStops.fetchBusStops()
+//            getBusStops.fetchBusStops()
         }
     }
 }

@@ -11,13 +11,21 @@ import Combine
 class UserSettings: ObservableObject {
     let userDefaults = UserDefaults.standard
     
-    @Published var isNeedReloadData: Bool {
+    @Published var sgBusStops: [Int] {
         didSet {
-            userDefaults.set(isNeedReloadData, forKey: "isNeedReloadData")
+            print("Saving to UserDefaults")
+            userDefaults.set(sgBusStops, forKey: "sgBusStops")
+        }
+    }
+    
+    @Published var busStopData: [BusStopsData] {
+        didSet {
+            userDefaults.set(busStopData, forKey: "busStopData")
         }
     }
     
     init() {
-        self.isNeedReloadData = userDefaults.bool(forKey: "isNeedReloadData") as? Bool ?? true
+        self.sgBusStops = userDefaults.object(forKey: "sgBusStops") as? [Int] ?? [0]
+        self.busStopData = userDefaults.object(forKey: "busStopData") as? [BusStopsData] ?? []
     }
 }

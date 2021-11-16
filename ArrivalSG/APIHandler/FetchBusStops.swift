@@ -9,9 +9,8 @@ import Foundation
 
 class FetchBusStops: ObservableObject {
     @Published var stops: BusStops?
-    @Published var busStopCodes = []
     
-    func fetchBusStops() {
+    func fetchBusStops(completion: @escaping (Result<BusStops, Error>) -> Void) {
         let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/BusStops")!
         
         var request = URLRequest(url: API_ENDPOINT)
@@ -25,6 +24,7 @@ class FetchBusStops: ObservableObject {
                 let decoder = JSONDecoder()
                 DispatchQueue.main.async {
                     self.stops = try? decoder.decode(BusStops.self, from: data)
+                    return completion(.success(self.stops!))
                 }
             } else {
                 fatalError("An Error has Occured")

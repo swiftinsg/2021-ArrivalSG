@@ -18,6 +18,7 @@ struct ContentView: View {
     @State var viewModel = ContentViewModel()
     @State public var currentlySelected = "Location"
     @State var isSettingsOpen = false
+    @Binding var busStops: [BusStopsData]
 
     var body: some View {
         GeometryReader { geometry in
@@ -86,12 +87,6 @@ struct OverlayControls: View {
 }
 
 struct SettingsPopup: View {
-    @ObservedObject var fetchStops = FetchBusStops()
-    
-    init() {
-        prepareDataReload()
-    }
-    
     var body: some View {
         // Temp UI
         VStack(alignment: .center, spacing: 3) {
@@ -118,18 +113,45 @@ struct SettingsPopup: View {
     }
     
     func prepareDataReload() {
-        var busStopArr:[String] = []
-        fetchStops.fetchBusStops()
-        print(fetchStops.stops)
+        var busStopArr:[Int] = []
+        @ObservedObject var userSettings = UserSettings()
+        @ObservedObject var fetchStops = FetchBusStops()
+        @ObservedObject var fetchStopData = FetchBuses()
         
-        if let stops = fetchStops.stops {
-            let val = stops.value
-            for i in 0..<val.count {
-                busStopArr.append(val[i].BusStopCode)
+        fetchStops.fetchBusStops() { result in
+            switch result {
+            case .success(let stops):
+                let val = stops.value
+                for i in 0..<val.count {
+                    busStopArr.append(Int(val[i].BusStopCode) ?? 0)
+                }
+                userSettings.sgBusStops = busStopArr
+                reloadData()
+            case .failure(let error):
+                print("Error in Getting Bus Stops: \(error)")
             }
-            print(busStopArr)
-        } else {
-            print("Awaiting for Bus Stop Data")
+        }
+        
+        
+        func reloadData() {
+            let data = userSettings.sgBusStops
+            var dataa:[BusStopsData] = []
+            
+            print(data.last)
+            for i in 0...data.count-1 {
+                print("Sending \(data[i]), \(i)")
+                fetchStopData.fetchBuses(BusStopCode: data[i]) { result in
+                    switch result {
+                    case .success(let stop):
+                        print("here")
+                        dataa.append(stop)
+                    case .failure(let error):
+                        print("Error in Getting Bus Stops: \(error)")
+                    }
+                }
+            }
+            print(dataa)
+            userSettings.busStopData = dataa
         }
     }
 }
@@ -184,6 +206,6 @@ class ContentViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(busStops: .constant([BusStopsData(BusStopCode: 0, Services: [])]))
     }
 }

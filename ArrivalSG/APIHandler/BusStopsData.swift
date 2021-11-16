@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct BusStopsData: Decodable {
+struct BusStopsData: Codable {
     let BusStopCode: Int
     let Services: [BusStop]
 }
 
-struct BusStop: Decodable, Hashable {
+struct BusStop: Codable, Hashable {
     let ServiceNo: String
     let Operator: String
     let NextBus: [Bus]
@@ -20,7 +20,7 @@ struct BusStop: Decodable, Hashable {
     let NextBus3: [Bus]
 }
 
-struct Bus: Decodable, Hashable {
+struct Bus: Codable, Hashable {
     let OriginCode: String
     let DestinationCode: String
     let EstimatedArrival: String
