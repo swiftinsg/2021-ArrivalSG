@@ -21,7 +21,7 @@ class TrainDisruptions: ObservableObject {
             if let data = data { // Make sure Data != nil
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] {
-                        self.disruptions = ["Status": json["Status"] ?? 1, "Line": json["Line"] ?? "", "Direction": json["Direction"] ?? "", "Stations": json["Stations"] ?? "", "FreePublicBus": json["FreePublicBus"] ?? "", "FreeMRTShuttle": json["FreeMRTShuttle"] ?? "", "MRTShuttleDirection": json["MRTShuttleDirection"] ?? "", "Message": json["Message"] ?? ""]
+                        self.disruptions = ["Status": json["Status"] ?? 1, "Affected Segments": json["Affected Segments"] as?  [[String:String]] ?? [["Direction": "", "Stations": "", "FreePublicBus": "", "FreeMRTShuttle": "", "MRTShuttleDirection": ""]], "Message": json["Message"] as? [[String:String]] ?? [["Content": "", "CreatedData": ""]]]
                         return completion(.success(self.disruptions))
                     }
                 } catch let error as NSError {

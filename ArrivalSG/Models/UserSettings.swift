@@ -46,7 +46,7 @@ class UserSettings: ObservableObject {
         self.sgBusStops = userDefaults.object(forKey: "sgBusStops") as? [Int] ?? [0]
         self.busStopData = userDefaults.object(forKey: "busStopData") as? [[String:Any]] ?? [[:]]
         self.sgBusStopLoc = userDefaults.object(forKey: "sgBusStopLoc") as? [[String:Any]] ?? [[:]]
-        self.trainDisruptions = userDefaults.object(forKey: "trainDisruptions") as? [String:Any] ?? ["Status": 1, "Line": "", "Direction": "", "Stations": "", "FreePublicBus": "", "FreeMRTShuttle": "", "MRTShuttleDirection": "", "Message": ""]
+        self.trainDisruptions = userDefaults.object(forKey: "trainDisruptions") as? [String:Any] ?? ["Status": 1, "Affected Segments": [["Direction": "", "Stations": "", "FreePublicBus": "", "FreeMRTShuttle": "", "MRTShuttleDirection": ""]], "Message": [["Content": "", "CreatedData": ""]]]
         self.isFirstOpen = userDefaults.bool(forKey: "busStopData") as? Bool ?? true
     }
 }
