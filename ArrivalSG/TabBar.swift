@@ -19,28 +19,25 @@ struct TabBar: View {
     @State private var selectedTab: Tabs = .bus
     @ObservedObject var userSettings = UserSettings()
     
-    func prepareDataReload() {
+    func prepareDataReload() async throws {
         var busStopArr:[Int] = []
         var busStopLoc:[[String:Any]] = [[:]]
         @ObservedObject var userSettings = UserSettings()
         @ObservedObject var fetchStops = FetchBusStops()
         @ObservedObject var fetchStopData = FetchBuses()
         
-        fetchStops.fetchBusStops() { result in
-            switch result {
-            case .success(let stops):
-                let val = stops.value
-                for i in 0..<val.count {
-                    busStopArr.append(Int(val[i].BusStopCode) ?? 0)
-                    busStopLoc.append(["BusStopCode": val[i].BusStopCode, "Latitude:": val[i].Latitude, "Longitude": val[i].Longitude])
-                }
-                userSettings.sgBusStopLoc = busStopLoc
-                userSettings.sgBusStops = busStopArr
-                reloadData()
-            case .failure(let error):
-                print("Error in Getting Bus Stops: \(error)")
-            }
+        try await fetchStops.fetchBusStops()
+        let stops = fetchStops.stops
+        
+        for i in 0..<stops!.count {
+            busStopArr.append(Int(stops![i].BusStopCode) ?? 0)
+            busStopLoc.append(["BusStopCode": stops![i].BusStopCode, "Latitude:": stops![i].Latitude, "Longitude": stops![i].Longitude])
         }
+        
+        userSettings.sgBusStopLoc = busStopLoc
+        userSettings.sgBusStops = busStopArr
+        print(userSettings.sgBusStopLoc)
+        reloadData()
         
         
         func reloadData() {
@@ -75,9 +72,9 @@ struct TabBar: View {
         }
     }
     
-    init() {
+    init() async {
         if (userSettings.isFirstOpen) {
-            prepareDataReload()
+            try? await prepareDataReload()
             userSettings.isFirstOpen = false
         }
         
@@ -92,9 +89,9 @@ struct TabBar: View {
                     Text("Bus")
                     Image(systemName: "bus.fill")
                 }
-                .onAppear {
+                .task {
                     if (userSettings.isFirstOpen) {
-                        prepareDataReload()
+                        try? await prepareDataReload()
                         userSettings.isFirstOpen = false
                     }
                 }
