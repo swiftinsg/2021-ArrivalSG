@@ -9,22 +9,33 @@ import Foundation
 import SwiftUI
 
 struct TrainDisruption: View {
-    @ObservedObject var getBusStops = FetchBusStops()
+    @ObservedObject var fetchStops = FetchBusStops()
+    @ObservedObject var userSettings = UserSettings()
+    @State var isDisruptions = false
     
     var body: some View {
+
         VStack {
             Text("Train Disruptions")
-            if let stops = getBusStops.stops {
-                Text("Stopssss")
-                ForEach(stops.value, id: \.self) {
-                    Text("\($0.BusStopCode)")
-                }
-            } else {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle())
+                .bold()
+                .font(.largeTitle)
+                .frame(alignment: .leading)
+            if isDisruptions{
+                // If yes
+                Text("There is a Train Disruptions as of right now")
+            }else{
+                // if no
+                Text("There are no Train Disruptions")
             }
+            
         }.onAppear{
-//            getBusStops.fetchBusStops()
+            let disruptionData = userSettings.trainDisruptions
+            print(disruptionData)
+            if disruptionData["Status"] as! Int == 1{
+                isDisruptions = false
+            }else{
+                isDisruptions = true
+            }
         }
     }
 }
