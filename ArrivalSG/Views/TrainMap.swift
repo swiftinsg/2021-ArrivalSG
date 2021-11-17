@@ -21,7 +21,7 @@ struct TrainMap: View {
                 Text("MRT Map")
                     .bold()
                     .font(.largeTitle)
-                    .frame(alignment: .leading5)
+                    .frame(alignment: .leading)
                 Image("sgtrainmap")
                     .resizable()
                     .scaledToFit()
