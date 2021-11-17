@@ -21,6 +21,7 @@ struct TabBar: View {
     
     func prepareDataReload() {
         var busStopArr:[Int] = []
+        var busStopLoc:[[String:Any]] = [[:]]
         @ObservedObject var userSettings = UserSettings()
         @ObservedObject var fetchStops = FetchBusStops()
         @ObservedObject var fetchStopData = FetchBuses()
