@@ -13,6 +13,7 @@ class FetchBusStops: ObservableObject {
     func fetchBusStops(completion: @escaping (Result<BusStops, Error>) -> Void) {
         let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/BusStops")! // Link to API
         
+        
         var request = URLRequest(url: API_ENDPOINT)
         request.addValue(ProcessInfo.processInfo.environment["API_KEY"]!, forHTTPHeaderField: "AccountKey") // Getting API Key from Xcode Environment Values
         request.httpMethod = "GET"
