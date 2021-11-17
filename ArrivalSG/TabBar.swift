@@ -31,7 +31,9 @@ struct TabBar: View {
                 let val = stops.value
                 for i in 0..<val.count {
                     busStopArr.append(Int(val[i].BusStopCode) ?? 0)
+                    busStopLoc.append(["BusStopCode": val[i].BusStopCode, "Latitude:": val[i].Latitude, "Longitude": val[i].Longitude])
                 }
+                userSettings.sgBusStopLoc = busStopLoc
                 userSettings.sgBusStops = busStopArr
                 reloadData()
             case .failure(let error):
