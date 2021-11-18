@@ -17,7 +17,7 @@ struct TrainMap: View {
     
     var body: some View {
         GeometryReader { reader in
-            VStack(spacing: 12) {
+            VStack(spacing: 20) {
                 Text("MRT Map")
                     .bold()
                     .font(.largeTitle)
