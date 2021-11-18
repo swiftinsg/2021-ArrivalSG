@@ -72,13 +72,15 @@ struct TabBar: View {
         }
     }
     
-    init() async {
-        if (userSettings.isFirstOpen) {
-            try? await prepareDataReload()
-            userSettings.isFirstOpen = false
+    func initAsync() {
+        Task.init {
+            if (userSettings.isFirstOpen) {
+                try? await prepareDataReload()
+                userSettings.isFirstOpen = false
+            }
+            
+            handleTrainDisruptions()
         }
-        
-        handleTrainDisruptions()
     }
     
     var body: some View {
@@ -94,6 +96,8 @@ struct TabBar: View {
                         try? await prepareDataReload()
                         userSettings.isFirstOpen = false
                     }
+                    
+                    initAsync()
                 }
             TrainMap()
                 .tag(1)

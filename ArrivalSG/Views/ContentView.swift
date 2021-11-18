@@ -150,11 +150,11 @@ struct SettingsPopup: View {
                 .foregroundColor(.black)
                 .padding()
             Button {
-                
+                Task {
+                    try? await prepareDataReload()
+                }
             } label: {
                 Text("Reload Bus Data")
-            }.task {
-                try? await prepareDataReload()
             }
                 .padding()
                 .foregroundColor(.white)
@@ -169,7 +169,7 @@ struct SettingsPopup: View {
     
     func prepareDataReload() async throws {
         var busStopArr:[Int] = []
-        var busStopLoc:[[String:Any]] = [[:]]
+        var busStopLoc:[[String:Any]] = []
         @ObservedObject var userSettings = UserSettings()
         @ObservedObject var fetchStops = FetchBusStops()
         @ObservedObject var fetchStopData = FetchBuses()
@@ -184,7 +184,6 @@ struct SettingsPopup: View {
         
         userSettings.sgBusStopLoc = busStopLoc
         userSettings.sgBusStops = busStopArr
-        print(userSettings.sgBusStopLoc)
         reloadData()
         
         func reloadData() {
@@ -202,7 +201,6 @@ struct SettingsPopup: View {
                 }
             }
             userSettings.busStopData = dataa
-            print(userSettings.busStopData)
         }
     }
 }
