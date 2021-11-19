@@ -14,6 +14,7 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     var locationManager: CLLocationManager?
     
     @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 1.3521, longitude: 103.8198), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)) // Placeholder Location
+    @Published var centerCoordinate:CLLocationCoordinate2D?
     @Published var locationAuthError = ["", ""]
     @Published var isAlertPresented = false
     
