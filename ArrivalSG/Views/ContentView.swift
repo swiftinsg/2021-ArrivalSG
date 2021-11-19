@@ -25,18 +25,12 @@ struct ContentView: View {
         // Map
         GeometryReader { geometry in
             ZStack {
-                ZStack {
-                    MapView(centreCoordinate: $centreCoordinate)
-                        .edgesIgnoringSafeArea(.all)
-                        .accentColor(Color(.systemPink))
-                        .onAppear {
-                            locationModel.checkIfLocationEnabled()
-                        }
-                    Circle()
-                        .size(width: 50, height: 50)
-                        .foregroundColor(Color.blue)
-                        .opacity(0.6)
-                }
+                MapView(centreCoordinate: $centreCoordinate)
+                    .edgesIgnoringSafeArea(.all)
+                    .accentColor(Color(.systemPink))
+                    .onAppear {
+                        locationModel.checkIfLocationEnabled()
+                    }
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
                     ScrollView {
