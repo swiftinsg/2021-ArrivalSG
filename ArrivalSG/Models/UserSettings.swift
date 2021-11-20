@@ -30,7 +30,7 @@ class UserSettings: ObservableObject {
         }
     }
     
-    @Published var trainDisruptions: [String:Any] {
+    @Published var trainDisruptions: TrainDisruptionsData {
         didSet {
             userDefaults.set(trainDisruptions, forKey: "trainDisruptions")
         }
@@ -52,7 +52,7 @@ class UserSettings: ObservableObject {
         self.sgBusStops = userDefaults.object(forKey: "sgBusStops") as? [Int] ?? [0]
         self.busStopData = userDefaults.object(forKey: "busStopData") as? [[String:Any]] ?? [[:]]
         self.sgBusStopLoc = userDefaults.object(forKey: "sgBusStopLoc") as? [[String:Any]] ?? [[:]]
-        self.trainDisruptions = userDefaults.object(forKey: "trainDisruptions") as? [String:Any] ?? ["Status": 1, "Affected Segments": [["Line": "","Direction": "", "Stations": "", "FreePublicBus": "", "FreeMRTShuttle": "", "MRTShuttleDirection": ""]], "Message": [["Content": "", "CreatedData": ""]]]
+        self.trainDisruptions = userDefaults.object(forKey: "trainDisruptions") as? TrainDisruptionsData ?? TrainDisruptionsData(Status: 1, Message: [msg(Content: "", CreatedDate: "")], AffectedSegments: [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")])
         self.isFirstOpen = userDefaults.bool(forKey: "busStopData") as? Bool ?? true
         self.showStopRadius = userDefaults.double(forKey: "showStopRadius") as? Double ?? 3.0
     }

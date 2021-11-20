@@ -8,10 +8,10 @@
 import Foundation
 
 class TrainDisruptions: ObservableObject {
-    @Published var disruptions: [String: Any] = [:]
+    @Published var disruptions: TrainDisruptionsData?
     
-    func fetchDisruptions(completion: @escaping (Result<[String:Any], Error>) -> Void) {
-        let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/BusStops")! // Link to API
+    func fetchDisruptions(completion: @escaping (Result<TrainDisruptionsData, Error>) -> Void) {
+        let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/TrainServiceAlerts")! // Link to API
         
         var request = URLRequest(url: API_ENDPOINT)
         request.addValue(ProcessInfo.processInfo.environment["API_KEY"]!, forHTTPHeaderField: "AccountKey") // Getting API Key from Xcode Environment Values
@@ -21,8 +21,11 @@ class TrainDisruptions: ObservableObject {
             if let data = data { // Make sure Data != nil
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] {
-                        self.disruptions = ["Status": json["Status"] ?? 1, "Affected Segments": json["Affected Segments"] as?  [[String:String]] ?? [["Line": "", "Direction": "", "Stations": "", "FreePublicBus": "", "FreeMRTShuttle": "", "MRTShuttleDirection": ""]], "Message": json["Message"] as? [[String:String]] ?? [["Content": "", "CreatedData": ""]]]
-                        return completion(.success(self.disruptions))
+                        let status = json["Status"] as! Int
+                        let affectedSeg = json["Affected Segments"] as? [affectedSeg] ?? [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")]
+                        let msg = json["Message"] as? [msg] ?? [msg(Content: "", CreatedDate: "")]
+                        self.disruptions = TrainDisruptionsData(Status: status, Message: msg, AffectedSegments: affectedSeg)
+                        return completion(.success(self.disruptions!))
                     }
                 } catch let error as NSError {
                     print("Failed to Load: \(error.localizedDescription)")

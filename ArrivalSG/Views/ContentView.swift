@@ -188,6 +188,7 @@ struct SettingsPopup: View {
         
         userSettings.sgBusStopLoc = busStopLoc
         userSettings.sgBusStops = busStopArr
+        print(userSettings.sgBusStopLoc)
         reloadData()
         
         func reloadData() {
