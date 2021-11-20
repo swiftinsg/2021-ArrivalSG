@@ -18,16 +18,17 @@ struct ContentView: View {
     @State var locationModel = LocationViewModel()
     @State public var currentlySelected = "Location"
     @State var isSettingsOpen = false
-
+    @State var centreCoordinate = CLLocationCoordinate2D()
+    @State var showStopRadius = 3 // 3km is default
+    
     var body: some View {
-        
         // Map
         GeometryReader { geometry in
             ZStack {
-                Map(coordinateRegion: $locationModel.region, showsUserLocation: true)
-                    .ignoresSafeArea()
+                MapView(centreCoordinate: $centreCoordinate)
+                    .edgesIgnoringSafeArea(.all)
                     .accentColor(Color(.systemPink))
-                    .onAppear{
+                    .onAppear {
                         locationModel.checkIfLocationEnabled()
                     }
                 
@@ -84,7 +85,7 @@ struct ContentView: View {
                 }
                 
                 if (isSettingsOpen) {
-                    SettingsPopup()
+                    SettingsPopup(showStopRadius: $showStopRadius)
                 }
                 
                 VStack(alignment: .trailing) {
@@ -141,6 +142,8 @@ struct OverlayControls: View {
 }
 
 struct SettingsPopup: View {
+    @Binding var showStopRadius:Int
+    
     var body: some View {
         // Temp UI
         VStack(alignment: .center, spacing: 3) {
@@ -165,6 +168,7 @@ struct SettingsPopup: View {
         .padding()
         .background(.white)
         .cornerRadius(5)
+        
     }
     
     func prepareDataReload() async throws {
@@ -184,6 +188,7 @@ struct SettingsPopup: View {
         
         userSettings.sgBusStopLoc = busStopLoc
         userSettings.sgBusStops = busStopArr
+        print(userSettings.sgBusStopLoc)
         reloadData()
         
         func reloadData() {
