@@ -25,7 +25,7 @@ struct ContentView: View {
         // Map
         GeometryReader { geometry in
             ZStack {
-                MapView(centreCoordinate: $centreCoordinate, annotations: BusStops)
+                MapView(centreCoordinate: $centreCoordinate)
                     .edgesIgnoringSafeArea(.all)
                     .accentColor(Color(.systemPink))
                     .onAppear {
