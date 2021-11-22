@@ -31,7 +31,7 @@ struct TrainDisruption: View {
         }.onAppear{
             let disruptionData = userSettings.trainDisruptions
             print(disruptionData)
-            if disruptionData["Status"] as! Int == 1{
+            if disruptionData.Status as! Int == 1{
                 isDisruptions = false
             }else{
                 isDisruptions = true
