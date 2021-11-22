@@ -19,12 +19,13 @@ class TrainDisruptions: ObservableObject {
                 
         URLSession.shared.dataTask(with: request) { data, response, error in // Make API Request
             if let data = data { // Make sure Data != nil
+                print(String(data: data, encoding: .utf8))
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] {
-                        let status = json["Status"] as! Int
-                        let affectedSeg = json["Affected Segments"] as? [affectedSeg] ?? [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")]
-                        let msg = json["Message"] as? [msg] ?? [msg(Content: "", CreatedDate: "")]
-                        self.disruptions = TrainDisruptionsData(Status: status, Message: msg, AffectedSegments: affectedSeg)
+                        let status = (json["value"] as? [String:Any])!["Status"] as? Int ?? 1
+                        let affected = (json["value"] as? [String:Any])!["AffectedSegments"] as? [affectedSeg] ?? [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")]
+                        let message = (json["value"] as? [String:Any])!["Message"] as? [msg] ?? [msg(Content: "", CreatedDate: "")]
+                        self.disruptions = TrainDisruptionsData(Status: status, Message: message, AffectedSegments: affected)
                         return completion(.success(self.disruptions!))
                     }
                 } catch let error as NSError {

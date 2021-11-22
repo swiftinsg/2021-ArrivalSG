@@ -36,7 +36,6 @@ struct TabBar: View {
         
         userSettings.sgBusStopLoc = busStopLoc
         userSettings.sgBusStops = busStopArr
-        print(userSettings.sgBusStopLoc)
         reloadData()
         
         
@@ -65,6 +64,7 @@ struct TabBar: View {
         getTrainDisruptions.fetchDisruptions() { result in
             switch result {
             case .success(let disruptions):
+                print(disruptions)
                 userSettings.trainDisruptions = disruptions
             case .failure(let error):
                 print("Error in Getting Bus Stops: \(error)")

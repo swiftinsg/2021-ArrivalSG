@@ -32,7 +32,10 @@ class UserSettings: ObservableObject {
     
     @Published var trainDisruptions: TrainDisruptionsData {
         didSet {
-            userDefaults.set(trainDisruptions, forKey: "trainDisruptions")
+            let encoder = JSONEncoder()
+            let data = try? encoder.encode(trainDisruptions)
+            let dataString = String(data: data!, encoding: .utf8)!
+            userDefaults.set(dataString, forKey: "trainDisruptions")
         }
     }
     
@@ -52,6 +55,17 @@ class UserSettings: ObservableObject {
         self.sgBusStops = userDefaults.object(forKey: "sgBusStops") as? [Int] ?? [0]
         self.busStopData = userDefaults.object(forKey: "busStopData") as? [[String:Any]] ?? [[:]]
         self.sgBusStopLoc = userDefaults.object(forKey: "sgBusStopLoc") as? [[String:Any]] ?? [[:]]
+        if (true) { // Just for some separation
+            let temp = userDefaults.string(forKey: "trainDisruptions")
+            let data = temp?.data(using: .utf8)
+            let decoder = JSONDecoder()
+            if let data = data {
+                let disruptions = try? decoder.decode(TrainDisruptionsData.self, from: data)
+                self.trainDisruptions = disruptions ?? TrainDisruptionsData(Status: 1, Message: [msg(Content: "", CreatedDate: "")], AffectedSegments: [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")])
+            } else {
+                self.trainDisruptions = TrainDisruptionsData(Status: 1, Message: [msg(Content: "", CreatedDate: "")], AffectedSegments: [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")])
+            }
+        }
         self.trainDisruptions = userDefaults.object(forKey: "trainDisruptions") as? TrainDisruptionsData ?? TrainDisruptionsData(Status: 1, Message: [msg(Content: "", CreatedDate: "")], AffectedSegments: [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")])
         self.isFirstOpen = userDefaults.bool(forKey: "busStopData") as? Bool ?? true
         self.showStopRadius = userDefaults.double(forKey: "showStopRadius") as? Double ?? 3.0
