@@ -12,12 +12,13 @@ class FetchBusStops: ObservableObject {
     @Published var stops: [BusStopLoc]?
     var stopsData:[BusStopLoc] = []
     var stopsDataDouble:[BusStopLocDouble] = []
+    let apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String
     
     func fetchBusStops() async throws -> Void {
         for i in 0...11 {
             let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/BusStops?$skip=\(i*500)")! // Link to API
             var request = URLRequest(url: API_ENDPOINT)
-            request.addValue(ProcessInfo.processInfo.environment["API_KEY"]!, forHTTPHeaderField: "AccountKey") // Getting API Key from Xcode Environment Values
+            request.addValue(apiKey!, forHTTPHeaderField: "AccountKey") // Getting API Key from Xcode Environment Values
             
             let (data, _) = try await URLSession.shared.data(for: request)
             let decoder = JSONDecoder()

@@ -9,17 +9,17 @@ import Foundation
 
 class TrainDisruptions: ObservableObject {
     @Published var disruptions: TrainDisruptionsData?
+    let apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String
     
     func fetchDisruptions(completion: @escaping (Result<TrainDisruptionsData, Error>) -> Void) {
         let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/TrainServiceAlerts")! // Link to API
         
         var request = URLRequest(url: API_ENDPOINT)
-        request.addValue(ProcessInfo.processInfo.environment["API_KEY"]!, forHTTPHeaderField: "AccountKey") // Getting API Key from Xcode Environment Values
+        request.addValue(apiKey!, forHTTPHeaderField: "AccountKey") // Getting API Key from Xcode Environment Values
         request.httpMethod = "GET"
                 
         URLSession.shared.dataTask(with: request) { data, response, error in // Make API Request
             if let data = data { // Make sure Data != nil
-                print(String(data: data, encoding: .utf8))
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] {
                         let status = (json["value"] as? [String:Any])!["Status"] as? Int ?? 1

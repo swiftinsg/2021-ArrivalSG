@@ -25,6 +25,7 @@ struct TabBar: View {
         @ObservedObject var userSettings = UserSettings()
         @ObservedObject var fetchStops = FetchBusStops()
         @ObservedObject var fetchStopData = FetchBuses()
+        userSettings.isFirstOpen = false
         
         try await fetchStops.fetchBusStops()
         let stops = fetchStops.stops
@@ -78,7 +79,6 @@ struct TabBar: View {
                 try? await prepareDataReload()
                 userSettings.isFirstOpen = false
             }
-            
             handleTrainDisruptions()
         }
     }

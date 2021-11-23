@@ -28,23 +28,6 @@ struct MapView: UIViewRepresentable {
     func updateUIView(_ uiView: MKMapView, context: Context) {
         uiView.setRegion(locationModel.region, animated: true)
         uiView.showsUserLocation = true
-        
-    
-        // Calculate Radius of showBusStop
-        var showStopLat = 1 / 110.574 * Double(userSettings.showStopRadius)
-        showStopLat = Angle(degrees: showStopLat).radians
-        var showStopLon = 1 / (111.320 * cos(showStopLat)) * Double(userSettings.showStopRadius)
-        showStopLon = Angle(degrees: showStopLon).radians
-        
-        let dTheta = 2 * Double.pi / 50
-        var theta = 0.0
-        
-//        var points:[CLLocationCoordinate2D] = []
-//        points.removeAll()
-//        for _ in 0..<50 {
-//            points.append(CLLocationCoordinate2D(latitude: centreCoordinate.latitude + showStopLat * sin(theta), longitude: centreCoordinate.longitude + showStopLon * cos(theta)))
-//            theta += dTheta
-//        }
     }
     
     func makeUIView(context: Context) -> MKMapView {
