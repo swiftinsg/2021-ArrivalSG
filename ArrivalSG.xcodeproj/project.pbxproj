@@ -21,7 +21,6 @@
 		59B48BF92742494A00554628 /* FetchBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF82742494A00554628 /* FetchBuses.swift */; };
 		59B48BFE274261F800554628 /* BusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFD274261F800554628 /* BusStops.swift */; };
 		59BFFB9027473E900012C464 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59BFFB8F27473E900012C464 /* MapView.swift */; };
-		59E0C930274CD41C004249BD /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 59E0C92F274CD41C004249BD /* .gitignore */; };
 		59F58B2B2743B73C00E93DDE /* LocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2A2743B73C00E93DDE /* LocationViewModel.swift */; };
 		59F58B2D2743BFFC00E93DDE /* TrainDisruptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2C2743BFFC00E93DDE /* TrainDisruptions.swift */; };
 		59F58B2F2743C03500E93DDE /* TrainDisruptionsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2E2743C03500E93DDE /* TrainDisruptionsData.swift */; };
@@ -46,7 +45,6 @@
 		59B48BFD274261F800554628 /* BusStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStops.swift; sourceTree = "<group>"; };
 		59BFFB8F27473E900012C464 /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		59E0C92C274CD255004249BD /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
-		59E0C92F274CD41C004249BD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		59F58B2A2743B73C00E93DDE /* LocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewModel.swift; sourceTree = "<group>"; };
 		59F58B2C2743BFFC00E93DDE /* TrainDisruptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainDisruptions.swift; sourceTree = "<group>"; };
 		59F58B2E2743C03500E93DDE /* TrainDisruptionsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainDisruptionsData.swift; sourceTree = "<group>"; };
@@ -67,7 +65,6 @@
 		593D638127420DD000FDF440 = {
 			isa = PBXGroup;
 			children = (
-				59E0C92F274CD41C004249BD /* .gitignore */,
 				593D638C27420DD000FDF440 /* ArrivalSG */,
 				593D638B27420DD000FDF440 /* Products */,
 			);
@@ -204,7 +201,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				593D639527420DD300FDF440 /* Preview Assets.xcassets in Resources */,
-				59E0C930274CD41C004249BD /* .gitignore in Resources */,
 				593D639227420DD300FDF440 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
