@@ -18,15 +18,17 @@ struct MapView: UIViewRepresentable {
         uiView.setRegion(locationModel.region, animated: true)
         uiView.showsUserLocation = true
         
-        let busStopLoc = userSettings.sgBusStopLoc
-        print(busStopLoc)
+        var busStopLoc = userSettings.sgBusStopLoc
         
-        for i in 0..<busStopLoc.count {
-            let newLocation = MKPointAnnotation()
-            newLocation.title = busStopLoc[i]["Name"]! as! String
-            newLocation.coordinate = CLLocationCoordinate2D(latitude: busStopLoc[i]["Latitude"] as! CLLocationDegrees, longitude: busStopLoc[i]["Longitude"] as! CLLocationDegrees)
-            uiView.addAnnotation(newLocation)
+        if (busStopLoc.count != 1) {
+            for i in 0..<busStopLoc.count {
+                let newLocation = MKPointAnnotation()
+                newLocation.title = busStopLoc[i]["Name"]! as! String
+                newLocation.coordinate = CLLocationCoordinate2D(latitude: busStopLoc[i]["Latitude"] as! CLLocationDegrees, longitude: busStopLoc[i]["Longitude"] as! CLLocationDegrees)
+                uiView.addAnnotation(newLocation)
+            }
         }
+        
         
         var region = locationModel.region {
             didSet {

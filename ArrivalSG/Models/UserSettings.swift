@@ -60,6 +60,6 @@ class UserSettings: ObservableObject {
             }
         }
         self.trainDisruptions = userDefaults.object(forKey: "trainDisruptions") as? TrainDisruptionsData ?? TrainDisruptionsData(Status: 1, Message: [msg(Content: "", CreatedDate: "")], AffectedSegments: [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")])
-        self.isFirstOpen = userDefaults.bool(forKey: "busStopData") as? Bool ?? true
+        self.isFirstOpen = userDefaults.object(forKey: "busStopData") as? Bool ?? true
     }
 }

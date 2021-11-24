@@ -30,6 +30,7 @@ struct TabBar: View {
         
         try await fetchStops.fetchBusStops()
         let stops = fetchStops.stops
+        busStopLoc.removeAll()
         
         for i in 0..<stops!.count {
             busStopArr.append(Int(stops![i].BusStopCode) ?? 0)
@@ -57,6 +58,7 @@ struct TabBar: View {
             }
             userSettings.busStopData = dataa
         }
+        print(userSettings.sgBusStopLoc)
     }
     
     func handleTrainDisruptions() {
@@ -74,16 +76,6 @@ struct TabBar: View {
         }
     }
     
-    func initAsync() {
-        Task.init {
-            if (userSettings.isFirstOpen) {
-                try? await prepareDataReload()
-                userSettings.isFirstOpen = false
-            }
-            handleTrainDisruptions()
-        }
-    }
-    
     var body: some View {
         TabView(selection: $selectedTab) {
             ContentView()
@@ -93,13 +85,14 @@ struct TabBar: View {
                     Image(systemName: "bus.fill")
                 }
                 .task {
-                    print("IM HERE")
+                    print(userSettings.isFirstOpen)
                     if (userSettings.isFirstOpen) {
+                        print("New User!")
                         try? await prepareDataReload()
+                        print("2")
                         userSettings.isFirstOpen = false
                     }
-                    
-                    initAsync()
+                    print("4")
                 }
             TrainMap()
                 .tag(1)
