@@ -28,9 +28,9 @@ struct TrainDisruption: View {
                 Text("There are no Train Disruptions")
             }
             
-        }.onAppear{
+        }.onAppear {
             let disruptionData = userSettings.trainDisruptions
-            if disruptionData.Status == 1{
+            if disruptionData.Status == 1 {
                 isDisruptions = false
             }else{
                 isDisruptions = true

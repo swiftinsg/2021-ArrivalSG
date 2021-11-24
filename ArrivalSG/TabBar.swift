@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import MapKit
 
 struct TabBar: View {
     
@@ -32,13 +33,13 @@ struct TabBar: View {
         
         for i in 0..<stops!.count {
             busStopArr.append(Int(stops![i].BusStopCode) ?? 0)
-            busStopLoc.append(["BusStopCode": stops![i].BusStopCode, "Latitude:": stops![i].Latitude, "Longitude": stops![i].Longitude])
+            busStopLoc.append(["Name": stops![i].Description,"BusStopCode": stops![i].BusStopCode, "Latitude": Double(stops![i].Latitude), "Longitude": Double(stops![i].Longitude)])
+
         }
         
         userSettings.sgBusStopLoc = busStopLoc
         userSettings.sgBusStops = busStopArr
         reloadData()
-        
         
         func reloadData() {
             let data = userSettings.sgBusStops
@@ -92,6 +93,7 @@ struct TabBar: View {
                     Image(systemName: "bus.fill")
                 }
                 .task {
+                    print("IM HERE")
                     if (userSettings.isFirstOpen) {
                         try? await prepareDataReload()
                         userSettings.isFirstOpen = false

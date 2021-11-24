@@ -19,7 +19,7 @@ class FetchBusStops: ObservableObject {
             let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/BusStops?$skip=\(i*500)")! // Link to API
             var request = URLRequest(url: API_ENDPOINT)
             request.addValue(apiKey!, forHTTPHeaderField: "AccountKey") // Getting API Key from Xcode Environment Values
-            
+
             let (data, _) = try await URLSession.shared.data(for: request)
             let decoder = JSONDecoder()
             if let res = try? decoder.decode(BusStops.self, from: data) {

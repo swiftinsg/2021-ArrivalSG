@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import MapKit
 
 class UserSettings: ObservableObject {
     let userDefaults = UserDefaults.standard
@@ -26,7 +27,7 @@ class UserSettings: ObservableObject {
     
     @Published var sgBusStopLoc: [[String:Any]] {
         didSet {
-            userDefaults.set(busStopData, forKey: "sgBusStopLoc")
+            userDefaults.set(sgBusStopLoc, forKey: "sgBusStopLoc")
         }
     }
     
@@ -34,8 +35,7 @@ class UserSettings: ObservableObject {
         didSet {
             let encoder = JSONEncoder()
             let data = try? encoder.encode(trainDisruptions)
-            let dataString = String(data: data!, encoding: .utf8)!
-            userDefaults.set(dataString, forKey: "trainDisruptions")
+            userDefaults.set(data, forKey: "trainDisruptions")
         }
     }
     
@@ -50,8 +50,7 @@ class UserSettings: ObservableObject {
         self.busStopData = userDefaults.object(forKey: "busStopData") as? [[String:Any]] ?? [[:]]
         self.sgBusStopLoc = userDefaults.object(forKey: "sgBusStopLoc") as? [[String:Any]] ?? [[:]]
         if (true) { // Just for some separation
-            let temp = userDefaults.string(forKey: "trainDisruptions")
-            let data = temp?.data(using: .utf8)
+            let data = userDefaults.object(forKey: "trainDisruptions") as? Data
             let decoder = JSONDecoder()
             if let data = data {
                 let disruptions = try? decoder.decode(TrainDisruptionsData.self, from: data)

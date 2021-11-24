@@ -21,6 +21,7 @@
 		59B48BF92742494A00554628 /* FetchBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF82742494A00554628 /* FetchBuses.swift */; };
 		59B48BFE274261F800554628 /* BusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFD274261F800554628 /* BusStops.swift */; };
 		59BFFB9027473E900012C464 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59BFFB8F27473E900012C464 /* MapView.swift */; };
+		59E0C932274CDBD6004249BD /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 59E0C931274CDBD6004249BD /* Secrets.xcconfig */; };
 		59F58B2B2743B73C00E93DDE /* LocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2A2743B73C00E93DDE /* LocationViewModel.swift */; };
 		59F58B2D2743BFFC00E93DDE /* TrainDisruptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2C2743BFFC00E93DDE /* TrainDisruptions.swift */; };
 		59F58B2F2743C03500E93DDE /* TrainDisruptionsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2E2743C03500E93DDE /* TrainDisruptionsData.swift */; };
@@ -44,7 +45,7 @@
 		59B48BFA2742599700554628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		59B48BFD274261F800554628 /* BusStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStops.swift; sourceTree = "<group>"; };
 		59BFFB8F27473E900012C464 /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
-		59E0C92C274CD255004249BD /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		59E0C931274CDBD6004249BD /* Secrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		59F58B2A2743B73C00E93DDE /* LocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewModel.swift; sourceTree = "<group>"; };
 		59F58B2C2743BFFC00E93DDE /* TrainDisruptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainDisruptions.swift; sourceTree = "<group>"; };
 		59F58B2E2743C03500E93DDE /* TrainDisruptionsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainDisruptionsData.swift; sourceTree = "<group>"; };
@@ -84,6 +85,7 @@
 				59B48BFA2742599700554628 /* Info.plist */,
 				59F58B322743C12100E93DDE /* Models */,
 				59B48BF52742411B00554628 /* APIHandler */,
+				59E0C933274E9013004249BD /* Structs */,
 				594A76312742283D00E29B23 /* Views */,
 				593D638D27420DD000FDF440 /* ArrivalSGApp.swift */,
 				594A7636274228AC00E29B23 /* TabBar.swift */,
@@ -117,14 +119,21 @@
 		59B48BF52742411B00554628 /* APIHandler */ = {
 			isa = PBXGroup;
 			children = (
-				59B48BFD274261F800554628 /* BusStops.swift */,
-				59F58B2E2743C03500E93DDE /* TrainDisruptionsData.swift */,
 				59B48BF62742412D00554628 /* FetchBusStops.swift */,
 				59B48BF82742494A00554628 /* FetchBuses.swift */,
 				59F58B2C2743BFFC00E93DDE /* TrainDisruptions.swift */,
-				59E0C92C274CD255004249BD /* Secrets.xcconfig */,
+				59E0C931274CDBD6004249BD /* Secrets.xcconfig */,
 			);
 			path = APIHandler;
+			sourceTree = "<group>";
+		};
+		59E0C933274E9013004249BD /* Structs */ = {
+			isa = PBXGroup;
+			children = (
+				59B48BFD274261F800554628 /* BusStops.swift */,
+				59F58B2E2743C03500E93DDE /* TrainDisruptionsData.swift */,
+			);
+			path = Structs;
 			sourceTree = "<group>";
 		};
 		59F58B322743C12100E93DDE /* Models */ = {
@@ -202,6 +211,7 @@
 			files = (
 				593D639527420DD300FDF440 /* Preview Assets.xcassets in Resources */,
 				593D639227420DD300FDF440 /* Assets.xcassets in Resources */,
+				59E0C932274CDBD6004249BD /* Secrets.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,7 +245,7 @@
 /* Begin XCBuildConfiguration section */
 		593D639B27420DD300FDF440 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 59E0C92C274CD255004249BD /* Secrets.xcconfig */;
+			baseConfigurationReference = 59E0C931274CDBD6004249BD /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -297,7 +307,7 @@
 		};
 		593D639C27420DD300FDF440 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 59E0C92C274CD255004249BD /* Secrets.xcconfig */;
+			baseConfigurationReference = 59E0C931274CDBD6004249BD /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;

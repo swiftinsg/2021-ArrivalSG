@@ -11,23 +11,28 @@ import SwiftUI
 
 struct MapView: UIViewRepresentable {
     @Binding var centreCoordinate: CLLocationCoordinate2D
-//    var annotations: [MKPointAnnotation]
-    
     @State var locationModel = LocationViewModel()
-//    @State private var busStops = [MKPointAnnotation]()
     @ObservedObject var userSettings = UserSettings()
-    
-//    //Bus Stop Annotation
-//    for busStop in BusStopLoc {
-//        let busStop = MKPointAnnotation()
-//        busStop.coordinate.longitude = BusStopLoc.longitude
-//        busStop.coordinate.latitude = BusStopLoc.latitude
-//        self.locations?.append(busStop)
-//    }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         uiView.setRegion(locationModel.region, animated: true)
         uiView.showsUserLocation = true
+        
+        let busStopLoc = userSettings.sgBusStopLoc
+        print(busStopLoc)
+        
+        for i in 0..<busStopLoc.count {
+            let newLocation = MKPointAnnotation()
+            newLocation.title = busStopLoc[i]["Name"]! as! String
+            newLocation.coordinate = CLLocationCoordinate2D(latitude: busStopLoc[i]["Latitude"] as! CLLocationDegrees, longitude: busStopLoc[i]["Longitude"] as! CLLocationDegrees)
+            uiView.addAnnotation(newLocation)
+        }
+        
+        var region = locationModel.region {
+            didSet {
+                uiView.setRegion(locationModel.region, animated: true)
+            }
+        }
     }
     
     func makeUIView(context: Context) -> MKMapView {
@@ -49,7 +54,6 @@ struct MapView: UIViewRepresentable {
         
         func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
             parent.centreCoordinate = mapView.centerCoordinate
-            
         }
     }
 }
