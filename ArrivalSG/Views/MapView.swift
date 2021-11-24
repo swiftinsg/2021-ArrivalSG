@@ -18,17 +18,45 @@ struct MapView: UIViewRepresentable {
         uiView.setRegion(locationModel.region, animated: true)
         uiView.showsUserLocation = true
         
+        // Find CheckWithin
+        let centralLocation = CLLocation(latitude: centreCoordinate.latitude, longitude: centreCoordinate.longitude)
+        func getRadius() -> Double {
+            let topCentralLat: Double = centralLocation.coordinate.latitude - uiView.region.span.latitudeDelta/2
+            let topCentralLocation = CLLocation(latitude: topCentralLat, longitude: centralLocation.coordinate.longitude)
+            let radius = centralLocation.distance(from: topCentralLocation)
+            return radius
+        }
+        
+        func checkPtWithin(pt: CLLocation) -> Bool {
+            let distCentreToPt = pt.distance(from: centralLocation) / 1000 // In km
+//            print(distCentreToPt, getRadius())
+//            if (distCentreToPt > getRadius()) {
+//                return false
+//            } else {
+//                return true
+//            }
+            print(distCentreToPt, 3)
+            if (distCentreToPt > 3) {
+                return false
+            } else {
+                return true
+            }
+        }
+        
         var busStopLoc = userSettings.sgBusStopLoc
         
         if (busStopLoc.count != 1) {
-            for i in 0..<busStopLoc.count {
+            let filteredAnnotations = busStopLoc.filter { val in
+                let pt = CLLocation(latitude: val["Latitude"] as! CLLocationDegrees, longitude: val["Longitude"] as! CLLocationDegrees)
+                return checkPtWithin(pt: pt)
+            }
+            for i in 0..<filteredAnnotations.count {
                 let newLocation = MKPointAnnotation()
-                newLocation.title = busStopLoc[i]["Name"]! as! String
+                newLocation.title = filteredAnnotations[i]["Name"] as! String
                 newLocation.coordinate = CLLocationCoordinate2D(latitude: busStopLoc[i]["Latitude"] as! CLLocationDegrees, longitude: busStopLoc[i]["Longitude"] as! CLLocationDegrees)
                 uiView.addAnnotation(newLocation)
             }
         }
-        
         
         var region = locationModel.region {
             didSet {

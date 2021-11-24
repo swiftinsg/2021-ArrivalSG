@@ -58,7 +58,6 @@ struct TabBar: View {
             }
             userSettings.busStopData = dataa
         }
-        print(userSettings.sgBusStopLoc)
     }
     
     func handleTrainDisruptions() {
@@ -68,7 +67,6 @@ struct TabBar: View {
         getTrainDisruptions.fetchDisruptions() { result in
             switch result {
             case .success(let disruptions):
-                print(disruptions)
                 userSettings.trainDisruptions = disruptions
             case .failure(let error):
                 print("Error in Getting Bus Stops: \(error)")
@@ -85,14 +83,10 @@ struct TabBar: View {
                     Image(systemName: "bus.fill")
                 }
                 .task {
-                    print(userSettings.isFirstOpen)
                     if (userSettings.isFirstOpen) {
-                        print("New User!")
                         try? await prepareDataReload()
-                        print("2")
                         userSettings.isFirstOpen = false
                     }
-                    print("4")
                 }
             TrainMap()
                 .tag(1)
