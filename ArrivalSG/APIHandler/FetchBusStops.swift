@@ -34,7 +34,7 @@ class FetchBusStops: ObservableObject {
             } else {
                 let res = BusStops(value: (try? decoder.decode(BusStopsDouble.self, from: data).value.map {
                     $0.convert()
-                })!)
+                })?)
                 if (res.value != []) {
                     for i in 0..<res.value.count {
                         self.stopsData.append(res.value[i])
