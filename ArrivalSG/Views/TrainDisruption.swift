@@ -50,11 +50,10 @@ struct TrainDisruption: View {
                 Text("There are no Train Disruptions")
             }
             
-        }.onAppear{
-            print(disruptionData)
-            disruptionData = userSettings.trainDisruptions
-            if disruptionData.Status == 1{
-                isDisruptions = true // Change to False
+        }.onAppear {
+            let disruptionData = userSettings.trainDisruptions
+            if disruptionData.Status == 1 {
+                isDisruptions = false
             }else{
                 isDisruptions = true
             }
