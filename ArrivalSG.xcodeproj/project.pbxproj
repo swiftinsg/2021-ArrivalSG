@@ -17,6 +17,7 @@
 		594A76332742285500E29B23 /* TrainDisruption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A76322742285500E29B23 /* TrainDisruption.swift */; };
 		594A76352742285F00E29B23 /* TrainMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A76342742285F00E29B23 /* TrainMap.swift */; };
 		594A7637274228AC00E29B23 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A7636274228AC00E29B23 /* TabBar.swift */; };
+		599EFABC274F345F00721AE2 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 599EFABB274F345F00721AE2 /* Secrets.plist */; };
 		59B48BF72742412D00554628 /* FetchBusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF62742412D00554628 /* FetchBusStops.swift */; };
 		59B48BF92742494A00554628 /* FetchBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF82742494A00554628 /* FetchBuses.swift */; };
 		59B48BFE274261F800554628 /* BusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFD274261F800554628 /* BusStops.swift */; };
@@ -39,6 +40,7 @@
 		594A76322742285500E29B23 /* TrainDisruption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainDisruption.swift; sourceTree = "<group>"; };
 		594A76342742285F00E29B23 /* TrainMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainMap.swift; sourceTree = "<group>"; };
 		594A7636274228AC00E29B23 /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
+		599EFABB274F345F00721AE2 /* Secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
 		59B48BF62742412D00554628 /* FetchBusStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchBusStops.swift; sourceTree = "<group>"; };
 		59B48BF82742494A00554628 /* FetchBuses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchBuses.swift; sourceTree = "<group>"; };
 		59B48BFA2742599700554628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				59B48BFA2742599700554628 /* Info.plist */,
+				599EFABB274F345F00721AE2 /* Secrets.plist */,
 				59F58B322743C12100E93DDE /* Models */,
 				59B48BF52742411B00554628 /* APIHandler */,
 				59E0C933274E9013004249BD /* Structs */,
@@ -207,6 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				593D639527420DD300FDF440 /* Preview Assets.xcassets in Resources */,
+				599EFABC274F345F00721AE2 /* Secrets.plist in Resources */,
 				593D639227420DD300FDF440 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

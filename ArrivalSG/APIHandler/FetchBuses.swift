@@ -9,13 +9,25 @@ import Foundation
 
 class FetchBuses: ObservableObject {
     @Published var stopsData: [String: Any] = [:]
-    let apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String
-    
+    var apiKey: String {
+      get {
+        // 1
+        guard let filePath = Bundle.main.path(forResource: "Secrets", ofType: "plist") else {
+          fatalError("Couldn't find file 'Secrets.plist'.")
+        }
+        // 2
+        let plist = NSDictionary(contentsOfFile: filePath)
+        guard let value = plist?.object(forKey: "API_KEY") as? String else {
+          fatalError("Couldn't find key 'API_KEY' in 'Secrets.plist'.")
+        }
+        return value
+      }
+    }
     func fetchBuses(BusStopCode: Int, completion: @escaping (Result<[String:Any], Error>) -> Void) {
         let API_ENDPOINT = URL(string: "http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=\(String(BusStopCode))")!
          
         var request = URLRequest(url: API_ENDPOINT)
-        request.addValue(apiKey!, forHTTPHeaderField: "AccountKey")
+        request.addValue(apiKey, forHTTPHeaderField: "AccountKey")
         request.httpMethod = "GET"
                 
         URLSession.shared.dataTask(with: request) { data, response, error in
