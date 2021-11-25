@@ -65,13 +65,11 @@ struct MapView: UIViewRepresentable {
                     let pt = CLLocation(latitude: val["Latitude"] as! CLLocationDegrees, longitude: val["Longitude"] as! CLLocationDegrees)
                     return checkPtWithin(pt: pt) <= 2
                 }
-                print(busStopLoc.count)
-                print(filteredAnnotations.count)
-                
+                                
                 for i in 0..<filteredAnnotations.count {
                     let newLocation = MKPointAnnotation()
                     newLocation.title = filteredAnnotations[i]["Name"] as? String
-                    newLocation.coordinate = CLLocationCoordinate2D(latitude: busStopLoc[i]["Latitude"] as! CLLocationDegrees, longitude: busStopLoc[i]["Longitude"] as! CLLocationDegrees)
+                    newLocation.coordinate = CLLocationCoordinate2D(latitude: filteredAnnotations[i]["Latitude"] as! CLLocationDegrees, longitude: filteredAnnotations[i]["Longitude"] as! CLLocationDegrees)
                     mapView.addAnnotation(newLocation)
                 }
             }
