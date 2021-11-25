@@ -84,6 +84,7 @@ struct TabBar: View {
                 }
                 .task {
                     if (userSettings.isFirstOpen) {
+                        print("First Open")
                         try? await prepareDataReload()
                         userSettings.isFirstOpen = false
                     }

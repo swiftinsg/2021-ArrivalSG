@@ -14,7 +14,6 @@ class UserSettings: ObservableObject {
     
     @Published var sgBusStops: [Int] {
         didSet {
-            print("Saving to UserDefaults")
             userDefaults.set(sgBusStops, forKey: "sgBusStops")
         }
     }
@@ -41,7 +40,13 @@ class UserSettings: ObservableObject {
     
     @Published var isFirstOpen: Bool {
         didSet {
-            userDefaults.set(busStopData, forKey: "isFirstOpen")
+            userDefaults.set(isFirstOpen, forKey: "isFirstOpen")
+        }
+    }
+    
+    @Published var favouritedBusStops: [[String:Any]] {
+        didSet {
+            userDefaults.set(favouritedBusStops, forKey: "favouritedBusStops")
         }
     }
     
@@ -49,6 +54,7 @@ class UserSettings: ObservableObject {
         self.sgBusStops = userDefaults.object(forKey: "sgBusStops") as? [Int] ?? [0]
         self.busStopData = userDefaults.object(forKey: "busStopData") as? [[String:Any]] ?? [[:]]
         self.sgBusStopLoc = userDefaults.object(forKey: "sgBusStopLoc") as? [[String:Any]] ?? [[:]]
+        self.favouritedBusStops = userDefaults.object(forKey: "favouritedBusStops") as? [[String:Any]] ?? [[:]]
         if (true) { // Just for some separation
             let data = userDefaults.object(forKey: "trainDisruptions") as? Data
             let decoder = JSONDecoder()
@@ -60,6 +66,6 @@ class UserSettings: ObservableObject {
             }
         }
         self.trainDisruptions = userDefaults.object(forKey: "trainDisruptions") as? TrainDisruptionsData ?? TrainDisruptionsData(Status: 1, Message: [msg(Content: "", CreatedDate: "")], AffectedSegments: [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")])
-        self.isFirstOpen = userDefaults.object(forKey: "busStopData") as? Bool ?? true
+        self.isFirstOpen = userDefaults.object(forKey: "isFirstOpen") as? Bool ?? true
     }
 }
