@@ -59,13 +59,13 @@ struct MapView: UIViewRepresentable {
 //            centreLoc.title = "Centre"
 //            centreLoc.coordinate = mapView.centerCoordinate
 //            mapView.addAnnotation(centreLoc)
-            
+            mapView.removeAnnotations(mapView.annotations)
             if (busStopLoc.count != 1) {
                 let filteredAnnotations = busStopLoc.filter { val in
                     let pt = CLLocation(latitude: val["Latitude"] as! CLLocationDegrees, longitude: val["Longitude"] as! CLLocationDegrees)
                     return checkPtWithin(pt: pt) <= 2
                 }
-                                
+                
                 for i in 0..<filteredAnnotations.count {
                     let newLocation = MKPointAnnotation()
                     newLocation.title = filteredAnnotations[i]["Name"] as? String
