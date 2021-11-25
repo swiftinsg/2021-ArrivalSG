@@ -10,10 +10,11 @@ import Foundation
 struct TrainDisruptionsData: Codable {
     let Status: Int
     let Message: [msg]
-    let AffectedSegments: [affectedSeg]
+    var AffectedSegments: [affectedSeg]
 }
-struct affectedSeg: Codable, Hashable {
-    let Line: String
+struct affectedSeg: Codable, Hashable, Identifiable {
+    var id = UUID()
+    var Line: String
     let Direction: String
     let Stations: String
     let FreePublicBus: String

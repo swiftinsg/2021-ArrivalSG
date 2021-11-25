@@ -13,6 +13,10 @@ struct TrainDisruption: View {
     @ObservedObject var userSettings = UserSettings()
     @State var isDisruptions = false
     
+    @State var isDefaultsExpanded: Bool = false
+    //@State var disruptionData: TrainDisruptionsData
+    @State var disruptionData: TrainDisruptionsData = TrainDisruptionsData(Status: 2, Message: [msg(Content: "Hello Messahe", CreatedDate: "123 Time")], AffectedSegments: [affectedSeg(Line: "EAST", Direction: "WONDERLAND", Stations: "1,2,3", FreePublicBus: "No Bus", FreeMRTShuttle: "No Shuttle", MRTShuttleDirection: "No Direction"),affectedSeg(Line: "WEST", Direction: "NOWONDERLAND", Stations: "0,2,5", FreePublicBus: "Magiv Bus", FreeMRTShuttle: "No Shuttle", MRTShuttleDirection: "No Direction")])
+    
     var body: some View {
 
         VStack {
@@ -20,11 +24,29 @@ struct TrainDisruption: View {
                 .bold()
                 .font(.largeTitle)
                 .frame(alignment: .leading)
+            
             if isDisruptions{
-                // If yes
-                Text("There is a Train Disruptions as of right now")
+                VStack{
+                    ForEach($disruptionData.AffectedSegments){ $trainDataSpecifc in
+                        DisclosureGroup(isExpanded:$isDefaultsExpanded){
+                            Text("Free Public Buses Avalable at")
+                                .bold()
+                            Text(trainDataSpecifc.FreePublicBus)
+                                .bold()
+                                .padding()
+                            Text("Free MRT Shuttle Avalable at")
+                                .bold()
+                            Text(trainDataSpecifc.FreeMRTShuttle)
+                                .bold()
+                                .padding()
+                        } label: {
+                            Text(trainDataSpecifc.Line)
+                            
+                        }
+                    }.padding()
+                }
+                    
             }else{
-                // if no
                 Text("There are no Train Disruptions")
             }
             
@@ -36,6 +58,9 @@ struct TrainDisruption: View {
                 isDisruptions = true
             }
         }
+
     }
 }
+
+
 
