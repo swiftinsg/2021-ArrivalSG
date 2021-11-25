@@ -52,7 +52,7 @@ struct MapView: UIViewRepresentable {
             }
             for i in 0..<filteredAnnotations.count {
                 let newLocation = MKPointAnnotation()
-                newLocation.title = filteredAnnotations[i]["Name"] as! String
+                newLocation.title = filteredAnnotations[i]["Name"] as? String
                 newLocation.coordinate = CLLocationCoordinate2D(latitude: busStopLoc[i]["Latitude"] as! CLLocationDegrees, longitude: busStopLoc[i]["Longitude"] as! CLLocationDegrees)
                 uiView.addAnnotation(newLocation)
             }
