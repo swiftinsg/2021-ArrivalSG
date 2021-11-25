@@ -143,6 +143,8 @@ struct OverlayControls: View {
 
 struct SettingsPopup: View {
     @Binding var showStopRadius:Int
+    @State var infoText: String = ""
+    @State var buttonDisabled: Bool = false
     
     var body: some View {
         // Temp UI
@@ -152,17 +154,21 @@ struct SettingsPopup: View {
                 .font(.title)
                 .foregroundColor(.black)
                 .padding()
-            Button {
-                Task {
-                    try? await prepareDataReload()
+            VStack {
+                Button {
+                    Task {
+                        try? await prepareDataReload()
+                    }
+                } label: {
+                    Text("Reload Bus Data")
                 }
-            } label: {
-                Text("Reload Bus Data")
+                    .padding()
+                    .foregroundColor(.white)
+                    .background(.cyan)
+                    .cornerRadius(5)
+                    .disabled(buttonDisabled == true)
+                Text(infoText)
             }
-                .padding()
-                .foregroundColor(.white)
-                .background(.cyan)
-                .cornerRadius(5)
             
         }
         .padding()
@@ -172,6 +178,8 @@ struct SettingsPopup: View {
     }
     
     func prepareDataReload() async throws {
+        infoText = "Loading Data..."
+        buttonDisabled = true
         var busStopArr:[Int] = []
         var busStopLoc:[[String:Any]] = []
         @ObservedObject var userSettings = UserSettings()
@@ -180,15 +188,14 @@ struct SettingsPopup: View {
         
         try await fetchStops.fetchBusStops()
         let stops = fetchStops.stops
-        
+                
         for i in 0..<stops!.count {
             busStopArr.append(Int(stops![i].BusStopCode) ?? 0)
-            busStopLoc.append(["BusStopCode": stops![i].BusStopCode, "Latitude:": stops![i].Latitude, "Longitude": stops![i].Longitude])
+            busStopLoc.append(["Name": stops![i].Description,"BusStopCode": stops![i].BusStopCode, "Latitude": Double(stops![i].Latitude), "Longitude": Double(stops![i].Longitude)])
         }
         
         userSettings.sgBusStopLoc = busStopLoc
         userSettings.sgBusStops = busStopArr
-        print(userSettings.sgBusStopLoc)
         reloadData()
         
         func reloadData() {
@@ -206,6 +213,7 @@ struct SettingsPopup: View {
                 }
             }
             userSettings.busStopData = dataa
+            infoText = "Done!"
         }
     }
 }

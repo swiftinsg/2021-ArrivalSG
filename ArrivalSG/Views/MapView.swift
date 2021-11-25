@@ -11,40 +11,58 @@ import SwiftUI
 
 struct MapView: UIViewRepresentable {
     @Binding var centreCoordinate: CLLocationCoordinate2D
-//    var annotations: [MKPointAnnotation]
-    
     @State var locationModel = LocationViewModel()
-//    @State private var busStops = [MKPointAnnotation]()
     @ObservedObject var userSettings = UserSettings()
-    
-//    //Bus Stop Annotation
-//    for busStop in BusStopLoc {
-//        let busStop = MKPointAnnotation()
-//        busStop.coordinate.longitude = BusStopLoc.longitude
-//        busStop.coordinate.latitude = BusStopLoc.latitude
-//        self.locations?.append(busStop)
-//    }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         uiView.setRegion(locationModel.region, animated: true)
         uiView.showsUserLocation = true
         
-    
-        // Calculate Radius of showBusStop
-        var showStopLat = 1 / 110.574 * Double(userSettings.showStopRadius)
-        showStopLat = Angle(degrees: showStopLat).radians
-        var showStopLon = 1 / (111.320 * cos(showStopLat)) * Double(userSettings.showStopRadius)
-        showStopLon = Angle(degrees: showStopLon).radians
+        // Find CheckWithin
+        let centralLocation = CLLocation(latitude: centreCoordinate.latitude, longitude: centreCoordinate.longitude)
+        func getRadius() -> Double {
+            let topCentralLat: Double = centralLocation.coordinate.latitude - uiView.region.span.latitudeDelta/2
+            let topCentralLocation = CLLocation(latitude: topCentralLat, longitude: centralLocation.coordinate.longitude)
+            let radius = centralLocation.distance(from: topCentralLocation)
+            return radius
+        }
         
-        let dTheta = 2 * Double.pi / 50
-        var theta = 0.0
+        func checkPtWithin(pt: CLLocation) -> Bool {
+            let distCentreToPt = pt.distance(from: centralLocation) / 1000 // In km
+//            print(distCentreToPt, getRadius())
+//            if (distCentreToPt > getRadius()) {
+//                return false
+//            } else {
+//                return true
+//            }
+            print(distCentreToPt, 3)
+            if (distCentreToPt > 3) {
+                return false
+            } else {
+                return true
+            }
+        }
         
-//        var points:[CLLocationCoordinate2D] = []
-//        points.removeAll()
-//        for _ in 0..<50 {
-//            points.append(CLLocationCoordinate2D(latitude: centreCoordinate.latitude + showStopLat * sin(theta), longitude: centreCoordinate.longitude + showStopLon * cos(theta)))
-//            theta += dTheta
-//        }
+        var busStopLoc = userSettings.sgBusStopLoc
+        
+        if (busStopLoc.count != 1) {
+            let filteredAnnotations = busStopLoc.filter { val in
+                let pt = CLLocation(latitude: val["Latitude"] as! CLLocationDegrees, longitude: val["Longitude"] as! CLLocationDegrees)
+                return checkPtWithin(pt: pt)
+            }
+            for i in 0..<filteredAnnotations.count {
+                let newLocation = MKPointAnnotation()
+                newLocation.title = filteredAnnotations[i]["Name"] as! String
+                newLocation.coordinate = CLLocationCoordinate2D(latitude: busStopLoc[i]["Latitude"] as! CLLocationDegrees, longitude: busStopLoc[i]["Longitude"] as! CLLocationDegrees)
+                uiView.addAnnotation(newLocation)
+            }
+        }
+        
+        var region = locationModel.region {
+            didSet {
+                uiView.setRegion(locationModel.region, animated: true)
+            }
+        }
     }
     
     func makeUIView(context: Context) -> MKMapView {
@@ -66,7 +84,6 @@ struct MapView: UIViewRepresentable {
         
         func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
             parent.centreCoordinate = mapView.centerCoordinate
-            
         }
     }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import MapKit
 
 struct TabBar: View {
     
@@ -25,19 +26,21 @@ struct TabBar: View {
         @ObservedObject var userSettings = UserSettings()
         @ObservedObject var fetchStops = FetchBusStops()
         @ObservedObject var fetchStopData = FetchBuses()
+        userSettings.isFirstOpen = false
         
         try await fetchStops.fetchBusStops()
         let stops = fetchStops.stops
+        busStopLoc.removeAll()
         
         for i in 0..<stops!.count {
             busStopArr.append(Int(stops![i].BusStopCode) ?? 0)
-            busStopLoc.append(["BusStopCode": stops![i].BusStopCode, "Latitude:": stops![i].Latitude, "Longitude": stops![i].Longitude])
+            busStopLoc.append(["Name": stops![i].Description,"BusStopCode": stops![i].BusStopCode, "Latitude": Double(stops![i].Latitude), "Longitude": Double(stops![i].Longitude)])
+
         }
         
         userSettings.sgBusStopLoc = busStopLoc
         userSettings.sgBusStops = busStopArr
         reloadData()
-        
         
         func reloadData() {
             let data = userSettings.sgBusStops
@@ -64,22 +67,10 @@ struct TabBar: View {
         getTrainDisruptions.fetchDisruptions() { result in
             switch result {
             case .success(let disruptions):
-                print(disruptions)
                 userSettings.trainDisruptions = disruptions
             case .failure(let error):
                 print("Error in Getting Bus Stops: \(error)")
             }
-        }
-    }
-    
-    func initAsync() {
-        Task.init {
-            if (userSettings.isFirstOpen) {
-                try? await prepareDataReload()
-                userSettings.isFirstOpen = false
-            }
-            
-            handleTrainDisruptions()
         }
     }
     
@@ -96,8 +87,6 @@ struct TabBar: View {
                         try? await prepareDataReload()
                         userSettings.isFirstOpen = false
                     }
-                    
-                    initAsync()
                 }
             TrainMap()
                 .tag(1)
