@@ -16,7 +16,7 @@ struct TrainDisruption: View {
     
     @State var isDefaultsExpanded: Bool = false
     //@State var disruptionData: TrainDisruptionsData
-    @State var disruptionData: TrainDisruptionsData = TrainDisruptionsData(Status: 2, Message: [msg(Content: "1811hrs: EWL - Additional travelling time of 30 minutes between Paya Lebar and Pasir Ris stations due to a train fault at Paya Lebar station.", CreatedDate: "2017-12-11 18:12:06"),msg(Content: "1756hrs: NSL - No train service between Bishan and Woodlands stations towards Jurong East station due to a signal fault. Free bus shuttle are available at designated bus stops.", CreatedDate:"2017-12-11 17:56:50")], AffectedSegments: [affectedSeg(Line: "EWL", Direction: "Both", Stations: "EW8, EW7, EW6,EW5,EW4, EW3, EW2, EW1", FreePublicBus: "EW8, EW7,EW6,EW5, EW4, EW3, EW2, EWI", FreeMRTShuttle: "EW8,EW7,EW6,EW5,EW4,EWB,EW2,EW1", MRTShuttleDirection: "Both"),affectedSeg(Line: "NSL", Direction: "Jurong East", Stations: "NS17,NS16,NS15,NS14,NS13,NS11,NS10,NS9", FreePublicBus: "", FreeMRTShuttle: "NS16,NS15,NS14,NS13, NS11,NS10, N59", MRTShuttleDirection: "Jurong East")])// THIS IS FOR DEBUG
+    @State var disruptionData: TrainDisruptionsData = TrainDisruptionsData(Status: 2, Message: [msg(Content: "1811hrs: EWL - Additional travelling time of 30 minutes between Paya Lebar and Pasir Ris stations due to a train fault at Paya Lebar station.", CreatedDate: "2017-12-11 18:12:06"),msg(Content: "1756hrs: NSL - No train service between Bishan and Woodlands stations towards Jurong East station due to a signal fault. Free bus shuttle are available at designated bus stops.", CreatedDate:"2017-12-11 17:56:50")], AffectedSegments: [affectedSeg(Line: "EWL", Direction: "Both", Stations: "EW8,EW7,EW6,EW5,EW4,EW3,EW2,EW1", FreePublicBus: "EW8, EW7,EW6,EW5, EW4, EW3, EW2, EWI", FreeMRTShuttle: "EW8,EW7,EW6,EW5,EW4,EWB,EW2,EW1", MRTShuttleDirection: "Both"),affectedSeg(Line: "NSL", Direction: "Jurong East", Stations: "NS17,NS16,NS15,NS14,NS13,NS11,NS10,NS9", FreePublicBus: "", FreeMRTShuttle: "NS16,NS15,NS14,NS13, NS11,NS10, N59", MRTShuttleDirection: "Jurong East")])// THIS IS FOR DEBUG
     
 
     func findText(line: String) -> String{
@@ -40,7 +40,12 @@ struct TrainDisruption: View {
         }
         return textToReturn
     }
-    
+    func stationName(text: String) -> String{
+        var textToReturn = ""
+        let listItems = text.components(separatedBy: ",")
+        textToReturn = "\(listItems[(listItems.count)-1]) to \(listItems[0])"
+        return textToReturn
+    }
     var body: some View {
 
         VStack {
@@ -48,7 +53,6 @@ struct TrainDisruption: View {
                 .bold()
                 .font(.largeTitle)
                 .frame(alignment: .leading)
-            
             if isDisruptions{
                 ScrollView{
                     VStack{
@@ -82,14 +86,15 @@ struct TrainDisruption: View {
                             } label: {
                                 HStack{
                                     VStack{
-                                        Text(disruptionData.AffectedSegments[i].Line)
+                                        Text(stationName(text: disruptionData.AffectedSegments[i].Stations))
                                             .bold()
-                                        Text("Affected Stations: \(disruptionData.AffectedSegments[i].Stations)")
+                                        Text("Line: \(disruptionData.AffectedSegments[i].Line)")
                                             .font(.system(size: 15))
                                     }
                                 }.padding(.horizontal)
                             }.foregroundColor(.black)
-                        }
+                            Divider()
+                        }.padding()
                     }
                 }
                     
@@ -118,9 +123,8 @@ struct TrainDisruption: View {
                     isMessage = true
                 }
                     
-            }else{isDefaultsExpanded
+            }else{
                 isDisruptions = true
-                }
             }
         }
     }
