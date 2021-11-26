@@ -91,7 +91,7 @@
 				594A76312742283D00E29B23 /* Views */,
 				593D638D27420DD000FDF440 /* ArrivalSGApp.swift */,
 				594A7636274228AC00E29B23 /* TabBar.swift */,
-				6310C5A32750BE13002E7A26 /* New Group */,
+				6310C5A32750BE13002E7A26 /* Bus UI */,
 				593D639627420DD300FDF440 /* Persistence.swift */,
 				593D639127420DD300FDF440 /* Assets.xcassets */,
 				593D639827420DD300FDF440 /* ArrivalSG.xcdatamodeld */,
@@ -148,12 +148,12 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		6310C5A32750BE13002E7A26 /* New Group */ = {
+		6310C5A32750BE13002E7A26 /* Bus UI */ = {
 			isa = PBXGroup;
 			children = (
 				6310C5A52750BE95002E7A26 /* BusUIView.swift */,
 			);
-			path = "New Group";
+			path = "Bus UI";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
