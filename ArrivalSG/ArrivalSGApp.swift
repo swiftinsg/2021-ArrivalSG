@@ -11,6 +11,10 @@ import SwiftUI
 struct ArrivalSGApp: App {
     let persistenceController = PersistenceController.shared
     
+    init() {
+        UITabBar.appearance().backgroundColor = UIColor.systemBackground
+    }
+    
     var body: some Scene {
         WindowGroup {
             TabBar()

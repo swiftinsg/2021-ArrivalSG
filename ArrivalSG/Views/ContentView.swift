@@ -13,6 +13,7 @@ import MapKit
 struct ContentView: View {
     @ObservedObject var fetchStops = FetchBusStops()
     @ObservedObject var userSettings = UserSettings()
+    @ObservedObject var shownStops = ShownStops()
     
     // Variables
     @State var locationModel = LocationViewModel()
@@ -22,6 +23,7 @@ struct ContentView: View {
     @State var isSettingsOpen = false
     @State var currLocationOpen = true
     @State var favouritedOpen = false
+    @State var shownBusStops: [Int] = []
     
     var body: some View {
         // Map
@@ -32,6 +34,9 @@ struct ContentView: View {
                     .accentColor(Color(.systemPink))
                     .onAppear {
                         locationModel.checkIfLocationEnabled()
+                    }
+                    .onChange(of: shownStops.shownBusStops) { _ in
+                        shownBusStops = shownStops.shownBusStops
                     }
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
@@ -159,7 +164,7 @@ struct SettingsPopup: View {
                 
         for i in 0..<stops!.count {
             busStopArr.append(Int(stops![i].BusStopCode) ?? 0)
-            busStopLoc.append(["Name": stops![i].Description,"BusStopCode": stops![i].BusStopCode, "Latitude": Double(stops![i].Latitude), "Longitude": Double(stops![i].Longitude)])
+            busStopLoc.append(["Name": stops![i].Description,"BusStopCode": Int(stops![i].BusStopCode), "Latitude": Double(stops![i].Latitude), "Longitude": Double(stops![i].Longitude)])
         }
         
         userSettings.sgBusStopLoc = busStopLoc
