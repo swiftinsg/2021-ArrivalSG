@@ -17,9 +17,11 @@ struct ContentView: View {
     // Variables
     @State var locationModel = LocationViewModel()
     @State public var currentlySelected = "Location"
-    @State var isSettingsOpen = false
     @State var centreCoordinate = CLLocationCoordinate2D()
     @State var showStopRadius = 3 // 3km is default
+    @State var isSettingsOpen = false
+    @State var currLocationOpen = true
+    @State var favouritedOpen = false
     
     var body: some View {
         // Map
@@ -33,54 +35,12 @@ struct ContentView: View {
                     }
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
-                    ScrollView {
-                        VStack(alignment: .leading) {
-                            Button(action: {
-                                print("Bus Option 1 Pressed")
-                            }) {
-                                Text("Option 1")
-                                    .frame(width: 400, height: 100)
-                                    .foregroundColor(Color.black)
-                                    .background(Color.red)
-                                    .cornerRadius(20)
-                            }
-                            Button(action: {
-                                print("Bus Option 2 Pressed")
-                            }) {
-                                Text("Option 2")
-                                    .frame(width: 400, height: 100)
-                                    .foregroundColor(Color.black)
-                                    .background(Color.red)
-                                    .cornerRadius(20)
-                            }
-                            Button(action: {
-                                print("Bus Option 3 Pressed")
-                            }) {
-                                Text("Option 3")
-                                    .frame(width: 400, height: 100)
-                                    .foregroundColor(Color.black)
-                                    .background(Color.red)
-                                    .cornerRadius(20)
-                            }
-                            Button(action: {
-                                print("Bus Option 4 Pressed")
-                            }) {
-                                Text("Option 4")
-                                    .frame(width: 400, height: 100)
-                                    .foregroundColor(Color.black)
-                                    .background(Color.red)
-                                    .cornerRadius(20)
-                            }
-                            Button(action: {
-                                print("Bus Option 5 Pressed")
-                            }) {
-                                Text("Option 5")
-                                    .frame(width: 400, height: 100)
-                                    .foregroundColor(Color.black)
-                                    .background(Color.red)
-                                    .cornerRadius(20)
-                            }
-                        }
+                    if (favouritedOpen) {
+                        FavouritedScreen()
+                    }
+                    
+                    if (currLocationOpen) {
+                        CurrLocationScreen()
                     }
                 }
                 
@@ -92,7 +52,7 @@ struct ContentView: View {
                     HStack(alignment: .top) {
                         Spacer()
                             .offset(y: geometry.safeAreaInsets.top)
-                        OverlayControls(isSettingsOpen: $isSettingsOpen)
+                        OverlayControls(isSettingsOpen: $isSettingsOpen, currLocationOpen: $currLocationOpen, favouritedOpen: $favouritedOpen)
                     }
                     Spacer()
                 }
@@ -105,19 +65,27 @@ struct ContentView: View {
 
 struct OverlayControls: View {
     @Binding var isSettingsOpen: Bool
+    @Binding var currLocationOpen: Bool
+    @Binding var favouritedOpen: Bool
     
     var body: some View {
         // Buttons in the top right hand corner
         VStack {
             VStack(spacing: 15) {
                 Button {
-                    print("Current Location button was tapped")
+                    if (currLocationOpen == false) {
+                        currLocationOpen = true
+                        favouritedOpen = false
+                    }
                 } label: {
                     Image(systemName: "location")
                 }
                 Divider()
                 Button {
-                    print("Favourites button was tapped")
+                    if (favouritedOpen == false) {
+                        favouritedOpen = true
+                        currLocationOpen = false
+                    }
                 } label: {
                     Image(systemName: "heart")
                 }
@@ -214,6 +182,32 @@ struct SettingsPopup: View {
             }
             userSettings.busStopData = dataa
             infoText = "Done!"
+        }
+    }
+}
+
+struct FavouritedScreen: View {
+    @ObservedObject var userSettings = UserSettings()
+    
+    var body: some View {
+        VStack {
+            if (userSettings.favouritedBusStops.count == 0) {
+                Text("You haven't favourited any Bus Stops!")
+            } else {
+                ScrollView {
+                    Text("Favourited")
+                }
+            }
+        }
+    }
+}
+
+struct CurrLocationScreen: View {
+    @ObservedObject var userSettings = UserSettings()
+    
+    var body: some View {
+        VStack {
+            Text("CurrLocation")
         }
     }
 }
