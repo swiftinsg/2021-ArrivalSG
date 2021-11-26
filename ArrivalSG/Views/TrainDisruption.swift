@@ -15,11 +15,11 @@ struct TrainDisruption: View {
     
     @State var isDefaultsExpanded: Bool = false
     //@State var disruptionData: TrainDisruptionsData
-    @State var disruptionData: TrainDisruptionsData = TrainDisruptionsData(Status: 2, Message: [msg(Content: "WEST - Hello Messahe", CreatedDate: "123 Time"),msg(Content: "EAST - Hello Messahe", CreatedDate: "123 Time")], AffectedSegments: [affectedSeg(Line: "EAST", Direction: "WONDERLAND", Stations: "1,2,3", FreePublicBus: "No Bus", FreeMRTShuttle: "No Shuttle", MRTShuttleDirection: "No Direction"),affectedSeg(Line: "WEST", Direction: "NOWONDERLAND", Stations: "0,2,5", FreePublicBus: "Magiv Bus", FreeMRTShuttle: "No Shuttle", MRTShuttleDirection: "No Direction")]) // THIS IS FOR DEBUG
+    @State var disruptionData: TrainDisruptionsData = TrainDisruptionsData(Status: 2, Message: [msg(Content: "1811hrs: EWL - Additional travelling time of 30 minutes between Paya Lebar and Pasir Ris stations due to a train fault at Paya Lebar station.", CreatedDate: "2017-12-11 18:12:06"),msg(Content: "1756hrs: NSL - No train service between Bishan and Woodlands stations towards Jurong East station due to a signal fault. Free bus shuttle are available at designated bus stops.", CreatedDate:"2017-12-11 17:56:50")], AffectedSegments: [affectedSeg(Line: "EWL", Direction: "Both", Stations: "EW8, EW7, EW6,EW5,EW4, EW3, EW2, EW1", FreePublicBus: "EW8, EW7,EW6,EW5, EW4, EW3, EW2, EWI", FreeMRTShuttle: "EW8,EW7,EW6,EW5,EW4,EWB,EW2,EW1", MRTShuttleDirection: "Both"),affectedSeg(Line: "NSL", Direction: "Jurong East", Stations: "NS17,NS16,NS15,NS14,NS13,NS11,NS10,NS9", FreePublicBus: "", FreeMRTShuttle: "NS16,NS15,NS14,NS13, NS11,NS10, N59", MRTShuttleDirection: "Jurong East")])// THIS IS FOR DEBUG
+    
     func findText(line: String) -> String{
         var messageContent = ""
         for i in 0..<(disruptionData.Message.count){
-        //ForEach(0..<disruptionData.Message.count, id: \.self) { i in
             let text = disruptionData.Message[i].Content
             let arrayResult = text.contains(line)
             if (arrayResult){
@@ -28,6 +28,15 @@ struct TrainDisruption: View {
         }
         print(messageContent)
         return messageContent
+    }
+    func textCheck(text: String) -> String{
+        var textToReturn = ""
+        if text == ""{
+            textToReturn = "None"
+        }else{
+            textToReturn = text
+        }
+        return textToReturn
     }
     
     var body: some View {
@@ -45,32 +54,35 @@ struct TrainDisruption: View {
                             DisclosureGroup(isExpanded:$isDefaultsExpanded){
                                 VStack(alignment: .leading){
                                     VStack(alignment: .leading){
-                                        Text("Free Public Buses Avalable at")
+                                        Text("Free Public Buses Available at")
                                             .bold()
-                                        Text(disruptionData.AffectedSegments[i].FreePublicBus)
-                                            
+                                        Text(textCheck(text: disruptionData.AffectedSegments[i].FreePublicBus))
                                     }.padding()
-                                    VStack{
-                                        Text("Free MRT Shuttle Avalable at")
+                                    VStack(alignment: .leading){
+                                        Text("Free MRT Shuttle Available at")
                                             .bold()
-                                        Text(disruptionData.AffectedSegments[i].FreeMRTShuttle)
-                                        
+                                        Text(textCheck(text: disruptionData.AffectedSegments[i].FreeMRTShuttle))
                                     }.padding()
-                                    VStack{
+                                    VStack(alignment: .leading){
                                         Text("Message from LTA")
                                             .bold()
-                                        Text(findText(line: disruptionData.AffectedSegments[i].Line))
-                                        Text("Time: \(disruptionData.Message[i].Content)")
+                                        Text(textCheck(text: (findText(line: disruptionData.AffectedSegments[i].Line))))
+                                    }.padding()
+                                    VStack(alignment: .leading){
+                                        Text("Time: \(textCheck(text: (disruptionData.Message[i].CreatedDate)))")
                                     }.padding()
                                 }
                             } label: {
-                                VStack{
-                                    Text(disruptionData.AffectedSegments[i].Line)
-                                        .bold()
-                                    Text("Hello Wolrd")
-                                }
-                            }
-                        }.padding()
+                                HStack{
+                                    VStack{
+                                        Text(disruptionData.AffectedSegments[i].Line)
+                                            .bold()
+                                        //Text("Affected Stations: \(disruptionData.AffectedSegments[i].Stations)")
+                                    }
+                                    //Text("+ 10 Mins")
+                                }.padding()
+                            }.foregroundColor(.black)
+                        }
                     }
                 }
                     
