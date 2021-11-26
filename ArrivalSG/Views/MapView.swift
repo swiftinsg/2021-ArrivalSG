@@ -47,7 +47,7 @@ struct MapView: UIViewRepresentable {
             @ObservedObject var userSettings = UserSettings()
             @State var locationModel = LocationViewModel()
             
-            var busStopLoc = userSettings.sgBusStopLoc
+            let busStopLoc = userSettings.sgBusStopLoc
             
             let centralLocation = CLLocation(latitude: mapView.centerCoordinate.latitude, longitude: mapView.centerCoordinate.longitude)
             func checkPtWithin(pt: CLLocation) -> Double {
@@ -55,15 +55,12 @@ struct MapView: UIViewRepresentable {
                 return distCentreToPt
             }
             
-//            let centreLoc = MKPointAnnotation()
-//            centreLoc.title = "Centre"
-//            centreLoc.coordinate = mapView.centerCoordinate
-//            mapView.addAnnotation(centreLoc)
             mapView.removeAnnotations(mapView.annotations)
+            
             if (busStopLoc.count != 1) {
                 let filteredAnnotations = busStopLoc.filter { val in
                     let pt = CLLocation(latitude: val["Latitude"] as! CLLocationDegrees, longitude: val["Longitude"] as! CLLocationDegrees)
-                    return checkPtWithin(pt: pt) <= 2
+                    return checkPtWithin(pt: pt) <= 1
                 }
                 
                 for i in 0..<filteredAnnotations.count {
