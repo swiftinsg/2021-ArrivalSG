@@ -15,7 +15,20 @@ struct TrainDisruption: View {
     
     @State var isDefaultsExpanded: Bool = false
     //@State var disruptionData: TrainDisruptionsData
-    @State var disruptionData: TrainDisruptionsData = TrainDisruptionsData(Status: 2, Message: [msg(Content: "Hello Messahe", CreatedDate: "123 Time")], AffectedSegments: [affectedSeg(Line: "EAST", Direction: "WONDERLAND", Stations: "1,2,3", FreePublicBus: "No Bus", FreeMRTShuttle: "No Shuttle", MRTShuttleDirection: "No Direction"),affectedSeg(Line: "WEST", Direction: "NOWONDERLAND", Stations: "0,2,5", FreePublicBus: "Magiv Bus", FreeMRTShuttle: "No Shuttle", MRTShuttleDirection: "No Direction")])
+    @State var disruptionData: TrainDisruptionsData = TrainDisruptionsData(Status: 2, Message: [msg(Content: "WEST - Hello Messahe", CreatedDate: "123 Time"),msg(Content: "EAST - Hello Messahe", CreatedDate: "123 Time")], AffectedSegments: [affectedSeg(Line: "EAST", Direction: "WONDERLAND", Stations: "1,2,3", FreePublicBus: "No Bus", FreeMRTShuttle: "No Shuttle", MRTShuttleDirection: "No Direction"),affectedSeg(Line: "WEST", Direction: "NOWONDERLAND", Stations: "0,2,5", FreePublicBus: "Magiv Bus", FreeMRTShuttle: "No Shuttle", MRTShuttleDirection: "No Direction")]) // THIS IS FOR DEBUG
+    func findText(line: String) -> String{
+        var messageContent = ""
+        for i in 0..<(disruptionData.Message.count){
+        //ForEach(0..<disruptionData.Message.count, id: \.self) { i in
+            let text = disruptionData.Message[i].Content
+            let arrayResult = text.contains(line)
+            if (arrayResult){
+                messageContent = text
+            }
+        }
+        print(messageContent)
+        return messageContent
+    }
     
     var body: some View {
 
@@ -26,24 +39,39 @@ struct TrainDisruption: View {
                 .frame(alignment: .leading)
             
             if isDisruptions{
-                VStack{
-                    ForEach($disruptionData.AffectedSegments){ $trainDataSpecifc in
-                        DisclosureGroup(isExpanded:$isDefaultsExpanded){
-                            Text("Free Public Buses Avalable at")
-                                .bold()
-                            Text(trainDataSpecifc.FreePublicBus)
-                                .bold()
-                                .padding()
-                            Text("Free MRT Shuttle Avalable at")
-                                .bold()
-                            Text(trainDataSpecifc.FreeMRTShuttle)
-                                .bold()
-                                .padding()
-                        } label: {
-                            Text(trainDataSpecifc.Line)
-                            
-                        }
-                    }.padding()
+                ScrollView{
+                    VStack{
+                        ForEach(0..<disruptionData.AffectedSegments.count, id: \.self) { i in
+                            DisclosureGroup(isExpanded:$isDefaultsExpanded){
+                                VStack(alignment: .leading){
+                                    VStack(alignment: .leading){
+                                        Text("Free Public Buses Avalable at")
+                                            .bold()
+                                        Text(disruptionData.AffectedSegments[i].FreePublicBus)
+                                            
+                                    }.padding()
+                                    VStack{
+                                        Text("Free MRT Shuttle Avalable at")
+                                            .bold()
+                                        Text(disruptionData.AffectedSegments[i].FreeMRTShuttle)
+                                        
+                                    }.padding()
+                                    VStack{
+                                        Text("Message from LTA")
+                                            .bold()
+                                        Text(findText(line: disruptionData.AffectedSegments[i].Line))
+                                        Text("Time: \(disruptionData.Message[i].Content)")
+                                    }.padding()
+                                }
+                            } label: {
+                                VStack{
+                                    Text(disruptionData.AffectedSegments[i].Line)
+                                        .bold()
+                                    Text("Hello Wolrd")
+                                }
+                            }
+                        }.padding()
+                    }
                 }
                     
             }else{
@@ -51,7 +79,7 @@ struct TrainDisruption: View {
             }
             
         }.onAppear {
-            let disruptionData = userSettings.trainDisruptions
+            //let disruptionData = userSettings.trainDisruptions
             if disruptionData.Status == 1 {
                 isDisruptions = false
             }else{
