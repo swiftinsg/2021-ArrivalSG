@@ -69,19 +69,24 @@ struct TrainDisruption: View {
                                             .bold()
                                         Text(textCheck(text: (findText(line: disruptionData.AffectedSegments[i].Line))))
                                     }.padding()
-                                    VStack(alignment: .leading){
-                                        Text("Time: \(textCheck(text: (disruptionData.Message[i].CreatedDate)))")
-                                    }.padding()
+                                    HStack{
+                                        Spacer()
+                                        VStack{
+                                            Text("Time: \(textCheck(text: (disruptionData.Message[i].CreatedDate)))")
+                                                .font(.system(size: 15))
+                                        }
+                                        Spacer()
+                                    }
                                 }
                             } label: {
                                 HStack{
                                     VStack{
                                         Text(disruptionData.AffectedSegments[i].Line)
                                             .bold()
-                                        //Text("Affected Stations: \(disruptionData.AffectedSegments[i].Stations)")
+                                        Text("Affected Stations: \(disruptionData.AffectedSegments[i].Stations)")
+                                            .font(.system(size: 15))
                                     }
-                                    //Text("+ 10 Mins")
-                                }.padding()
+                                }.padding(.horizontal)
                             }.foregroundColor(.black)
                         }
                     }
@@ -91,11 +96,14 @@ struct TrainDisruption: View {
                 VStack{
                     Text("There are no Train Disruptions")
                     if isMessage{
-                        Text("NEW UPDATE: \(disruptionData.Message[0].Content)")
+                        Text("Latest News")
                             .bold()
+                            .font(.system(size: 25))
+                            .padding()
+                        Text(disruptionData.Message[0].Content)
                         Text("Time: \(disruptionData.Message[0].CreatedDate)")
                     }
-                }
+                }.padding()
             }
             
         }.onAppear {
