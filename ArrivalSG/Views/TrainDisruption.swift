@@ -47,6 +47,11 @@ struct TrainDisruption: View {
         textToReturn = "\(listItems[(listItems.count)-1]) to \(listItems[0])"
         return textToReturn
     }
+    func fullName(line: String) -> String{
+        let MRTDict = ["EWL" : "East-West Line", "TEL" : "Thomson-East Coast Line","NSL" : "North-South Line", "NEL" : "North East Line","DTL" : "Downtown Line", "CCL" : "Circle Line","BP" : "Bukit Panjang LRT","SK" : "Sengkang-Punggol LRT"]
+        let textToReturn = MRTDict[line]!
+        return textToReturn
+    }
     var body: some View {
 
         VStack {
@@ -89,10 +94,16 @@ struct TrainDisruption: View {
                                     VStack{
                                         Text(stationName(text: disruptionData.AffectedSegments[i].Stations))
                                             .bold()
-                                        Text("Line: \(disruptionData.AffectedSegments[i].Line)")
+                                        Text((fullName(line: disruptionData.AffectedSegments[i].Line)))
+                                            .foregroundColor(SwiftUI.Color.white)
+                                            .padding(3.0)
+                                            .padding(.horizontal)
+                                            .background(Rectangle().fill(Color(disruptionData.AffectedSegments[i].Line)))
                                             .font(.system(size: 15))
+                                            .cornerRadius(30)
+                                            
                                     }
-                                }.padding(.horizontal)
+                                }
                             }.foregroundColor(.black)
                                 .padding()
 
@@ -128,7 +139,7 @@ struct TrainDisruption: View {
                     
             }else{
                 isDisruptions = true
-                for i in 0..<(disruptionData.AffectedSegments.count-1){
+                for _ in 0..<(disruptionData.AffectedSegments.count-1){
                     isDefaultsExpanded.append(false)
                 }
             }
