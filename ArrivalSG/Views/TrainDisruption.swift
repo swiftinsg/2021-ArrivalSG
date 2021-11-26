@@ -12,6 +12,7 @@ struct TrainDisruption: View {
     @ObservedObject var fetchStops = FetchBusStops()
     @ObservedObject var userSettings = UserSettings()
     @State var isDisruptions = false
+    @State var isMessage = false
     
     @State var isDefaultsExpanded: Bool = false
     //@State var disruptionData: TrainDisruptionsData
@@ -87,13 +88,27 @@ struct TrainDisruption: View {
                 }
                     
             }else{
-                Text("There are no Train Disruptions")
+                VStack{
+                    Text("There are no Train Disruptions")
+                    if isMessage{
+                        Text("NEW UPDATE: \(disruptionData.Message[0].Content)")
+                            .bold()
+                        Text("Time: \(disruptionData.Message[0].CreatedDate)")
+                    }
+                }
             }
             
         }.onAppear {
             //let disruptionData = userSettings.trainDisruptions
             if disruptionData.Status == 1 {
                 isDisruptions = false
+                // This is for if there are no disruptions but have messages
+                if disruptionData.Message.count < 1{
+                    isMessage = false
+                }else{
+                    isMessage = true
+                }
+                    
             }else{
                 isDisruptions = true
             }
