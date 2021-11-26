@@ -14,13 +14,11 @@ struct TrainDisruption: View {
     @State var isDisruptions = false
     @State var isMessage = false
     
-    @State var isDefaultsExpanded = []
+    @State var isDefaultsExpanded: Bool = false
     //@State var disruptionData: TrainDisruptionsData
     @State var disruptionData: TrainDisruptionsData = TrainDisruptionsData(Status: 2, Message: [msg(Content: "1811hrs: EWL - Additional travelling time of 30 minutes between Paya Lebar and Pasir Ris stations due to a train fault at Paya Lebar station.", CreatedDate: "2017-12-11 18:12:06"),msg(Content: "1756hrs: NSL - No train service between Bishan and Woodlands stations towards Jurong East station due to a signal fault. Free bus shuttle are available at designated bus stops.", CreatedDate:"2017-12-11 17:56:50")], AffectedSegments: [affectedSeg(Line: "EWL", Direction: "Both", Stations: "EW8, EW7, EW6,EW5,EW4, EW3, EW2, EW1", FreePublicBus: "EW8, EW7,EW6,EW5, EW4, EW3, EW2, EWI", FreeMRTShuttle: "EW8,EW7,EW6,EW5,EW4,EWB,EW2,EW1", MRTShuttleDirection: "Both"),affectedSeg(Line: "NSL", Direction: "Jurong East", Stations: "NS17,NS16,NS15,NS14,NS13,NS11,NS10,NS9", FreePublicBus: "", FreeMRTShuttle: "NS16,NS15,NS14,NS13, NS11,NS10, N59", MRTShuttleDirection: "Jurong East")])// THIS IS FOR DEBUG
     
-    extension String {
-        var boolValue: Bool { (self as NSString).boolValue }
-    }
+
     func findText(line: String) -> String{
         var messageContent = ""
         for i in 0..<(disruptionData.Message.count){
@@ -55,7 +53,7 @@ struct TrainDisruption: View {
                 ScrollView{
                     VStack{
                         ForEach(0..<disruptionData.AffectedSegments.count, id: \.self) { i in
-                            DisclosureGroup(isExpanded: $isDefaultsExpanded[i].boolValue)){
+                            DisclosureGroup(isExpanded: $isDefaultsExpanded){
                                 VStack(alignment: .leading){
                                     VStack(alignment: .leading){
                                         Text("Free Public Buses Available at")
@@ -122,13 +120,8 @@ struct TrainDisruption: View {
                     
             }else{isDefaultsExpanded
                 isDisruptions = true
-                ForEach(0..<disruptionData.AffectedSegments.count, id: \.self) { i in
-                    isDefaultsExpanded[i] = false
+                }
             }
         }
-
     }
 }
-
-
-
