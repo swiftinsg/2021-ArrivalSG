@@ -246,18 +246,20 @@ struct CurrLocationScreen: View {
                     ForEach(0..<filteredBusStopData[i]["Services"].count, id: \.self) { j in
                         HStack{
                             Text(filteredBusStopData[i]["Services"][j]["ServiceNo"])
-                            Text(filteredBusStopData[i]["Services"][j]["NextBus"]["EstimatedArrival"])
-                                .padding(.horizontal)
-                                .background(Rectangle())
-                                .cornerRadius(20)
-                            Text(filteredBusStopData[i]["Services"][j]["NextBus2"]["EstimatedArrival"])
-                                .padding(.horizontal)
-                                .background(Rectangle())
-                                .cornerRadius(20)
-                            Text(filteredBusStopData[i]["Services"][j]["NextBus3"]["EstimatedArrival"])
-                                .padding(.horizontal)
-                                .background(Rectangle())
-                                .cornerRadius(20)
+                            HStack{
+                                Text(filteredBusStopData[i]["Services"][j]["NextBus"]["EstimatedArrival"])
+                                    .padding(.horizontal)
+                                    .background(Rectangle())
+                                    .cornerRadius(20)
+                                Text(filteredBusStopData[i]["Services"][j]["NextBus2"]["EstimatedArrival"])
+                                    .padding(.horizontal)
+                                    .background(Rectangle())
+                                    .cornerRadius(20)
+                                Text(filteredBusStopData[i]["Services"][j]["NextBus3"]["EstimatedArrival"])
+                                    .padding(.horizontal)
+                                    .background(Rectangle())
+                                    .cornerRadius(20)
+                            }
                         }
                         Divider()
                 } label: {
