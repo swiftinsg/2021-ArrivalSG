@@ -32,9 +32,6 @@ struct ContentView: View {
                 MapView(centreCoordinate: $centreCoordinate, showNewStops: $isShowNewStops)
                     .edgesIgnoringSafeArea(.all)
                     .accentColor(Color(.systemPink))
-                    .onChange(of: shownStops.shownBusStops) { _ in
-                        shownBusStops = shownStops.shownBusStops
-                    }
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
                     if (favouritedOpen) {
@@ -195,6 +192,7 @@ struct SettingsPopup: View {
                     }
                 }
             }
+            print(dataa)
             userSettings.busStopData = dataa
             infoText = "Done!"
         }

@@ -34,7 +34,17 @@ class FetchBuses: ObservableObject {
             if let data = data {
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                        self.stopsData = ["BusStopCode": json["BusStopCode"] as? String, "Services": json["Services"] as? [[String:Any]] ?? []]
+                        let busStopCode = (json["BusStopCode"] as? String)
+                        let services = (json["Services"] as? [[String:Any]])
+                        var newServices:[[String:Any]] = []
+                        for i in 0..<services!.count {
+                            let currServices = services![i]
+                            let nextBus = currServices["NextBus"] as? [String:String]
+                            let nextBus2 = currServices["NextBus2"] as? [String:String]
+                            let nextBus3 = currServices["NextBus3"] as? [String:String]
+                            newServices.append(["ServiceNo": currServices["ServiceNo"], "Operator": currServices["Operator"], "NextBus": nextBus, "NextBus2": nextBus2, "NextBus3": nextBus3])
+                        }
+                        self.stopsData = ["BusStopCode": busStopCode as? String, "Services": newServices]
                         return completion(.success(self.stopsData))
                     }
                 } catch let error as NSError {
