@@ -208,91 +208,38 @@ struct FavouritedScreen: View {
     
     @State var shownStopCodes:[Int] = []
     @State var busData:[[String:Any]] = []
-    @State var isDefaultExpanded = [false]
+    @State var isDefaultsExpanded = [false]
     
     let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
     
     var body: some View {
         VStack {
-                ForEach(0..<userSettings.favouritedBusStops.count, id: \.self) { i in
-                    DisclosureGroup(isExpanded: $isDefaultsExpanded[i]) {
-                        VStack(alignment: .leading) {
-                            VStack(alignment: .leading) {
-                                Text("Free Public Buses Available at")
-                                    .bold()
-                                Text(textCheck(text: disruptionData.AffectedSegments[i].FreePublicBus))
-                            }.padding()
-                            VStack(alignment: .leading) {
-                                Text("Free MRT Shuttle Available at")
-                                    .bold()
-                                Text(textCheck(text: disruptionData.AffectedSegments[i].FreeMRTShuttle))
-                            }.padding()
-                            VStack(alignment: .leading) {
-                                Text("Message from LTA")
-                                    .bold()
-                                Text(textCheck(text: (findText(line: disruptionData.AffectedSegments[i].Line))))
-                            }.padding()
-                            HStack {
-                                Spacer()
-                                VStack {
-                                    Text("Time: \(textCheck(text: (disruptionData.Message[i].CreatedDate)))")
-                                        .font(.system(size: 15))
-                                }
-                                Spacer()
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(stationName(text: disruptionData.AffectedSegments[i].Stations))
-                                    .bold()
-                                    .font(.title3)
-                                Text((fullName(line: disruptionData.AffectedSegments[i].Line)))
-                                    .foregroundColor(SwiftUI.Color.white)
-                                    .padding(3.0)
-                                    .padding(.horizontal, 7.0)
-                                    .background(Rectangle().fill(Color(disruptionData.AffectedSegments[i].Line)))
-                                    .font(.system(size: 15))
-                                    .cornerRadius(30)
-                            }
-                        }
+            ForEach(0..<userSettings.favouritedBusStops.count, id: \.self) { i in
+                DisclosureGroup(isExpanded: $isDefaultsExpanded[i]) {
+                    VStack{
+                        Text("hello")
+                    }
+                } label: {
+                    Text("S")
                     }.foregroundColor(.black)
-                        .padding()
+                    .padding()
+                Divider()
+                Spacer()
+            }
+        }.onAppear{
+            print(userSettings.favouritedBusStops)
+            print(userSettings.favouritedBusStops.count)
+            if (userSettings.favouritedBusStops.count == 0) || (userSettings.favouritedBusStops.count == 1) {
+                
+            }else{
+                for _ in (0..<(userSettings.favouritedBusStops.count)) {
+                    isDefaultsExpanded.append(false)
+                }
+            }
+        }
+    }
+}
 
-                    Divider()
-                }
-            }
-        }
-           // } //else {
-                //ScrollView {
-                  // Text("Favourited")
-               // }
-           // }
-     //   }//.onChange(of: shownStops.shownBusStops){ _ in
-        //    shownStopCodes = shownStops.shownBusStops
-      //      getNewData()
-     //   }
-     //   .onReceive(timer) { _ in
-            getNewData()
-        }
-        .onAppear{
-            shownStopCodes = shownStops.shownBusStops
-        }
-    }
-    
-    func getNewData() {
-        for stopCode in shownStopCodes {
-            fetchStopData.fetchBuses(BusStopCode: stopCode) { result in
-                switch result {
-                case .success(let stop):
-                    busData.append(stop)
-                case .failure(let error):
-                    print("Error in Getting Bus Stops: \(error)")
-                }
-            }
-        }
-    }
-//}
 
 struct CurrLocationScreen: View {
     @ObservedObject var userSettings = UserSettings()
