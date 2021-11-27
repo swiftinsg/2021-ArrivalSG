@@ -50,6 +50,12 @@ class UserSettings: ObservableObject {
         }
     }
     
+    @Published var lastUpdatedBus: Date {
+        didSet {
+            userDefaults.set(favouritedBusStops, forKey: "lastUpdatedBus")
+        }
+    }
+    
     init() {
         self.sgBusStops = userDefaults.object(forKey: "sgBusStops") as? [Int] ?? [0]
         self.busStopData = userDefaults.object(forKey: "busStopData") as? [[String:Any]] ?? [[:]]
@@ -67,5 +73,6 @@ class UserSettings: ObservableObject {
         }
         self.trainDisruptions = userDefaults.object(forKey: "trainDisruptions") as? TrainDisruptionsData ?? TrainDisruptionsData(Status: 1, Message: [msg(Content: "", CreatedDate: "")], AffectedSegments: [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")])
         self.isFirstOpen = userDefaults.object(forKey: "isFirstOpen") as? Bool ?? true
+        self.lastUpdatedBus = userDefaults.object(forKey: "lastUpdatedBus") as? Date ?? Date.now
     }
 }

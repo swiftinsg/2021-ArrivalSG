@@ -203,6 +203,13 @@ struct SettingsPopup: View {
 
 struct FavouritedScreen: View {
     @ObservedObject var userSettings = UserSettings()
+    @ObservedObject var shownStops = ShownStops()
+    @ObservedObject var fetchStopData = FetchBuses()
+    
+    @State var shownStopCodes:[Int] = []
+    @State var busData:[[String:Any]] = []
+    
+    let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
     
     var body: some View {
         VStack {
@@ -213,17 +220,44 @@ struct FavouritedScreen: View {
                     Text("Favourited")
                 }
             }
+        }.onChange(of: shownStops.shownBusStops){ _ in
+            shownStopCodes = shownStops.shownBusStops
+            getNewData()
+        }
+        .onReceive(timer) { _ in
+            getNewData()
+        }
+        .onAppear{
+            shownStopCodes = shownStops.shownBusStops
+        }
+    }
+    
+    func getNewData() {
+        for stopCode in shownStopCodes {
+            fetchStopData.fetchBuses(BusStopCode: stopCode) { result in
+                switch result {
+                case .success(let stop):
+                    busData.append(stop)
+                case .failure(let error):
+                    print("Error in Getting Bus Stops: \(error)")
+                }
+            }
         }
     }
 }
 
 struct CurrLocationScreen: View {
     @ObservedObject var userSettings = UserSettings()
+    @ObservedObject var shownStops = ShownStops()
+    @ObservedObject var fetchStopData = FetchBuses()
+    
     @State var isDefaultsBusStopExpanded = [false]
     @State var filteredBusStopData:[[String:Any]] = []
     @Binding var shownBusStops: [Int]
-    @ObservedObject var shownStops = ShownStops()
     @State var shownStopCodes:[Int] = []
+    @State var busData:[[String:Any]] = []
+    
+    let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
     
     func busType(type : String) -> String{
         var textToReturn = ""
@@ -241,50 +275,28 @@ struct CurrLocationScreen: View {
     
     var body: some View {
         VStack {
-            ForEach(0..<filteredBusStopData.count, id: \.self) { i in
-                DisclosureGroup(isExpanded: $isDefaultsBusStopExpanded[i]) {
-                    ForEach(0..<filteredBusStopData[i]["Services"].count, id: \.self) { j in
-                        HStack{
-                            Text(filteredBusStopData[i]["Services"][j]["ServiceNo"])
-                            HStack{
-                                Text(filteredBusStopData[i]["Services"][j]["NextBus"]["EstimatedArrival"])
-                                    .padding(.horizontal)
-                                    .background(Rectangle())
-                                    .cornerRadius(20)
-                                Text(filteredBusStopData[i]["Services"][j]["NextBus2"]["EstimatedArrival"])
-                                    .padding(.horizontal)
-                                    .background(Rectangle())
-                                    .cornerRadius(20)
-                                Text(filteredBusStopData[i]["Services"][j]["NextBus3"]["EstimatedArrival"])
-                                    .padding(.horizontal)
-                                    .background(Rectangle())
-                                    .cornerRadius(20)
-                            }
-                        }
-                        Divider()
-                } label: {
-                    VStack{
-                        Text("BusStopCode: \(filteredBusStopData[i]["BusStopCode"])")
-                            .bold()
-                        }
-                    }
-                }
-            }
+
         }.onChange(of: shownStops.shownBusStops){ _ in
             shownStopCodes = shownStops.shownBusStops
-            let busStopData = userSettings.busStopData
-            for i in 0..<shownBusStops.count{
-                for j in 0..<busStopData.count{
-                    if (busStopData[j]["BusStopCode"] as? String) == String(shownBusStops[i]){
-                        filteredBusStopData.append(["BusStopCode":busStopData[j]["BusStopCode"], "Services": busStopData[j]["Services"]])
-                    }
-                }
-            }
+            getNewData()
+        }
+        .onReceive(timer) { _ in
+            getNewData()
         }
         .onAppear{
-            print("onAppear Working")
-            for _ in 0..<(shownStops.shownBusStops.count - 1) {
-                isDefaultsBusStopExpanded.append(false)
+            shownStopCodes = shownStops.shownBusStops
+        }
+    }
+    
+    func getNewData() {
+        for stopCode in shownStopCodes {
+            fetchStopData.fetchBuses(BusStopCode: stopCode) { result in
+                switch result {
+                case .success(let stop):
+                    busData.append(stop)
+                case .failure(let error):
+                    print("Error in Getting Bus Stops: \(error)")
+                }
             }
         }
     }
