@@ -29,12 +29,9 @@ struct ContentView: View {
         // Map
         GeometryReader { geometry in
             ZStack {
-                MapView(centreCoordinate: $centreCoordinate)
+                MapView(centreCoordinate: $centreCoordinate, showNewStops: $isShowNewStops)
                     .edgesIgnoringSafeArea(.all)
                     .accentColor(Color(.systemPink))
-                    .onAppear {
-                        locationModel.checkIfLocationEnabled()
-                    }
                     .onChange(of: shownStops.shownBusStops) { _ in
                         shownBusStops = shownStops.shownBusStops
                     }
@@ -114,7 +111,7 @@ struct OverlayControls: View {
                 .cornerRadius(8)
             
             Button {
-                showStops.showNewStops.toggle()
+                isShowNewStops = true
             } label: {
                 Image(systemName: "gobackward")
             }

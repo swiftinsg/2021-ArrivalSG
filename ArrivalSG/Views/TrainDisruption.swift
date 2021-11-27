@@ -132,7 +132,8 @@ struct TrainDisruption: View {
             }
             
         }.onAppear {
-            //disruptionData = userSettings.trainDisruptions
+            disruptionData = userSettings.trainDisruptions
+            
             if disruptionData.Status == 1 {
                 isDisruptions = false
                 // This is for if there are no disruptions but have messages

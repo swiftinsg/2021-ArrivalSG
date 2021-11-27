@@ -11,26 +11,52 @@ import SwiftUI
 
 struct MapView: UIViewRepresentable {
     @Binding var centreCoordinate: CLLocationCoordinate2D
+    @Binding var showNewStops: Bool
     @State var locationModel = LocationViewModel()
     @ObservedObject var userSettings = UserSettings()
+    @ObservedObject var shownStops = ShownStops()
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        uiView.setRegion(locationModel.region, animated: true)
         uiView.showsUserLocation = true
         
-        var region = locationModel.region {
-            didSet {
-                uiView.setRegion(locationModel.region, animated: true)
+        if showNewStops {
+            let busStopLoc = userSettings.sgBusStopLoc
+            var shownBusStops:[Int] = []
+            
+            let centralLocation = CLLocation(latitude: uiView.centerCoordinate.latitude, longitude: uiView.centerCoordinate.longitude)
+            func checkPtWithin(pt: CLLocation) -> Double {
+                let distCentreToPt = pt.distance(from: centralLocation) / 1000 // In km
+                return distCentreToPt
             }
+            
+            uiView.removeAnnotations(uiView.annotations)
+            if (busStopLoc.count != 1) {
+                let filteredAnnotations = busStopLoc.filter { val in
+                    let pt = CLLocation(latitude: val["Latitude"] as! CLLocationDegrees, longitude: val["Longitude"] as! CLLocationDegrees)
+                    return checkPtWithin(pt: pt) <= 1
+                }
+                
+                for i in 0..<filteredAnnotations.count {
+                    let newLocation = MKPointAnnotation()
+                    newLocation.title = filteredAnnotations[i]["Name"] as? String
+                    newLocation.coordinate = CLLocationCoordinate2D(latitude: filteredAnnotations[i]["Latitude"] as! CLLocationDegrees, longitude: filteredAnnotations[i]["Longitude"] as! CLLocationDegrees)
+                    uiView.addAnnotation(newLocation)
+                    shownBusStops.append(Int("\(filteredAnnotations[i]["BusStopCode"]!)")!)
+                }
+            }
+            shownStops.shownBusStops = shownBusStops
         }
         
-        uiView.setRegion(locationModel.region, animated: true)
+        showNewStops = false
+ 
     }
     
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
         mapView.setRegion(locationModel.region, animated: true)
+        locationModel.mapView = mapView
+        locationModel.checkIfLocationEnabled()
         return mapView
     }
     
@@ -48,42 +74,13 @@ class Coordinator: NSObject, MKMapViewDelegate, CLLocationManagerDelegate {
     
     func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
         parent.centreCoordinate = mapView.centerCoordinate
-        @ObservedObject var userSettings = UserSettings()
-        @State var locationModel = LocationViewModel()
-        @ObservedObject var shownStops = ShownStops()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        let busStopLoc = userSettings.sgBusStopLoc
-        var shownBusStops:[Int] = []
-        
-        let centralLocation = CLLocation(latitude: mapView.centerCoordinate.latitude, longitude: mapView.centerCoordinate.longitude)
-        func checkPtWithin(pt: CLLocation) -> Double {
-            let distCentreToPt = pt.distance(from: centralLocation) / 1000 // In km
-            return distCentreToPt
-        }
-        
-        if shownStops.showNewStops {
-            mapView.removeAnnotations(mapView.annotations)
-            
-            if (busStopLoc.count != 1) {
-                let filteredAnnotations = busStopLoc.filter { val in
-                    let pt = CLLocation(latitude: val["Latitude"] as! CLLocationDegrees, longitude: val["Longitude"] as! CLLocationDegrees)
-                    return checkPtWithin(pt: pt) <= 1
-                }
-                
-                for i in 0..<filteredAnnotations.count {
-                    let newLocation = MKPointAnnotation()
-                    newLocation.title = filteredAnnotations[i]["Name"] as? String
-                    newLocation.coordinate = CLLocationCoordinate2D(latitude: filteredAnnotations[i]["Latitude"] as! CLLocationDegrees, longitude: filteredAnnotations[i]["Longitude"] as! CLLocationDegrees)
-                    mapView.addAnnotation(newLocation)
-                    shownBusStops.append(Int("\(filteredAnnotations[i]["BusStopCode"]!)")!)
-                }
-            }
-            shownStops.shownBusStops = shownBusStops
-        }
     }
 }
 
 class ShownStops: ObservableObject {
     @Published var shownBusStops: [Int] = []
-    @Published var showNewStops: Bool = false
 }
