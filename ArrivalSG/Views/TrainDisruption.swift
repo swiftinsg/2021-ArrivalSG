@@ -103,7 +103,6 @@ struct TrainDisruption: View {
                                             .background(Rectangle().fill(Color(disruptionData.AffectedSegments[i].Line)))
                                             .font(.system(size: 15))
                                             .cornerRadius(30)
-                                            
                                     }
                                 }
                             }.foregroundColor(.black)

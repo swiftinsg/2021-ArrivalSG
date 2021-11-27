@@ -220,7 +220,6 @@ struct FavouritedScreen: View {
 struct CurrLocationScreen: View {
     @ObservedObject var userSettings = UserSettings()
     @State var isDefaultsBusStopExpanded = [false]
-    @State var isDefaultsBusExpanded = [false]
     @State var filteredBusStopData:[[String:Any]] = []
     @Binding var shownBusStops: [Int]
     @ObservedObject var shownStops = ShownStops()
@@ -247,15 +246,15 @@ struct CurrLocationScreen: View {
                     ForEach(0..<filteredBusStopData[i]["Services"].count, id: \.self) { j in
                         HStack{
                             Text(filteredBusStopData[i]["Services"][j]["ServiceNo"])
-                            Text(filteredBusStopData[i]["Services"][j]["NextBus"]["EstimatedArrival"]).toISODate()))
+                            Text(filteredBusStopData[i]["Services"][j]["NextBus"]["EstimatedArrival"])
                                 .padding(.horizontal)
                                 .background(Rectangle())
                                 .cornerRadius(20)
-                            Text((filteredBusStopData[i]["Services"][j]["NextBus2"]["EstimatedArrival"]).toISODate())
+                            Text(filteredBusStopData[i]["Services"][j]["NextBus2"]["EstimatedArrival"])
                                 .padding(.horizontal)
                                 .background(Rectangle())
                                 .cornerRadius(20)
-                            Text(filteredBusStopData[i]["Services"][j]["NextBus3"]["EstimatedArrival"]).toISODate()))
+                            Text(filteredBusStopData[i]["Services"][j]["NextBus3"]["EstimatedArrival"])
                                 .padding(.horizontal)
                                 .background(Rectangle())
                                 .cornerRadius(20)
@@ -269,7 +268,7 @@ struct CurrLocationScreen: View {
                     }
                 }
             }
-        }.onChange(of: shownStops.shownBusStops, perform: {_ in
+        }.onChange(of: shownStops.shownBusStops){ _ in
             shownStopCodes = shownStops.shownBusStops
             let busStopData = userSettings.busStopData
             for i in 0..<shownBusStops.count{
@@ -279,12 +278,12 @@ struct CurrLocationScreen: View {
                     }
                 }
             }
-            print(shownBusStops)
-            print(filteredBusStopData)
         }
-        .onAppear {
-            shownStopCodes = shownStops.shownBusStops
-            print(shownStops.shownBusStops)
+        .onAppear{
+            print("onAppear Working")
+            for _ in 0..<(shownStops.shownBusStops.count - 1) {
+                isDefaultsBusStopExpanded.append(false)
+            }
         }
     }
 }
