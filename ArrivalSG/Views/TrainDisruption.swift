@@ -118,22 +118,25 @@ struct TrainDisruption: View {
                 VStack{
                     Text("There are no Train Disruptions")
                     if isMessage {
-                        Text("Latest News")
+                        Text("Latest Updates")
                             .bold()
                             .font(.system(size: 25))
                             .padding()
-                        Text(disruptionData.Message[0].Content)
-                        Text("Time: \(disruptionData.Message[0].CreatedDate)")
+                        ForEach(0..<disruptionData.Message.count, id: \.self) { i in
+                            Text(disruptionData.Message[i].Content)
+                            Text("Time: \(disruptionData.Message[i].CreatedDate)")
+                            Spacer()
+                        }
                     }
                 }.padding()
             }
             
         }.onAppear {
-            disruptionData = userSettings.trainDisruptions
+            //disruptionData = userSettings.trainDisruptions
             if disruptionData.Status == 1 {
                 isDisruptions = false
                 // This is for if there are no disruptions but have messages
-                if disruptionData.Message.count > 0 {
+                if disruptionData.Message.count > 0 && disruptionData.Message[0].Content != "" {
                     isMessage = true
                 } else {
                     isMessage = false
