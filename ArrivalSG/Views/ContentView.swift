@@ -29,11 +29,11 @@ struct ContentView: View {
         // Map
         GeometryReader { geometry in
             ZStack {
-                MapView(centreCoordinate: $centreCoordinate, showNewStops: $isShowNewStops)
+                MapView(centreCoordinate: $centreCoordinate, showNewStops: $isShowNewStops, shownBusStops: $shownBusStops)
                     .edgesIgnoringSafeArea(.all)
                     .accentColor(Color(.systemPink))
-                    .onChange(of: shownStops.shownBusStops) { _ in
-                        shownBusStops = shownStops.shownBusStops
+                    .onChange(of: shownBusStops) { _ in
+                      
                     }
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
@@ -243,13 +243,11 @@ struct FavouritedScreen: View {
 
 struct CurrLocationScreen: View {
     @ObservedObject var userSettings = UserSettings()
-    @ObservedObject var shownStops = ShownStops()
     @ObservedObject var fetchStopData = FetchBuses()
     
     @State var isDefaultsBusStopExpanded = [false]
     @State var filteredBusStopData:[[String:Any]] = []
     @Binding var shownBusStops: [Int]
-    @State var shownStopCodes:[Int] = []
     @State var busData:[[String:Any]] = []
     
     let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
@@ -270,21 +268,26 @@ struct CurrLocationScreen: View {
     
     var body: some View {
         VStack {
+            List(shownBusStops, id: \.self) { shownBusStop in
+                HStack{
+                    Text("\(shownBusStop)")
+                }
+                
+            }
 
-        }.onChange(of: shownStops.shownBusStops){ _ in
-            shownStopCodes = shownStops.shownBusStops
+        }.onChange(of: shownBusStops){ _ in
             getNewData()
         }
         .onReceive(timer) { _ in
             getNewData()
         }
         .onAppear{
-            shownStopCodes = shownStops.shownBusStops
+            
         }
     }
     
     func getNewData() {
-        for stopCode in shownStopCodes {
+        for stopCode in shownBusStops {
             fetchStopData.fetchBuses(BusStopCode: stopCode) { result in
                 switch result {
                 case .success(let stop):

@@ -14,14 +14,13 @@ struct MapView: UIViewRepresentable {
     @Binding var showNewStops: Bool
     @State var locationModel = LocationViewModel()
     @ObservedObject var userSettings = UserSettings()
-    @ObservedObject var shownStops = ShownStops()
+    @Binding var shownBusStops : [Int]
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         uiView.showsUserLocation = true
         
         if showNewStops {
             let busStopLoc = userSettings.sgBusStopLoc
-            var shownBusStops:[Int] = []
             
             let centralLocation = CLLocation(latitude: uiView.centerCoordinate.latitude, longitude: uiView.centerCoordinate.longitude)
             func checkPtWithin(pt: CLLocation) -> Double {
@@ -42,9 +41,10 @@ struct MapView: UIViewRepresentable {
                     newLocation.coordinate = CLLocationCoordinate2D(latitude: filteredAnnotations[i]["Latitude"] as! CLLocationDegrees, longitude: filteredAnnotations[i]["Longitude"] as! CLLocationDegrees)
                     uiView.addAnnotation(newLocation)
                     shownBusStops.append(Int("\(filteredAnnotations[i]["BusStopCode"]!)")!)
+                    print(Int("\(filteredAnnotations[i]["BusStopCode"]!)")!)
                 }
             }
-            shownStops.shownBusStops = shownBusStops
+        print(shownBusStops)
         }
         showNewStops = false
     }
@@ -78,7 +78,6 @@ class Coordinator: NSObject, MKMapViewDelegate, CLLocationManagerDelegate {
         
     }
 }
-
 class ShownStops: ObservableObject {
     @Published var shownBusStops: [Int] = []
 }
