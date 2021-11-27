@@ -22,6 +22,7 @@ struct ContentView: View {
     @State var isSettingsOpen = false
     @State var currLocationOpen = true
     @State var favouritedOpen = false
+    @State var isShowNewStops = false
     @State var shownBusStops: [Int] = []
     
     var body: some View {
@@ -52,11 +53,11 @@ struct ContentView: View {
                     SettingsPopup(showStopRadius: $showStopRadius)
                 }
                 
-                VStack(alignment: .trailing) {
+                VStack(alignment: .leading) {
                     HStack(alignment: .top) {
+                        OverlayControls(isSettingsOpen: $isSettingsOpen, currLocationOpen: $currLocationOpen, favouritedOpen: $favouritedOpen, isShowNewStops: $isShowNewStops)
                         Spacer()
                             .offset(y: geometry.safeAreaInsets.top)
-                        OverlayControls(isSettingsOpen: $isSettingsOpen, currLocationOpen: $currLocationOpen, favouritedOpen: $favouritedOpen)
                     }
                     Spacer()
                 }
@@ -68,9 +69,12 @@ struct ContentView: View {
 }
 
 struct OverlayControls: View {
+    @ObservedObject var showStops = ShownStops()
+
     @Binding var isSettingsOpen: Bool
     @Binding var currLocationOpen: Bool
     @Binding var favouritedOpen: Bool
+    @Binding var isShowNewStops: Bool
     
     var body: some View {
         // Buttons in the top right hand corner
@@ -103,6 +107,16 @@ struct OverlayControls: View {
                 isSettingsOpen.toggle()
             } label: {
                 Image(systemName: "gear")
+            }
+                .frame(width: 50)
+                .padding(.vertical, 12)
+                .background(Color(uiColor:  .white))
+                .cornerRadius(8)
+            
+            Button {
+                showStops.showNewStops.toggle()
+            } label: {
+                Image(systemName: "gobackward")
             }
                 .frame(width: 50)
                 .padding(.vertical, 12)

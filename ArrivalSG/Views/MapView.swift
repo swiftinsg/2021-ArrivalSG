@@ -61,26 +61,29 @@ class Coordinator: NSObject, MKMapViewDelegate, CLLocationManagerDelegate {
             return distCentreToPt
         }
         
-        mapView.removeAnnotations(mapView.annotations)
-        
-        if (busStopLoc.count != 1) {
-            let filteredAnnotations = busStopLoc.filter { val in
-                let pt = CLLocation(latitude: val["Latitude"] as! CLLocationDegrees, longitude: val["Longitude"] as! CLLocationDegrees)
-                return checkPtWithin(pt: pt) <= 1
-            }
+        if shownStops.showNewStops {
+            mapView.removeAnnotations(mapView.annotations)
             
-            for i in 0..<filteredAnnotations.count {
-                let newLocation = MKPointAnnotation()
-                newLocation.title = filteredAnnotations[i]["Name"] as? String
-                newLocation.coordinate = CLLocationCoordinate2D(latitude: filteredAnnotations[i]["Latitude"] as! CLLocationDegrees, longitude: filteredAnnotations[i]["Longitude"] as! CLLocationDegrees)
-                mapView.addAnnotation(newLocation)
-                shownBusStops.append(Int("\(filteredAnnotations[i]["BusStopCode"]!)")!)
+            if (busStopLoc.count != 1) {
+                let filteredAnnotations = busStopLoc.filter { val in
+                    let pt = CLLocation(latitude: val["Latitude"] as! CLLocationDegrees, longitude: val["Longitude"] as! CLLocationDegrees)
+                    return checkPtWithin(pt: pt) <= 1
+                }
+                
+                for i in 0..<filteredAnnotations.count {
+                    let newLocation = MKPointAnnotation()
+                    newLocation.title = filteredAnnotations[i]["Name"] as? String
+                    newLocation.coordinate = CLLocationCoordinate2D(latitude: filteredAnnotations[i]["Latitude"] as! CLLocationDegrees, longitude: filteredAnnotations[i]["Longitude"] as! CLLocationDegrees)
+                    mapView.addAnnotation(newLocation)
+                    shownBusStops.append(Int("\(filteredAnnotations[i]["BusStopCode"]!)")!)
+                }
             }
+            shownStops.shownBusStops = shownBusStops
         }
-        shownStops.shownBusStops = shownBusStops
     }
 }
 
 class ShownStops: ObservableObject {
     @Published var shownBusStops: [Int] = []
+    @Published var showNewStops: Bool = false
 }
