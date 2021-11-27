@@ -217,11 +217,19 @@ struct FavouritedScreen: View {
 
 struct CurrLocationScreen: View {
     @ObservedObject var userSettings = UserSettings()
+    @ObservedObject var shownStops = ShownStops()
+    
+    @State var shownStopCodes:[Int] = []
     
     var body: some View {
         VStack {
             Text("Current Location")
+        }.onAppear {
+            shownStopCodes = shownStops.shownBusStops
         }
+        .onChange(of: shownStops.shownBusStops, perform: { i in
+            shownStopCodes = shownStops.shownBusStops
+        })
     }
 }
 

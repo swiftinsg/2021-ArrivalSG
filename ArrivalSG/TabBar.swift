@@ -43,6 +43,7 @@ struct TabBar: View {
         reloadData()
         
         func reloadData() {
+            @ObservedObject var userSettings = UserSettings()
             let data = userSettings.sgBusStops
             var dataa:[[String:Any]] = []
             

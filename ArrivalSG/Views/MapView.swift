@@ -46,9 +46,7 @@ struct MapView: UIViewRepresentable {
             }
             shownStops.shownBusStops = shownBusStops
         }
-        
         showNewStops = false
- 
     }
     
     func makeUIView(context: Context) -> MKMapView {

@@ -18,6 +18,7 @@
 		594A76332742285500E29B23 /* TrainDisruption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A76322742285500E29B23 /* TrainDisruption.swift */; };
 		594A76352742285F00E29B23 /* TrainMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A76342742285F00E29B23 /* TrainMap.swift */; };
 		594A7637274228AC00E29B23 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A7636274228AC00E29B23 /* TabBar.swift */; };
+		596D867E27521B0E00AE37CB /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 596D867D27521B0E00AE37CB /* SwiftDate */; };
 		59B48BF72742412D00554628 /* FetchBusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF62742412D00554628 /* FetchBusStops.swift */; };
 		59B48BF92742494A00554628 /* FetchBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF82742494A00554628 /* FetchBuses.swift */; };
 		59B48BFE274261F800554628 /* BusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFD274261F800554628 /* BusStops.swift */; };
@@ -56,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				596D867E27521B0E00AE37CB /* SwiftDate in Frameworks */,
 				59F704BC27421395006B2D18 /* Snap in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -163,6 +165,7 @@
 			name = ArrivalSG;
 			packageProductDependencies = (
 				59F704BB27421395006B2D18 /* Snap */,
+				596D867D27521B0E00AE37CB /* SwiftDate */,
 			);
 			productName = ArrivalSG;
 			productReference = 593D638A27420DD000FDF440 /* ArrivalSG.app */;
@@ -194,6 +197,7 @@
 			mainGroup = 593D638127420DD000FDF440;
 			packageReferences = (
 				59F704BA27421395006B2D18 /* XCRemoteSwiftPackageReference "Snap" */,
+				596D867C27521B0E00AE37CB /* XCRemoteSwiftPackageReference "SwiftDate" */,
 			);
 			productRefGroup = 593D638B27420DD000FDF440 /* Products */;
 			projectDirPath = "";
@@ -445,6 +449,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		596D867C27521B0E00AE37CB /* XCRemoteSwiftPackageReference "SwiftDate" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/malcommac/SwiftDate";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
 		59F704BA27421395006B2D18 /* XCRemoteSwiftPackageReference "Snap" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nerdsupremacist/Snap.git";
@@ -456,6 +468,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		596D867D27521B0E00AE37CB /* SwiftDate */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 596D867C27521B0E00AE37CB /* XCRemoteSwiftPackageReference "SwiftDate" */;
+			productName = SwiftDate;
+		};
 		59F704BB27421395006B2D18 /* Snap */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 59F704BA27421395006B2D18 /* XCRemoteSwiftPackageReference "Snap" */;
