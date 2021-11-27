@@ -72,7 +72,7 @@ struct OverlayControls: View {
     @Binding var currLocationOpen: Bool
     @Binding var favouritedOpen: Bool
     @Binding var isShowNewStops: Bool
-    
+   
     var body: some View {
         // Buttons in the top right hand corner
         VStack {
@@ -208,23 +208,71 @@ struct FavouritedScreen: View {
     
     @State var shownStopCodes:[Int] = []
     @State var busData:[[String:Any]] = []
+    @State var isDefaultExpanded = [false]
     
     let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
     
     var body: some View {
         VStack {
-            if (userSettings.favouritedBusStops.count == 0) {
-                Text("You haven't favourited any Bus Stops!")
-            } else {
-                ScrollView {
-                    Text("Favourited")
+                ForEach(0..<userSettings.favouritedBusStops.count, id: \.self) { i in
+                    DisclosureGroup(isExpanded: $isDefaultsExpanded[i]) {
+                        VStack(alignment: .leading) {
+                            VStack(alignment: .leading) {
+                                Text("Free Public Buses Available at")
+                                    .bold()
+                                Text(textCheck(text: disruptionData.AffectedSegments[i].FreePublicBus))
+                            }.padding()
+                            VStack(alignment: .leading) {
+                                Text("Free MRT Shuttle Available at")
+                                    .bold()
+                                Text(textCheck(text: disruptionData.AffectedSegments[i].FreeMRTShuttle))
+                            }.padding()
+                            VStack(alignment: .leading) {
+                                Text("Message from LTA")
+                                    .bold()
+                                Text(textCheck(text: (findText(line: disruptionData.AffectedSegments[i].Line))))
+                            }.padding()
+                            HStack {
+                                Spacer()
+                                VStack {
+                                    Text("Time: \(textCheck(text: (disruptionData.Message[i].CreatedDate)))")
+                                        .font(.system(size: 15))
+                                }
+                                Spacer()
+                            }
+                        }
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(stationName(text: disruptionData.AffectedSegments[i].Stations))
+                                    .bold()
+                                    .font(.title3)
+                                Text((fullName(line: disruptionData.AffectedSegments[i].Line)))
+                                    .foregroundColor(SwiftUI.Color.white)
+                                    .padding(3.0)
+                                    .padding(.horizontal, 7.0)
+                                    .background(Rectangle().fill(Color(disruptionData.AffectedSegments[i].Line)))
+                                    .font(.system(size: 15))
+                                    .cornerRadius(30)
+                            }
+                        }
+                    }.foregroundColor(.black)
+                        .padding()
+
+                    Divider()
                 }
             }
-        }.onChange(of: shownStops.shownBusStops){ _ in
-            shownStopCodes = shownStops.shownBusStops
-            getNewData()
         }
-        .onReceive(timer) { _ in
+           // } //else {
+                //ScrollView {
+                  // Text("Favourited")
+               // }
+           // }
+     //   }//.onChange(of: shownStops.shownBusStops){ _ in
+        //    shownStopCodes = shownStops.shownBusStops
+      //      getNewData()
+     //   }
+     //   .onReceive(timer) { _ in
             getNewData()
         }
         .onAppear{
@@ -244,7 +292,7 @@ struct FavouritedScreen: View {
             }
         }
     }
-}
+//}
 
 struct CurrLocationScreen: View {
     @ObservedObject var userSettings = UserSettings()
