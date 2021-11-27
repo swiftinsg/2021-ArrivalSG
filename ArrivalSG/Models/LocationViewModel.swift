@@ -50,7 +50,7 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             locationAuthError = ["Location Access Denied", "You have denied this app to use your location. Go into settings to resolve it."]
             isAlertPresented = true
         case .authorizedAlways, .authorizedWhenInUse:
-            region = MKCoordinateRegion(center: locationManager.location!.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+            region = MKCoordinateRegion(center: locationManager.location?.coordinate ?? CLLocationCoordinate2D(latitude: 1.3521, longitude: 103.8198), latitudinalMeters: 1000, longitudinalMeters: 1000)
             userLocation = locationManager.location?.coordinate
             locationManager.startUpdatingLocation()
         @unknown default:

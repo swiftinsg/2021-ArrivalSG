@@ -21,12 +21,11 @@
 		59B48BF92742494A00554628 /* FetchBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF82742494A00554628 /* FetchBuses.swift */; };
 		59B48BFE274261F800554628 /* BusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFD274261F800554628 /* BusStops.swift */; };
 		59BFFB9027473E900012C464 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59BFFB8F27473E900012C464 /* MapView.swift */; };
-		59EC019D27510E800001F2C6 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 59EC019C27510E800001F2C6 /* Secrets.plist */; };
-		59EC019F27510E8C0001F2C6 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 59EC019E27510E8C0001F2C6 /* Secrets.plist */; };
 		59F58B2B2743B73C00E93DDE /* LocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2A2743B73C00E93DDE /* LocationViewModel.swift */; };
 		59F58B2D2743BFFC00E93DDE /* TrainDisruptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2C2743BFFC00E93DDE /* TrainDisruptions.swift */; };
 		59F58B2F2743C03500E93DDE /* TrainDisruptionsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2E2743C03500E93DDE /* TrainDisruptionsData.swift */; };
 		59F704BC27421395006B2D18 /* Snap in Frameworks */ = {isa = PBXBuildFile; productRef = 59F704BB27421395006B2D18 /* Snap */; };
+		FE735A5A2751DBBE00370E40 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = FE735A592751DBBE00370E40 /* Secrets.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,11 +45,10 @@
 		59B48BFA2742599700554628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		59B48BFD274261F800554628 /* BusStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStops.swift; sourceTree = "<group>"; };
 		59BFFB8F27473E900012C464 /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
-		59EC019C27510E800001F2C6 /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
-		59EC019E27510E8C0001F2C6 /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
 		59F58B2A2743B73C00E93DDE /* LocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewModel.swift; sourceTree = "<group>"; };
 		59F58B2C2743BFFC00E93DDE /* TrainDisruptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainDisruptions.swift; sourceTree = "<group>"; };
 		59F58B2E2743C03500E93DDE /* TrainDisruptionsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainDisruptionsData.swift; sourceTree = "<group>"; };
+		FE735A592751DBBE00370E40 /* Secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Secrets.plist; path = ArrivalSG/Secrets.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,8 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				59B48BFA2742599700554628 /* Info.plist */,
-				59EC019C27510E800001F2C6 /* Secrets.plist */,
-				59EC019E27510E8C0001F2C6 /* Secrets.plist */,
+				FE735A592751DBBE00370E40 /* Secrets.plist */,
 				59F58B322743C12100E93DDE /* Models */,
 				59E0C933274E9013004249BD /* Structs */,
 				594A76312742283D00E29B23 /* Views */,
@@ -212,9 +209,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				59EC019F27510E8C0001F2C6 /* Secrets.plist in Resources */,
-				59EC019D27510E800001F2C6 /* Secrets.plist in Resources */,
 				593D639527420DD300FDF440 /* Preview Assets.xcassets in Resources */,
+				FE735A5A2751DBBE00370E40 /* Secrets.plist in Resources */,
 				593D639227420DD300FDF440 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
