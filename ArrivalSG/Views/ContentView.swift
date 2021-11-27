@@ -4,7 +4,6 @@
 //
 //  Created by Ethan Chew on 15/11/21.
 //
-
 import SwiftUI
 import Snap
 import CoreData
@@ -212,7 +211,7 @@ struct CurrLocationScreen: View {
     
     var body: some View {
         VStack {
-            Text("CurrLocation")
+            Text("Current Location")
         }
     }
 }
