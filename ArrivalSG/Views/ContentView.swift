@@ -32,6 +32,9 @@ struct ContentView: View {
                 MapView(centreCoordinate: $centreCoordinate, showNewStops: $isShowNewStops)
                     .edgesIgnoringSafeArea(.all)
                     .accentColor(Color(.systemPink))
+                    .onChange(of: shownStops.shownBusStops) { _ in
+                        shownBusStops = shownStops.shownBusStops
+                    }
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
                     if (favouritedOpen) {
@@ -39,7 +42,7 @@ struct ContentView: View {
                     }
                     
                     if (currLocationOpen) {
-                        CurrLocationScreen()
+                        CurrLocationScreen(shownBusStops: $shownBusStops)
                     }
                 }
                 
@@ -192,7 +195,6 @@ struct SettingsPopup: View {
                     }
                 }
             }
-            print(dataa)
             userSettings.busStopData = dataa
             infoText = "Done!"
         }
@@ -217,19 +219,73 @@ struct FavouritedScreen: View {
 
 struct CurrLocationScreen: View {
     @ObservedObject var userSettings = UserSettings()
+    @State var isDefaultsBusStopExpanded = [false]
+    @State var isDefaultsBusExpanded = [false]
+    @State var filteredBusStopData:[[String:Any]] = []
+    @Binding var shownBusStops: [Int]
     @ObservedObject var shownStops = ShownStops()
-    
     @State var shownStopCodes:[Int] = []
+    
+    func busType(type : String) -> String{
+        var textToReturn = ""
+        if type == "SD"{
+            textToReturn = "Single Deck"
+        }else if (type == "DD"){
+            textToReturn = "Double Deck"
+        }else if (type == "BD"){
+            textToReturn = "Bendy"
+        }else{
+            textToReturn = "Bus Type not Found"
+        }
+        return textToReturn
+    }
     
     var body: some View {
         VStack {
-            Text("Current Location")
-        }.onAppear {
+            ForEach(0..<filteredBusStopData.count, id: \.self) { i in
+                DisclosureGroup(isExpanded: $isDefaultsBusStopExpanded[i]) {
+                    ForEach(0..<filteredBusStopData[i]["Services"].count, id: \.self) { j in
+                        HStack{
+                            Text(filteredBusStopData[i]["Services"][j]["ServiceNo"])
+                            Text(filteredBusStopData[i]["Services"][j]["NextBus"]["EstimatedArrival"]).toISODate()))
+                                .padding(.horizontal)
+                                .background(Rectangle())
+                                .cornerRadius(20)
+                            Text((filteredBusStopData[i]["Services"][j]["NextBus2"]["EstimatedArrival"]).toISODate())
+                                .padding(.horizontal)
+                                .background(Rectangle())
+                                .cornerRadius(20)
+                            Text(filteredBusStopData[i]["Services"][j]["NextBus3"]["EstimatedArrival"]).toISODate()))
+                                .padding(.horizontal)
+                                .background(Rectangle())
+                                .cornerRadius(20)
+                        }
+                        Divider()
+                } label: {
+                    VStack{
+                        Text("BusStopCode: \(filteredBusStopData[i]["BusStopCode"])")
+                            .bold()
+                        }
+                    }
+                }
+            }
+        }.onChange(of: shownStops.shownBusStops, perform: {_ in
             shownStopCodes = shownStops.shownBusStops
+            let busStopData = userSettings.busStopData
+            for i in 0..<shownBusStops.count{
+                for j in 0..<busStopData.count{
+                    if (busStopData[j]["BusStopCode"] as? String) == String(shownBusStops[i]){
+                        filteredBusStopData.append(["BusStopCode":busStopData[j]["BusStopCode"], "Services": busStopData[j]["Services"]])
+                    }
+                }
+            }
+            print(shownBusStops)
+            print(filteredBusStopData)
         }
-        .onChange(of: shownStops.shownBusStops, perform: { i in
+        .onAppear {
             shownStopCodes = shownStops.shownBusStops
-        })
+            print(shownStops.shownBusStops)
+        }
     }
 }
 
