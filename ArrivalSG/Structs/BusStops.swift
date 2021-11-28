@@ -18,7 +18,7 @@ struct BusStopsDouble: Decodable {
 struct BusStopLoc: Decodable, Hashable {
     let BusStopCode: String
     let RoadName: String
-    let Description: String
+    let Description: String 
     let Latitude: String
     let Longitude: String
 }

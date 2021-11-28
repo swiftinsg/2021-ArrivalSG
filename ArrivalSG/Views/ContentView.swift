@@ -268,11 +268,15 @@ struct CurrLocationScreen: View {
     
     var body: some View {
         VStack {
-            List(shownBusStops, id: \.self) { shownBusStop in
-                HStack{
-                    Text("\(shownBusStop)")
+            ForEach(0..<filteredBusStopData.count,id:\.self){ i in
+                DisclosureGroup(isExpanded: $isDefaultsExpanded[i]) {
+                    HStack{
+                        Text("")
+                    }
+                }label: {
+                    
                 }
-                
+
             }
 
         }.onChange(of: shownBusStops){ _ in
@@ -284,7 +288,11 @@ struct CurrLocationScreen: View {
                     }
                 }
             }
-            print(filteredBusStopData)
+            print("I reached")
+            for i in 0..<filteredBusStopData.count{
+                print(filteredBusStopData[i])
+                print("")
+            }
             var x = [false]
             for _ in 0..<filteredBusStopData.count{
                 x.append(false)
