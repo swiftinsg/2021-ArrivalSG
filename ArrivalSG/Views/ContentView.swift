@@ -299,23 +299,9 @@ struct CurrLocationScreen: View {
 
         }.onChange(of: shownBusStops){ _ in
             getNewData()
-            for i in 0..<shownBusStops.count{
-                for j in 0..<busData.count{
-                    if (busData[j]["BusStopCode"] as? String) == String(shownBusStops[i]){
-                        filteredBusStopData.append(["BusStopCode": busData[j]["BusStopCode"], "Services": busData[j]["Services"]])
-                    }
-                }
-            }
+            
             print("I reached")
-            for i in 0..<filteredBusStopData.count{
-                print(filteredBusStopData[i])
-                print("")
-            }
-            var x = [false]
-            for _ in 0..<filteredBusStopData.count{
-                x.append(false)
-            }
-            isDefaultsExpanded = x
+            print("\(userSettings.sgBusStopLoc)")
         }
         .onReceive(timer) { _ in
             getNewData() // Recieve new data from API every 55s
