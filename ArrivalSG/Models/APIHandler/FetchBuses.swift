@@ -44,7 +44,9 @@ class FetchBuses: ObservableObject {
                             let nextBus3 = currServices["NextBus3"] as? [String:String]
                             newServices.append(["ServiceNo": currServices["ServiceNo"], "Operator": currServices["Operator"], "NextBus": nextBus, "NextBus2": nextBus2, "NextBus3": nextBus3])
                         }
-                        self.stopsData = ["BusStopCode": busStopCode as? String, "Services": newServices]
+                        DispatchQueue.main.async {
+                            self.stopsData = ["BusStopCode": busStopCode as? String, "Services": newServices]
+                        }
                         return completion(.success(self.stopsData))
                     }
                 } catch let error as NSError {

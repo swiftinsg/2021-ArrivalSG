@@ -14,7 +14,7 @@ struct MapView: UIViewRepresentable {
     @Binding var showNewStops: Bool
     @State var locationModel = LocationViewModel()
     @ObservedObject var userSettings = UserSettings()
-    @Binding var shownBusStops : [Int]
+    @Binding var shownBusStops : [[String:String]]
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         uiView.showsUserLocation = true
@@ -31,7 +31,7 @@ struct MapView: UIViewRepresentable {
             
             uiView.removeAnnotations(uiView.annotations)
             if (busStopLoc.count != 1) {
-                var temp: [Int] = []
+                var temp: [[String:String]] = []
                 let filteredAnnotations = busStopLoc.filter { val in
                     let pt = CLLocation(latitude: val["Latitude"] as! CLLocationDegrees, longitude: val["Longitude"] as! CLLocationDegrees)
                     return checkPtWithin(pt: pt) <= 1
@@ -42,7 +42,7 @@ struct MapView: UIViewRepresentable {
                     newLocation.title = filteredAnnotations[i]["Name"] as? String
                     newLocation.coordinate = CLLocationCoordinate2D(latitude: filteredAnnotations[i]["Latitude"] as! CLLocationDegrees, longitude: filteredAnnotations[i]["Longitude"] as! CLLocationDegrees)
                     uiView.addAnnotation(newLocation)
-                    temp.append(Int("\(filteredAnnotations[i]["BusStopCode"]!)")!)
+                    temp.append((filteredAnnotations[i] as? [String:String])!)
                 }
                 
                 shownBusStops = temp

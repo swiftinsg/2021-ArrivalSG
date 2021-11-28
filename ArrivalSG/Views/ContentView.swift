@@ -23,7 +23,7 @@ struct ContentView: View {
     @State var currLocationOpen = true
     @State var favouritedOpen = false
     @State var isShowNewStops = false
-    @State var shownBusStops: [Int] = []
+    @State var shownBusStops: [[String:String]] = []
     
     var body: some View {
         // Map
@@ -38,7 +38,7 @@ struct ContentView: View {
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
                     if (favouritedOpen) {
-                        FavouritedScreen()
+                        FavouritedScreen(shownBusStops: $shownBusStops)
                     }
                     
                     if (currLocationOpen) {
@@ -206,7 +206,7 @@ struct FavouritedScreen: View {
     @ObservedObject var shownStops = ShownStops()
     @ObservedObject var fetchStopData = FetchBuses()
     
-    @State var shownStopCodes:[Int] = []
+    @Binding var shownBusStops: [[String:String]]
     @State var busData:[[String:Any]] = []
     @State var isDefaultsExpanded = [false]
     
@@ -243,8 +243,8 @@ struct FavouritedScreen: View {
     }
     
     func getNewData() {
-        for stopCode in userSettings.favouritedBusStops {
-            fetchStopData.fetchBuses(BusStopCode: stopCode) { result in
+        for stopData in shownBusStops {
+            fetchStopData.fetchBuses(BusStopCode: Int(stopData["BusStopCode"]!)!) { result in
                 switch result {
                 case .success(let stop):
                     DispatchQueue.main.async {
@@ -264,8 +264,7 @@ struct CurrLocationScreen: View {
     @ObservedObject var fetchStopData = FetchBuses()
     
     @State var isDefaultsExpanded = [false]
-    @State var filteredBusStopData:[[String:Any]] = []
-    @Binding var shownBusStops: [Int]
+    @Binding var shownBusStops: [[String:String]]
     @State var busData:[[String:Any]] = []
     
     let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
@@ -286,52 +285,26 @@ struct CurrLocationScreen: View {
     
     var body: some View {
         VStack {
-            List(shownBusStops, id: \.self) { shownBusStop in
-                HStack{
-                    Text("\(shownBusStop)")
-                }
-                
-            }
-
+            
         }.onChange(of: shownBusStops){ _ in
             getNewData()
-            for i in 0..<shownBusStops.count{
-                for j in 0..<busData.count{
-                    if (busData[j]["BusStopCode"] as? String) == String(shownBusStops[i]){
-                        filteredBusStopData.append(["BusStopCode": busData[j]["BusStopCode"], "Services": busData[j]["Services"]])
-                    }
-                }
-            }
-            print(filteredBusStopData)
             var x = [false]
-            for _ in 0..<filteredBusStopData.count{
-                x.append(false)
-            }
+//            for _ in 0..<filteredBusStopData.count{
+//                x.append(false)
+//            }
             isDefaultsExpanded = x
         }
         .onReceive(timer) { _ in
             getNewData() // Recieve new data from API every 55s
         }
         .onAppear{
-            for i in 0..<shownBusStops.count{
-                for j in 0..<busData.count{
-                    if (busData[j]["BusStopCode"] as? String) == String(shownBusStops[i]){
-                        filteredBusStopData.append(["BusStopCode": busData[j]["BusStopCode"], "Services": busData[j]["Services"]])
-                    }
-                }
-            }
-            print(filteredBusStopData)
-            if filteredBusStopData.count > 2{
-                for _ in (0..<(filteredBusStopData.count)) {
-                    isDefaultsExpanded.append(false)
-                }
-            }
+            
         }
     }
 
     func getNewData() {
-        for stopCode in shownBusStops {
-            fetchStopData.fetchBuses(BusStopCode: stopCode) { result in
+        for stopData in shownBusStops {
+            fetchStopData.fetchBuses(BusStopCode: Int(stopData["BusStopCode"]!)!) { result in
                 switch result {
                 case .success(let stop):
                     DispatchQueue.main.async {
