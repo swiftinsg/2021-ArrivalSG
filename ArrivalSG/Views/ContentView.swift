@@ -33,7 +33,7 @@ struct ContentView: View {
                     .edgesIgnoringSafeArea(.all)
                     .accentColor(Color(.systemPink))
                     .onChange(of: shownBusStops) { _ in
-                      
+                        
                     }
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
@@ -67,12 +67,12 @@ struct ContentView: View {
 
 struct OverlayControls: View {
     @ObservedObject var showStops = ShownStops()
-
+    
     @Binding var isSettingsOpen: Bool
     @Binding var currLocationOpen: Bool
     @Binding var favouritedOpen: Bool
     @Binding var isShowNewStops: Bool
-   
+    
     var body: some View {
         // Buttons in the top right hand corner
         VStack {
@@ -105,20 +105,20 @@ struct OverlayControls: View {
             } label: {
                 Image(systemName: "gear")
             }
-                .frame(width: 50)
-                .padding(.vertical, 12)
-                .background(Color(uiColor:  .white))
-                .cornerRadius(8)
+            .frame(width: 50)
+            .padding(.vertical, 12)
+            .background(Color(uiColor:  .white))
+            .cornerRadius(8)
             
             Button {
                 isShowNewStops = true
             } label: {
                 Image(systemName: "gobackward")
             }
-                .frame(width: 50)
-                .padding(.vertical, 12)
-                .background(Color(uiColor:  .white))
-                .cornerRadius(8)
+            .frame(width: 50)
+            .padding(.vertical, 12)
+            .background(Color(uiColor:  .white))
+            .cornerRadius(8)
         }
         .padding()
     }
@@ -145,11 +145,11 @@ struct SettingsPopup: View {
                 } label: {
                     Text("Reload Bus Data")
                 }
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(.cyan)
-                    .cornerRadius(5)
-                    .disabled(buttonDisabled == true)
+                .padding()
+                .foregroundColor(.white)
+                .background(.cyan)
+                .cornerRadius(5)
+                .disabled(buttonDisabled == true)
                 Text(infoText)
             }
             
@@ -174,7 +174,7 @@ struct SettingsPopup: View {
         print(stops)
         for i in 0..<stops!.count {
             busStopArr.append(Int(stops![i].BusStopCode) ?? 0)
-            busStopLoc.append(["Name": stops![i].Description,"RoadName": stops![i].RoadName, "BusStopCode": Int(stops![i].BusStopCode), "Latitude": Double(stops![i].Latitude), "Longitude": Double(stops![i].Longitude)])
+            busStopLoc.append(["Name": stops![i].Description,"RoadName": stops![i].RoadName, "BusStopCode": String(stops![i].BusStopCode), "Latitude": String(stops![i].Latitude), "Longitude": String(stops![i].Longitude)])
         }
         
         userSettings.sgBusStopLoc = busStopLoc
@@ -221,7 +221,7 @@ struct FavouritedScreen: View {
                     }
                 } label: {
                     Text("S")
-                    }.foregroundColor(.black)
+                }.foregroundColor(.black)
                     .padding()
                 Divider()
                 Spacer()
@@ -266,6 +266,7 @@ struct CurrLocationScreen: View {
     @State var isDefaultsExpanded = [false]
     @Binding var shownBusStops: [[String:String]]
     @State var busData:[[String:Any]] = []
+    @State var buses: [[String: String]] = []
     
     let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
     
@@ -285,24 +286,50 @@ struct CurrLocationScreen: View {
     
     var body: some View {
         VStack {
-            ForEach(0..<shownBusStops.count,id:\.self){ i in
-                DisclosureGroup(isExpanded: $isDefaultsExpanded[i]) {
-                    HStack{
-                        Text("")
+            ForEach(shownBusStops, id: \.self
+            ){ stopData in
+                var stopName = stopData["Name"]!
+                var roadName = stopData["RoadName"]!
+                DisclosureGroup{
+                    VStack{
+                        
                     }
-                }label: {
+                }label:{
+                    HStack{
+                        VStack{
+                            VStack{
+                                Text("\(stopName)")
+                                     .bold()
+                                Text("\(roadName)")
+                                    .opacity(0.9)
+                            }
+                            
+                        }
+                        Spacer()
+                        VStack{
+                            
+                        }
+                    }
+                }
+                
+                
+            }
+            
+        }
+        .padding(.top)
+        .onChange(of: shownBusStops){ _ in
+            getNewData()
+            print(shownBusStops)
+            var x = [false]
+            for i in 0..<shownBusStops.count{
+                x.append(false)
+                //let temp =
+                for j in 0..<(busData["Services"] as? [[String: Any]]).count{
                     
                 }
-
             }
-
-        }.onChange(of: shownBusStops){ _ in
-            getNewData()
-            var x = [false]
-//            for _ in 0..<filteredBusStopData.count{
-//                x.append(false)
-//            }
             isDefaultsExpanded = x
+            
         }
         .onReceive(timer) { _ in
             getNewData() // Recieve new data from API every 55s
@@ -311,7 +338,7 @@ struct CurrLocationScreen: View {
             
         }
     }
-
+    
     func getNewData() {
         for stopData in shownBusStops {
             fetchStopData.fetchBuses(BusStopCode: Int(stopData["BusStopCode"]!)!) { result in

@@ -32,17 +32,28 @@ struct MapView: UIViewRepresentable {
             uiView.removeAnnotations(uiView.annotations)
             if (busStopLoc.count != 1) {
                 var temp: [[String:String]] = []
-                let filteredAnnotations = busStopLoc.filter { val in
-                    let pt = CLLocation(latitude: val["Latitude"] as! CLLocationDegrees, longitude: val["Longitude"] as! CLLocationDegrees)
+                var filteredAnnotations = busStopLoc.filter { val in
+                    let pt = CLLocation(latitude: Double(val["Latitude"]!) as! CLLocationDegrees, longitude: Double(val["Longitude"]!) as! CLLocationDegrees)
                     return checkPtWithin(pt: pt) <= 1
                 }
+                
                 
                 for i in 0..<filteredAnnotations.count {
                     let newLocation = MKPointAnnotation()
                     newLocation.title = filteredAnnotations[i]["Name"] as? String
                     newLocation.coordinate = CLLocationCoordinate2D(latitude: filteredAnnotations[i]["Latitude"] as! CLLocationDegrees, longitude: filteredAnnotations[i]["Longitude"] as! CLLocationDegrees)
                     uiView.addAnnotation(newLocation)
-                    temp.append((filteredAnnotations[i] as? [String:String])!)
+                    temp.append(filteredAnnotations[i].mapValues { value -> String in
+                        if let str = value as? String {
+                            return str
+                        } else if let int = value as? Int {
+                            return String(int)
+                        } else if let double = value as? Double {
+                            return String(double)
+                        } else {
+                            return ""
+                        }
+                    })
                 }
                 
                 shownBusStops = temp
