@@ -263,7 +263,7 @@ struct CurrLocationScreen: View {
     @ObservedObject var userSettings = UserSettings()
     @ObservedObject var fetchStopData = FetchBuses()
     
-    @State var isDefaultsBusStopExpanded = [false]
+    @State var isDefaultsExpanded = [false]
     @State var filteredBusStopData:[[String:Any]] = []
     @Binding var shownBusStops: [Int]
     @State var busData:[[String:Any]] = []
@@ -294,16 +294,41 @@ struct CurrLocationScreen: View {
             }
 
         }.onChange(of: shownBusStops){ _ in
-            getNewData() // Recieve new data from API once shownBusStops changes
+            getNewData()
+            for i in 0..<shownBusStops.count{
+                for j in 0..<busData.count{
+                    if (busData[j]["BusStopCode"] as? String) == String(shownBusStops[i]){
+                        filteredBusStopData.append(["BusStopCode": busData[j]["BusStopCode"], "Services": busData[j]["Services"]])
+                    }
+                }
+            }
+            print(filteredBusStopData)
+            var x = [false]
+            for _ in 0..<filteredBusStopData.count{
+                x.append(false)
+            }
+            isDefaultsExpanded = x
         }
         .onReceive(timer) { _ in
             getNewData() // Recieve new data from API every 55s
         }
         .onAppear{
-            
+            for i in 0..<shownBusStops.count{
+                for j in 0..<busData.count{
+                    if (busData[j]["BusStopCode"] as? String) == String(shownBusStops[i]){
+                        filteredBusStopData.append(["BusStopCode": busData[j]["BusStopCode"], "Services": busData[j]["Services"]])
+                    }
+                }
+            }
+            print(filteredBusStopData)
+            if filteredBusStopData.count > 2{
+                for _ in (0..<(filteredBusStopData.count)) {
+                    isDefaultsExpanded.append(false)
+                }
+            }
         }
     }
-    
+
     func getNewData() {
         for stopCode in shownBusStops {
             fetchStopData.fetchBuses(BusStopCode: stopCode) { result in
