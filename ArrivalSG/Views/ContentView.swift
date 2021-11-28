@@ -419,12 +419,16 @@ struct BusView: View {
                             
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack {
-                                    if let servicesData = busData["Services"], let services = servicesData as? [[String: Any]] {
+                                    if let servicesData = busData["Services"],
+                                        let services = servicesData as? [[String: Any]] {
+                                        
                                         ForEach(0..<services.count) { serviceIndex in
-                                            let service = services[serviceIndex]
-                                            let serviceNo = service["ServiceNo"] as! String
-                                            Text(serviceNo)
-                                                .foregroundColor(Color("DarkBlue"))
+                                            if services.count - 1 > serviceIndex {
+                                                let service = services[serviceIndex]
+                                                let serviceNo = service["ServiceNo"] as! String
+                                                Text(serviceNo)
+                                                    .foregroundColor(Color("DarkBlue"))
+                                            }
                                         }
                                     }
                                 }
@@ -452,6 +456,7 @@ struct BusView: View {
                                 }
                             }
                         }
+                        .padding(.trailing)
                     }
                 }
                 

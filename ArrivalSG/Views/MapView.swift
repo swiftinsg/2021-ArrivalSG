@@ -33,7 +33,19 @@ struct MapView: UIViewRepresentable {
             if (busStopLoc.count != 1) {
                 var temp: [[String:String]] = []
                 var filteredAnnotations = busStopLoc.filter { val in
-                    let pt = CLLocation(latitude: CLLocationDegrees(val["Latitude"]! as! String)! , longitude: CLLocationDegrees(val["Longitude"]! as! String)!)
+                    let pt = CLLocation(latitude: CLLocationDegrees({ () -> String in
+                        if let lat = val["Latitude"]! as? String {
+                            return lat
+                        } else {
+                            return String(val["Latitude"]! as! Double)
+                        }
+                    }())! , longitude: CLLocationDegrees({ () -> String in
+                        if let lat = val["Longitude"]! as? String {
+                            return lat
+                        } else {
+                            return String(val["Longitude"]! as! Double)
+                        }
+                    }())!)
                     return checkPtWithin(pt: pt) <= 1
                 }
                 
