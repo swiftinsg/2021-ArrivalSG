@@ -174,7 +174,7 @@ struct SettingsPopup: View {
         
         try await fetchStops.fetchBusStops()
         let stops = fetchStops.stops
-        print(stops)
+
         for i in 0..<stops!.count {
             busStopArr.append(Int(stops![i].BusStopCode) ?? 0)
             busStopLoc.append(["Name": stops![i].Description,"RoadName": stops![i].RoadName, "BusStopCode": String(stops![i].BusStopCode), "Latitude": String(stops![i].Latitude), "Longitude": String(stops![i].Longitude)])
@@ -212,36 +212,53 @@ struct FavouritedScreen: View {
     @Binding var shownBusStops: [[String:String]]
     @State var busData:[[String:Any]] = []
     @State var isDefaultsExpanded = [false]
+    @State var favouritedBusStopData: [[String:String]] = []
+    @State var favouritedBusStopTemp: [[String:Any]] = []
     
     let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        VStack {
-            ForEach(0..<userSettings.favouritedBusStops.count, id: \.self) { i in
-                DisclosureGroup(isExpanded: $isDefaultsExpanded[i]) {
-                    VStack{
-                        Text("hello")
+        ScrollView {
+            if (userSettings.favouritedBusStops.count != 0) {
+                VStack {
+                    ForEach(favouritedBusStopData, id: \.self
+                    ){ stopData in
+                        BusView(stopData: stopData, favouriteBusStops: userSettings.favouritedBusStops)
+                            .padding(.horizontal)
                     }
-                } label: {
-                    Text("S")
-                }.foregroundColor(.black)
-                    .padding()
-                Divider()
-                Spacer()
-            }
-        }.onAppear{
-            print(userSettings.favouritedBusStops)
-            print(userSettings.favouritedBusStops.count)
-            if (userSettings.favouritedBusStops.count == 0) || (userSettings.favouritedBusStops.count == 1) {
-                
-            } else {
-                for _ in (0..<(userSettings.favouritedBusStops.count)) {
-                    isDefaultsExpanded.append(false)
                 }
+            } else {
+                Text("You have not Favourited anything!")
             }
+            
+            Spacer()
+                .frame(height: 100)
+        }.onChange(of: shownBusStops){ _ in
+            var x = [false]
+            for _ in 0..<shownBusStops.count{
+                x.append(false)
+            }
+            isDefaultsExpanded = x
         }
-        .onReceive(timer) { _ in
-            getNewData() // Recieve new data from API every 55s
+        .onAppear {
+            favouritedBusStopTemp = userSettings.sgBusStopLoc.filter { val in
+                let code = Int(val["BusStopCode"]! as! String)!
+                return userSettings.favouritedBusStops.contains(code)
+            }
+            
+            for tempData in favouritedBusStopTemp {
+                favouritedBusStopData.append(tempData.mapValues { value -> String in
+                    if let str = value as? String {
+                        return str
+                    } else if let int = value as? Int {
+                        return String(int)
+                    } else if let double = value as? Double {
+                        return String(double)
+                    } else {
+                        return ""
+                    }
+                })
+            }
         }
     }
     
@@ -287,31 +304,22 @@ struct CurrLocationScreen: View {
     var body: some View {
         ScrollView {
             VStack {
-                ForEach(shownBusStops, id: \.self
-                ){ stopData in
-                    BusView(stopData: stopData)
-                        .padding(.horizontal)
-                }
-                .onAppear {
-                    print(busData)
+                if (shownBusStops.count != 0) {
+                    ForEach(shownBusStops, id: \.self
+                    ){ stopData in
+                        BusView(stopData: stopData, favouriteBusStops: userSettings.favouritedBusStops)
+                            .padding(.horizontal)
+                    }
+                } else {
+                    Text("Click 'Reload' in an area with Bus Stops!")
                 }
             }
             .onChange(of: shownBusStops){ _ in
-                print(shownBusStops)
-                
                 var x = [false]
-                
-                for i in 0..<shownBusStops.count{
+                for _ in 0..<shownBusStops.count{
                     x.append(false)
-                    //let temp =
-                    //let services = busData["Services"]! as! [[String: Any]]
-                    //for j in 0..<services.count{
-                    
-                    //}
-                    
                 }
                 isDefaultsExpanded = x
-                
             }
             
             Spacer()
@@ -320,18 +328,14 @@ struct CurrLocationScreen: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
-
 struct BusView: View {
     
     var stopData: [String: String]
+    @State var favouriteBusStops: [Int] = []
     let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
     
     @ObservedObject var fetchStopData = FetchBuses()
+    @ObservedObject var userSettings = UserSettings()
     
     @State private var busData: [String: Any] = [:]
     
@@ -396,9 +400,6 @@ struct BusView: View {
                                     }
                                 }
                             }
-                            .onAppear {
-                                print(nextBuses)
-                            }
                         }
                     }
                 }
@@ -423,6 +424,7 @@ struct BusView: View {
                                             let service = services[serviceIndex]
                                             let serviceNo = service["ServiceNo"] as! String
                                             Text(serviceNo)
+                                                .foregroundColor(Color("DarkBlue"))
                                         }
                                     }
                                 }
@@ -430,19 +432,30 @@ struct BusView: View {
                         }
                         Spacer()
                         VStack{
-                            #warning("This is where the heart button thing should exist")
                             Button {
-                                
-                                print("Potato Potato")
-                                
+                                if (favouriteBusStops.contains(busStopCode)) {
+                                    favouriteBusStops.remove(at: favouriteBusStops.firstIndex(of: busStopCode)!)
+                                } else {
+                                    favouriteBusStops.append(busStopCode)
+                                }
+                                #warning("Need to change to not ObservedObject")
+                                userSettings.favouritedBusStops = favouriteBusStops
                             } label: {
-                                Image(systemName: "heart.fill")
+                                if (favouriteBusStops.contains(busStopCode)) {
+                                    Image(systemName: "heart.fill")
+                                        .font(.system(size: 35))
+                                        .foregroundColor(Color.red)
+                                } else {
+                                    Image(systemName: "heart")
+                                        .font(.system(size: 35))
+                                        .foregroundColor(Color.gray)
+                                }
                             }
                         }
                     }
                 }
                 
-            }
+            }.accentColor(.black)
             Rectangle()
                 .frame(height: 0.4)
                 .foregroundColor(.black)
@@ -481,5 +494,12 @@ struct BusView: View {
         let date = dateFormatter.date(from: dateString)
         
         return date
+    }
+}
+
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }
