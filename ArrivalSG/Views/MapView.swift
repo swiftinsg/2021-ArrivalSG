@@ -44,6 +44,7 @@ struct MapView: UIViewRepresentable {
                     uiView.addAnnotation(newLocation)
                     temp.append(Int("\(filteredAnnotations[i]["BusStopCode"]!)")!)
                 }
+                
                 shownBusStops = temp
             }
         }
