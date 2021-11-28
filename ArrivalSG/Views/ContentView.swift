@@ -8,11 +8,14 @@ import SwiftUI
 import Snap
 import CoreData
 import MapKit
+import SwiftDate
 
 struct ContentView: View {
     @ObservedObject var fetchStops = FetchBusStops()
     @ObservedObject var userSettings = UserSettings()
     @ObservedObject var shownStops = ShownStops()
+    
+    #warning("ONLY ONE OBSERVEDOBJECT DECLARED HERE, EVERYTHING ELSE @BINDING")
     
     // Variables
     @State var locationModel = LocationViewModel()
@@ -261,14 +264,11 @@ struct FavouritedScreen: View {
 
 struct CurrLocationScreen: View {
     @ObservedObject var userSettings = UserSettings()
-    @ObservedObject var fetchStopData = FetchBuses()
     
     @State var isDefaultsExpanded = [false]
     @Binding var shownBusStops: [[String:String]]
     @State var busData:[[String:Any]] = []
     @State var buses: [[String: String]] = []
-    
-    let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
     
     func busType(type : String) -> String{
         var textToReturn = ""
@@ -285,75 +285,37 @@ struct CurrLocationScreen: View {
     }
     
     var body: some View {
-        VStack {
-            ForEach(shownBusStops, id: \.self
-            ){ stopData in
-                var stopName = stopData["Name"]!
-                var roadName = stopData["RoadName"]!
-                DisclosureGroup{
-                    VStack{
-                        
-                    }
-                }label:{
-                    HStack{
-                        VStack{
-                            VStack{
-                                Text("\(stopName)")
-                                     .bold()
-                                Text("\(roadName)")
-                                    .opacity(0.9)
-                            }
-                            
-                        }
-                        Spacer()
-                        VStack{
-                            
-                        }
-                    }
+        ScrollView {
+            VStack {
+                ForEach(shownBusStops, id: \.self
+                ){ stopData in
+                    BusView(stopData: stopData)
+                        .padding(.horizontal)
                 }
-                
-                
+                .onAppear {
+                    print(busData)
+                }
             }
-            
-        }
-        .padding(.top)
-        .onChange(of: shownBusStops){ _ in
-            getNewData()
-            print(shownBusStops)
-            
-            var x = [false]
-            
-            for i in 0..<shownBusStops.count{
-                x.append(false)
-                //let temp =
-                //let services = busData["Services"]! as! [[String: Any]]
-                //for j in 0..<services.count{
+            .onChange(of: shownBusStops){ _ in
+                print(shownBusStops)
+                
+                var x = [false]
+                
+                for i in 0..<shownBusStops.count{
+                    x.append(false)
+                    //let temp =
+                    //let services = busData["Services"]! as! [[String: Any]]
+                    //for j in 0..<services.count{
                     
-                //}
-            }
-            isDefaultsExpanded = x
-            
-        }
-        .onReceive(timer) { _ in
-            getNewData() // Recieve new data from API every 55s
-        }
-        .onAppear{
-            
-        }
-    }
-    
-    func getNewData() {
-        for stopData in shownBusStops {
-            fetchStopData.fetchBuses(BusStopCode: Int(stopData["BusStopCode"]!)!) { result in
-                switch result {
-                case .success(let stop):
-                    DispatchQueue.main.async {
-                        busData.append(stop)
-                    }
-                case .failure(let error):
-                    print("Error in Getting Bus Stops: \(error)")
+                    //}
+                    
                 }
+                isDefaultsExpanded = x
+                
             }
+            
+            Spacer()
+                .frame(height: 100)
         }
     }
 }
@@ -361,5 +323,163 @@ struct CurrLocationScreen: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+struct BusView: View {
+    
+    var stopData: [String: String]
+    let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
+    
+    @ObservedObject var fetchStopData = FetchBuses()
+    
+    @State private var busData: [String: Any] = [:]
+    
+    var body: some View {
+        
+        let stopName = stopData["Name"]!
+        let roadName = stopData["RoadName"]!
+        let busStopCode = Int(stopData["BusStopCode"]!)!
+        
+        VStack {
+            DisclosureGroup{
+                VStack(alignment: .leading) {
+                    if let servicesData = busData["Services"], let services = servicesData as? [[String: Any]] {
+                        ForEach(0..<services.count) { serviceIndex in
+                            let service = services[serviceIndex]
+                            let serviceNo = service["ServiceNo"] as! String
+                            
+                            let nextBuses: [[String: String]] = {
+                                var buses: [[String: String]] = []
+                                
+                                if let nextBus = service["NextBus"] { buses.append(nextBus as! [String: String]) }
+                                if let nextBus = service["NextBus2"] { buses.append(nextBus as! [String: String]) }
+                                if let nextBus = service["NextBus3"] { buses.append(nextBus as! [String: String]) }
+                                
+                                return buses
+                            }()
+                            
+                            Divider()
+                            
+                            HStack {
+                                Text(serviceNo)
+                                    .frame(width: 100, alignment: .leading)
+                                    .font(.system(size: 18, weight: .bold))
+                                
+                                Spacer()
+                                
+                                let colors = [Color(red: 180/255, green: 174/255, blue: 210/255), Color(red: 180/255, green: 174/255, blue: 210/255), Color(red: 229/255, green: 223/255, blue: 255/255)]
+
+                                ForEach(0..<nextBuses.count) { nextBusIndex in
+                                    let bus = nextBuses[nextBusIndex]
+                                    if let date = getDate(from: bus["EstimatedArrival"]!),
+                                        let busArrivalTime = Int(round(date.timeIntervalSinceNow / 60)) {
+                                        
+                                        VStack {
+                                            if busArrivalTime < 0 {
+                                                Text("Bye!")
+                                            } else if busArrivalTime < 1 {
+                                                Text("Run.")
+                                            } else {
+                                                Text("\(busArrivalTime)")
+                                            }
+                                        }
+                                        .frame(width: 50, height: 50)
+                                        .background(colors[nextBusIndex])
+                                        .cornerRadius(8)
+                                        .font(.system(size: 18, weight: .bold))
+                                        
+                                    } else {
+                                        Rectangle()
+                                            .foregroundColor(.clear)
+                                            .frame(width: 50, height: 50)
+                                    }
+                                }
+                            }
+                            .onAppear {
+                                print(nextBuses)
+                            }
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity)
+            }label:{
+                VStack {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            VStack(alignment: .leading) {
+                                Text("\(stopName)")
+                                    .foregroundColor(Color(.label))
+                                    .bold()
+                                Text("\(roadName)")
+                                    .foregroundColor(Color(.label))
+                                    .opacity(0.8)
+                            }
+                            
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack {
+                                    if let servicesData = busData["Services"], let services = servicesData as? [[String: Any]] {
+                                        ForEach(0..<services.count) { serviceIndex in
+                                            let service = services[serviceIndex]
+                                            let serviceNo = service["ServiceNo"] as! String
+                                            Text(serviceNo)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Spacer()
+                        VStack{
+                            #warning("This is where the heart button thing should exist")
+                            Button {
+                                
+                                print("Potato Potato")
+                                
+                            } label: {
+                                Image(systemName: "heart.fill")
+                            }
+                        }
+                    }
+                }
+                
+            }
+            Rectangle()
+                .frame(height: 0.4)
+                .foregroundColor(.black)
+        }
+        .onAppear {
+            fetchStopData.fetchBuses(BusStopCode: busStopCode) { result in
+                switch result {
+                case .success(let value):
+                    DispatchQueue.main.async {
+                        self.busData = value
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        }
+        .onReceive(timer) { _ in
+            fetchStopData.fetchBuses(BusStopCode: busStopCode) { result in
+                switch result {
+                case .success(let value):
+                    DispatchQueue.main.async {
+                        self.busData = value
+                    }
+                case .failure(let error):
+                    print("Error in Getting Bus Stops: \(error)")
+                }
+            }
+        }
+    }
+    
+    func getDate(from dateString: String) -> Date? {
+        let dateFormatter = DateFormatter()
+
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        
+        let date = dateFormatter.date(from: dateString)
+        
+        return date
     }
 }

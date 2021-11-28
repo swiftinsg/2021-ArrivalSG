@@ -8,7 +8,7 @@
 import Foundation
 
 class FetchBuses: ObservableObject {
-    @Published var stopsData: [String: Any] = [:]
+    var stopsData: [String: Any] = [:]
     var apiKey: String {
       get {
         // 1
@@ -44,9 +44,8 @@ class FetchBuses: ObservableObject {
                             let nextBus3 = currServices["NextBus3"] as? [String:String]
                             newServices.append(["ServiceNo": currServices["ServiceNo"], "Operator": currServices["Operator"], "NextBus": nextBus, "NextBus2": nextBus2, "NextBus3": nextBus3])
                         }
-                        DispatchQueue.main.async {
-                            self.stopsData = ["BusStopCode": busStopCode as? String, "Services": newServices]
-                        }
+                        self.stopsData = ["BusStopCode": busStopCode as? String, "Services": newServices]
+                        
                         return completion(.success(self.stopsData))
                     }
                 } catch let error as NSError {
