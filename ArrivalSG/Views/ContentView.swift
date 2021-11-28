@@ -285,7 +285,7 @@ struct CurrLocationScreen: View {
     
     var body: some View {
         VStack {
-            ForEach(0..<filteredBusStopData.count,id:\.self){ i in
+            ForEach(0..<shownBusStops.count,id:\.self){ i in
                 DisclosureGroup(isExpanded: $isDefaultsExpanded[i]) {
                     HStack{
                         Text("")
