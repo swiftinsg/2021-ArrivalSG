@@ -156,7 +156,9 @@ struct TrainDisruption: View {
             getTrainDisruptions.fetchDisruptions() { result in
                 switch result {
                 case .success(let disruptions):
-                    userSettings.trainDisruptions = disruptions
+                    DispatchQueue.main.async {
+                        userSettings.trainDisruptions = disruptions
+                    }
                 case .failure(let error):
                     print("Error in Getting Bus Stops: \(error)")
                 }

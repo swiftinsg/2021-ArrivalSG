@@ -44,7 +44,7 @@ class UserSettings: ObservableObject {
         }
     }
     
-    @Published var favouritedBusStops: [[String:Any]] {
+    @Published var favouritedBusStops: [Int] {
         didSet {
             userDefaults.set(favouritedBusStops, forKey: "favouritedBusStops")
         }
@@ -57,10 +57,10 @@ class UserSettings: ObservableObject {
     }
     
     init() {
-        self.sgBusStops = userDefaults.object(forKey: "sgBusStops") as? [Int] ?? [0]
+        self.sgBusStops = userDefaults.object(forKey: "sgBusStops") as? [Int] ?? []
         self.busStopData = userDefaults.object(forKey: "busStopData") as? [[String:Any]] ?? [[:]]
         self.sgBusStopLoc = userDefaults.object(forKey: "sgBusStopLoc") as? [[String:Any]] ?? [[:]]
-        self.favouritedBusStops = userDefaults.object(forKey: "favouritedBusStops") as? [[String:Any]] ?? []
+        self.favouritedBusStops = userDefaults.object(forKey: "favouritedBusStops") as? [Int] ?? []
         if (true) { // Just for some separation
             let data = userDefaults.object(forKey: "trainDisruptions") as? Data
             let decoder = JSONDecoder()

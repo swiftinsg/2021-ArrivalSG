@@ -231,9 +231,27 @@ struct FavouritedScreen: View {
             print(userSettings.favouritedBusStops.count)
             if (userSettings.favouritedBusStops.count == 0) || (userSettings.favouritedBusStops.count == 1) {
                 
-            }else{
+            } else {
                 for _ in (0..<(userSettings.favouritedBusStops.count)) {
                     isDefaultsExpanded.append(false)
+                }
+            }
+        }
+        .onReceive(timer) { _ in
+            getNewData() // Recieve new data from API every 55s
+        }
+    }
+    
+    func getNewData() {
+        for stopCode in userSettings.favouritedBusStops {
+            fetchStopData.fetchBuses(BusStopCode: stopCode) { result in
+                switch result {
+                case .success(let stop):
+                    DispatchQueue.main.async {
+                        busData.append(stop)
+                    }
+                case .failure(let error):
+                    print("Error in Getting Bus Stops: \(error)")
                 }
             }
         }
@@ -300,7 +318,7 @@ struct CurrLocationScreen: View {
             isDefaultsExpanded = x
         }
         .onReceive(timer) { _ in
-            getNewData()
+            getNewData() // Recieve new data from API every 55s
         }
         .onAppear{
             for i in 0..<shownBusStops.count{
@@ -324,7 +342,9 @@ struct CurrLocationScreen: View {
             fetchStopData.fetchBuses(BusStopCode: stopCode) { result in
                 switch result {
                 case .success(let stop):
-                    busData.append(stop)
+                    DispatchQueue.main.async {
+                        busData.append(stop)
+                    }
                 case .failure(let error):
                     print("Error in Getting Bus Stops: \(error)")
                 }
