@@ -20,6 +20,7 @@ struct MapView: UIViewRepresentable {
         uiView.showsUserLocation = true
         
         if showNewStops {
+            print("Showing new stops")
             let busStopLoc = userSettings.sgBusStopLoc
             
             let centralLocation = CLLocation(latitude: uiView.centerCoordinate.latitude, longitude: uiView.centerCoordinate.longitude)
@@ -30,6 +31,7 @@ struct MapView: UIViewRepresentable {
             
             uiView.removeAnnotations(uiView.annotations)
             if (busStopLoc.count != 1) {
+                var temp: [Int] = []
                 let filteredAnnotations = busStopLoc.filter { val in
                     let pt = CLLocation(latitude: val["Latitude"] as! CLLocationDegrees, longitude: val["Longitude"] as! CLLocationDegrees)
                     return checkPtWithin(pt: pt) <= 1
@@ -40,11 +42,10 @@ struct MapView: UIViewRepresentable {
                     newLocation.title = filteredAnnotations[i]["Name"] as? String
                     newLocation.coordinate = CLLocationCoordinate2D(latitude: filteredAnnotations[i]["Latitude"] as! CLLocationDegrees, longitude: filteredAnnotations[i]["Longitude"] as! CLLocationDegrees)
                     uiView.addAnnotation(newLocation)
-                    shownBusStops.append(Int("\(filteredAnnotations[i]["BusStopCode"]!)")!)
-                    print(Int("\(filteredAnnotations[i]["BusStopCode"]!)")!)
+                    temp.append(Int("\(filteredAnnotations[i]["BusStopCode"]!)")!)
                 }
+                shownBusStops = temp
             }
-        print(shownBusStops)
         }
         showNewStops = false
     }
