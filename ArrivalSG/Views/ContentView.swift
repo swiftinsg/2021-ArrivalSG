@@ -320,13 +320,16 @@ struct CurrLocationScreen: View {
         .onChange(of: shownBusStops){ _ in
             getNewData()
             print(shownBusStops)
+            
             var x = [false]
+            
             for i in 0..<shownBusStops.count{
                 x.append(false)
                 //let temp =
-                for j in 0..<(busData["Services"] as? [[String: Any]]).count{
+                //let services = busData["Services"]! as! [[String: Any]]
+                //for j in 0..<services.count{
                     
-                }
+                //}
             }
             isDefaultsExpanded = x
             

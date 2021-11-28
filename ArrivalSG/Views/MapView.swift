@@ -33,7 +33,7 @@ struct MapView: UIViewRepresentable {
             if (busStopLoc.count != 1) {
                 var temp: [[String:String]] = []
                 var filteredAnnotations = busStopLoc.filter { val in
-                    let pt = CLLocation(latitude: Double(val["Latitude"]!) as! CLLocationDegrees, longitude: Double(val["Longitude"]!) as! CLLocationDegrees)
+                    let pt = CLLocation(latitude: CLLocationDegrees(val["Latitude"]! as! String)! , longitude: CLLocationDegrees(val["Longitude"]! as! String)!)
                     return checkPtWithin(pt: pt) <= 1
                 }
                 
@@ -41,7 +41,7 @@ struct MapView: UIViewRepresentable {
                 for i in 0..<filteredAnnotations.count {
                     let newLocation = MKPointAnnotation()
                     newLocation.title = filteredAnnotations[i]["Name"] as? String
-                    newLocation.coordinate = CLLocationCoordinate2D(latitude: filteredAnnotations[i]["Latitude"] as! CLLocationDegrees, longitude: filteredAnnotations[i]["Longitude"] as! CLLocationDegrees)
+                    newLocation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees( filteredAnnotations[i]["Latitude"] as! String)!, longitude: CLLocationDegrees( filteredAnnotations[i]["Longitude"] as! String)!)
                     uiView.addAnnotation(newLocation)
                     temp.append(filteredAnnotations[i].mapValues { value -> String in
                         if let str = value as? String {
