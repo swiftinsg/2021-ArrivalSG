@@ -40,8 +40,8 @@ struct MapView: UIViewRepresentable {
                             return String(val["Latitude"]! as! Double)
                         }
                     }())! , longitude: CLLocationDegrees({ () -> String in
-                        if let lat = val["Longitude"]! as? String {
-                            return lat
+                        if let lon = val["Longitude"]! as? String {
+                            return lon
                         } else {
                             return String(val["Longitude"]! as! Double)
                         }
@@ -68,7 +68,33 @@ struct MapView: UIViewRepresentable {
                     })
                 }
                 
-                shownBusStops = temp
+                shownBusStops = temp.sorted(by: {a, b in
+                    CLLocation(latitude: CLLocationDegrees({ () -> String in
+                        if let lat = a["Latitude"]! as? String {
+                            return lat
+                        } else {
+                            return String(a["Latitude"]! as! Double)
+                        }
+                    }())! , longitude: CLLocationDegrees({ () -> String in
+                        if let lon = a["Longitude"]! as? String {
+                            return lon
+                        } else {
+                            return String(a["Longitude"]! as! Double)
+                        }
+                    }())!).distance(from: centralLocation) < CLLocation(latitude: CLLocationDegrees({ () -> String in
+                        if let lat = b["Latitude"]! as? String {
+                            return lat
+                        } else {
+                            return String(b["Latitude"]! as! Double)
+                        }
+                    }())! , longitude: CLLocationDegrees({ () -> String in
+                        if let lon = b["Longitude"]! as? String {
+                            return lon
+                        } else {
+                            return String(b["Longitude"]! as! Double)
+                        }
+                    }())!).distance(from: centralLocation)
+                })
             }
         }
         showNewStops = false

@@ -15,8 +15,6 @@ struct ContentView: View {
     @ObservedObject var userSettings = UserSettings()
     @ObservedObject var shownStops = ShownStops()
     
-    #warning("ONLY ONE OBSERVEDOBJECT DECLARED HERE, EVERYTHING ELSE @BINDING")
-    
     // Variables
     @State var locationModel = LocationViewModel()
     @State public var currentlySelected = "Location"
@@ -27,6 +25,7 @@ struct ContentView: View {
     @State var favouritedOpen = false
     @State var isShowNewStops = false
     @State var shownBusStops: [[String:String]] = []
+    @State var userLocation: CLLocation = CLLocation(latitude: 1.3521, longitude: 103.8198)
     
     var body: some View {
         // Map
@@ -41,11 +40,11 @@ struct ContentView: View {
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
                     if (favouritedOpen) {
-                        FavouritedScreen(shownBusStops: $shownBusStops)
+                        FavouritedScreen(shownBusStops: $shownBusStops, userLocation: $userLocation)
                     }
                     
                     if (currLocationOpen) {
-                        CurrLocationScreen(shownBusStops: $shownBusStops)
+                        CurrLocationScreen(shownBusStops: $shownBusStops, userLocation: $userLocation)
                     }
                 }
                 
@@ -63,6 +62,10 @@ struct ContentView: View {
                 }
             }.alert(isPresented: $locationModel.isAlertPresented) {
                 Alert(title: Text(locationModel.locationAuthError[0]), message: Text(locationModel.locationAuthError[1]), dismissButton: .destructive(Text("Ok")))
+            }
+            .onAppear {
+                userLocation = CLLocation(latitude: locationModel.userLocation?.latitude ?? 1.3521, longitude: locationModel.userLocation?.longitude ?? 103.8198)
+                print(userLocation)
             }
         }
     }
@@ -133,7 +136,6 @@ struct SettingsPopup: View {
     @State var buttonDisabled: Bool = false
     
     var body: some View {
-        // Temp UI
         VStack(alignment: .center, spacing: 3) {
             Text("Settings")
                 .bold()
@@ -155,12 +157,36 @@ struct SettingsPopup: View {
                 .disabled(buttonDisabled == true)
                 Text(infoText)
             }
-            
+            Text("Information")
+                .bold()
+                .font(.title2)
+                .foregroundColor(.black)
+                .padding()
+            VStack {
+                List {
+                    Section(header: Text("Bus Occupancy")) {
+                        Text("For Bus Arrivals, the Bus Arrival Background has a deeper purple the more packed the Bus is.")
+                            .bold()
+                        Text("Light Purple: Seats Available")
+                        Text("Darker Purple: Standing Available")
+                        Text("Darkest Purple: Limited Standing")
+                    }
+                    
+                    Section(header: Text("Bus Arrival")) {
+                        Text("Normally, Bus Arrival should show Bus Arrival Timing, but there are Special Cases.")
+                        Text("'Run.' -- Bus is arriving in 1 minute or lesser.")
+                        Text("'Bye!' -- Bus has left the Bus Stop.")
+                    }
+                }
+                .foregroundColor(.black)
+            }
         }
-        .padding()
+        .frame(height: 500)
         .background(.white)
-        .cornerRadius(5)
-        
+        .cornerRadius(10)
+        .padding(.leading, 5)
+        .padding(.trailing, 5)
+        .padding()
     }
     
     func prepareDataReload() async throws {
@@ -174,7 +200,7 @@ struct SettingsPopup: View {
         
         try await fetchStops.fetchBusStops()
         let stops = fetchStops.stops
-
+        
         for i in 0..<stops!.count {
             busStopArr.append(Int(stops![i].BusStopCode) ?? 0)
             busStopLoc.append(["Name": stops![i].Description,"RoadName": stops![i].RoadName, "BusStopCode": String(stops![i].BusStopCode), "Latitude": String(stops![i].Latitude), "Longitude": String(stops![i].Longitude)])
@@ -210,6 +236,8 @@ struct FavouritedScreen: View {
     @ObservedObject var fetchStopData = FetchBuses()
     
     @Binding var shownBusStops: [[String:String]]
+    @Binding var userLocation: CLLocation
+    
     @State var busData:[[String:Any]] = []
     @State var isDefaultsExpanded = [false]
     @State var favouritedBusStopData: [[String:String]] = []
@@ -223,7 +251,7 @@ struct FavouritedScreen: View {
                 VStack {
                     ForEach(favouritedBusStopData, id: \.self
                     ){ stopData in
-                        BusView(stopData: stopData, favouriteBusStops: userSettings.favouritedBusStops)
+                        BusView(stopData: stopData, favouriteBusStops: userSettings.favouritedBusStops, userLocation: userLocation)
                             .padding(.horizontal)
                     }
                 }
@@ -282,8 +310,10 @@ struct FavouritedScreen: View {
 struct CurrLocationScreen: View {
     @ObservedObject var userSettings = UserSettings()
     
-    @State var isDefaultsExpanded = [false]
     @Binding var shownBusStops: [[String:String]]
+    @Binding var userLocation: CLLocation
+    
+    @State var isDefaultsExpanded = [false]
     @State var busData:[[String:Any]] = []
     @State var buses: [[String: String]] = []
     
@@ -307,7 +337,7 @@ struct CurrLocationScreen: View {
                 if (shownBusStops.count != 0) {
                     ForEach(shownBusStops, id: \.self
                     ){ stopData in
-                        BusView(stopData: stopData, favouriteBusStops: userSettings.favouritedBusStops)
+                        BusView(stopData: stopData, favouriteBusStops: userSettings.favouritedBusStops, userLocation: userLocation)
                             .padding(.horizontal)
                     }
                 } else {
@@ -332,11 +362,14 @@ struct BusView: View {
     
     var stopData: [String: String]
     @State var favouriteBusStops: [Int] = []
+    @State var userLocation: CLLocation
+    
     let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
     
     @ObservedObject var fetchStopData = FetchBuses()
     @ObservedObject var userSettings = UserSettings()
     
+    @State var locationManager = LocationViewModel()
     @State private var busData: [String: Any] = [:]
     
     var body: some View {
@@ -344,6 +377,7 @@ struct BusView: View {
         let stopName = stopData["Name"]!
         let roadName = stopData["RoadName"]!
         let busStopCode = Int(stopData["BusStopCode"]!)!
+        let stopCoord = CLLocation(latitude: Double(stopData["Latitude"]!)!, longitude: Double(stopData["Longitude"]!)!)
         
         VStack {
             DisclosureGroup{
@@ -371,33 +405,36 @@ struct BusView: View {
                                     .font(.system(size: 18, weight: .bold))
                                 
                                 Spacer()
-                                
-                                let colors = [Color(red: 180/255, green: 174/255, blue: 210/255), Color(red: 180/255, green: 174/255, blue: 210/255), Color(red: 229/255, green: 223/255, blue: 255/255)]
-
-                                ForEach(0..<nextBuses.count) { nextBusIndex in
-                                    let bus = nextBuses[nextBusIndex]
-                                    if let date = getDate(from: bus["EstimatedArrival"]!),
-                                        let busArrivalTime = Int(round(date.timeIntervalSinceNow / 60)) {
-                                        
-                                        VStack {
-                                            if busArrivalTime < 0 {
-                                                Text("Bye!")
-                                            } else if busArrivalTime < 1 {
-                                                Text("Run.")
-                                            } else {
-                                                Text("\(busArrivalTime)")
+                                   
+                                if (nextBuses.count != 0) {
+                                    ForEach(0..<nextBuses.count) { nextBusIndex in
+                                        let bus = nextBuses[nextBusIndex]
+                                        if let date = getDate(from: bus["EstimatedArrival"]!),
+                                           let busArrivalTime = Int(round(date.timeIntervalSinceNow / 60)) {
+                                            
+                                            VStack {
+                                                if busArrivalTime < 0 {
+                                                    Text("Bye!")
+                                                } else if busArrivalTime < 1 {
+                                                    Text("Run.")
+                                                } else {
+                                                    Text("\(busArrivalTime)")
+                                                }
                                             }
-                                        }
-                                        .frame(width: 50, height: 50)
-                                        .background(colors[nextBusIndex])
-                                        .cornerRadius(8)
-                                        .font(.system(size: 18, weight: .bold))
-                                        
-                                    } else {
-                                        Rectangle()
-                                            .foregroundColor(.clear)
                                             .frame(width: 50, height: 50)
+                                            .background(Color(bus["Load"]!))
+                                            .cornerRadius(8)
+                                            .font(.system(size: 18, weight: .bold))
+                                            
+                                        } else {
+                                            Rectangle()
+                                                .foregroundColor(.clear)
+                                                .frame(width: 50, height: 50)
+                                        }
                                     }
+                                } else {
+                                    Text("End of Service.")
+                                        .opacity(0.8)
                                 }
                             }
                         }
@@ -410,6 +447,7 @@ struct BusView: View {
                         VStack(alignment: .leading) {
                             VStack(alignment: .leading) {
                                 Text("\(stopName)")
+                                    .font(.system(size: 19))
                                     .foregroundColor(Color(.label))
                                     .bold()
                                 Text("\(roadName)")
@@ -420,15 +458,15 @@ struct BusView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack {
                                     if let servicesData = busData["Services"],
-                                        let services = servicesData as? [[String: Any]] {
+                                       let services = servicesData as? [[String: Any]] {
                                         
                                         ForEach(0..<services.count) { serviceIndex in
-                                            if services.count - 1 > serviceIndex {
+//                                            if services.count - 1 > serviceIndex {
                                                 let service = services[serviceIndex]
                                                 let serviceNo = service["ServiceNo"] as! String
                                                 Text(serviceNo)
                                                     .foregroundColor(Color("DarkBlue"))
-                                            }
+//                                            }
                                         }
                                     }
                                 }
@@ -442,7 +480,6 @@ struct BusView: View {
                                 } else {
                                     favouriteBusStops.append(busStopCode)
                                 }
-                                #warning("Need to change to not ObservedObject")
                                 userSettings.favouritedBusStops = favouriteBusStops
                             } label: {
                                 if (favouriteBusStops.contains(busStopCode)) {
@@ -455,6 +492,11 @@ struct BusView: View {
                                         .foregroundColor(Color.gray)
                                 }
                             }
+                            
+                            Spacer()
+                            
+                            Text("\(String(format: "%.2f",(stopCoord.distance(from: userLocation) / 1000))) km")
+                                .foregroundColor(Color("DarkBlue"))
                         }
                         .padding(.trailing)
                     }
@@ -493,7 +535,7 @@ struct BusView: View {
     
     func getDate(from dateString: String) -> Date? {
         let dateFormatter = DateFormatter()
-
+        
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         
         let date = dateFormatter.date(from: dateString)
