@@ -89,18 +89,21 @@ struct TabBar: View {
                         userSettings.isFirstOpen = false
                     }
                 }
+                .preferredColorScheme(.light)
             TrainMap()
                 .tag(1)
                 .tabItem {
                     Text("Train")
                     Image(systemName: "tram.fill")
                 }
+                .preferredColorScheme(.light)
             TrainDisruption()
                 .tag(2)
                 .tabItem {
                     Text("Train Disruptions")
                     Image(systemName: "xmark.octagon")
                 }
+                .preferredColorScheme(.light)
         }
     }
 }

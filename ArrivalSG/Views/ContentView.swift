@@ -25,8 +25,15 @@ struct ContentView: View {
     @State var favouritedOpen = false
     @State var isShowNewStops = false
     @State var shownBusStops: [[String:String]] = []
-    @State var userLocation: CLLocation = CLLocation(latitude: 1.3521, longitude: 103.8198)
     
+    @State var refresh: Bool = false
+    
+    @State var reloadTimer = Timer.publish(every: 1, on: .current, in: .common).autoconnect()
+    
+    init() {
+        locationModel.checkIfLocationEnabled()
+    }
+
     var body: some View {
         // Map
         GeometryReader { geometry in
@@ -40,11 +47,11 @@ struct ContentView: View {
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
                     if (favouritedOpen) {
-                        FavouritedScreen(shownBusStops: $shownBusStops, userLocation: $userLocation)
+                        FavouritedScreen(shownBusStops: $shownBusStops, userLocation: $locationModel.userLocation)
                     }
                     
                     if (currLocationOpen) {
-                        CurrLocationScreen(shownBusStops: $shownBusStops, userLocation: $userLocation)
+                        CurrLocationScreen(shownBusStops: $shownBusStops, userLocation: $locationModel.userLocation)
                     }
                 }
                 
@@ -63,9 +70,9 @@ struct ContentView: View {
             }.alert(isPresented: $locationModel.isAlertPresented) {
                 Alert(title: Text(locationModel.locationAuthError[0]), message: Text(locationModel.locationAuthError[1]), dismissButton: .destructive(Text("Ok")))
             }
-            .onAppear {
-                userLocation = CLLocation(latitude: locationModel.userLocation?.latitude ?? 1.3521, longitude: locationModel.userLocation?.longitude ?? 103.8198)
-                print(userLocation)
+            .onReceive(reloadTimer) { _ in
+                refresh.toggle()
+                self.reloadTimer.upstream.connect().cancel()
             }
         }
     }
@@ -173,9 +180,13 @@ struct SettingsPopup: View {
                     }
                     
                     Section(header: Text("Bus Arrival")) {
-                        Text("Normally, Bus Arrival should show Bus Arrival Timing, but there are Special Cases.")
+                        Text("Normally, Bus Arrival should show Bus Arrival Timing in Minutes, but there are Special Cases.")
                         Text("'Run.' -- Bus is arriving in 1 minute or lesser.")
                         Text("'Bye!' -- Bus has left the Bus Stop.")
+                    }
+                    
+                    Section(header: Text("Sorting of Bus Stops")) {
+                        Text("Bus Stops are sorted by the distance from the Middle of the Screen. (NOT the UserLocation)")
                     }
                 }
                 .foregroundColor(.black)
@@ -236,7 +247,7 @@ struct FavouritedScreen: View {
     @ObservedObject var fetchStopData = FetchBuses()
     
     @Binding var shownBusStops: [[String:String]]
-    @Binding var userLocation: CLLocation
+    @Binding var userLocation: CLLocationCoordinate2D
     
     @State var busData:[[String:Any]] = []
     @State var isDefaultsExpanded = [false]
@@ -311,7 +322,7 @@ struct CurrLocationScreen: View {
     @ObservedObject var userSettings = UserSettings()
     
     @Binding var shownBusStops: [[String:String]]
-    @Binding var userLocation: CLLocation
+    @Binding var userLocation: CLLocationCoordinate2D
     
     @State var isDefaultsExpanded = [false]
     @State var busData:[[String:Any]] = []
@@ -362,14 +373,13 @@ struct BusView: View {
     
     var stopData: [String: String]
     @State var favouriteBusStops: [Int] = []
-    @State var userLocation: CLLocation
+    @State var userLocation: CLLocationCoordinate2D
     
     let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
     
     @ObservedObject var fetchStopData = FetchBuses()
     @ObservedObject var userSettings = UserSettings()
     
-    @State var locationManager = LocationViewModel()
     @State private var busData: [String: Any] = [:]
     
     var body: some View {
@@ -377,6 +387,7 @@ struct BusView: View {
         let stopName = stopData["Name"]!
         let roadName = stopData["RoadName"]!
         let busStopCode = Int(stopData["BusStopCode"]!)!
+        let location = CLLocation(latitude: userLocation.latitude, longitude: userLocation.longitude)
         let stopCoord = CLLocation(latitude: Double(stopData["Latitude"]!)!, longitude: Double(stopData["Longitude"]!)!)
         
         VStack {
@@ -480,7 +491,6 @@ struct BusView: View {
                                 } else {
                                     favouriteBusStops.append(busStopCode)
                                 }
-                                userSettings.favouritedBusStops = favouriteBusStops
                             } label: {
                                 if (favouriteBusStops.contains(busStopCode)) {
                                     Image(systemName: "heart.fill")
@@ -492,10 +502,13 @@ struct BusView: View {
                                         .foregroundColor(Color.gray)
                                 }
                             }
+                            .onChange(of: favouriteBusStops) { _ in
+                                userSettings.favouritedBusStops = favouriteBusStops
+                            }
                             
                             Spacer()
                             
-                            Text("\(String(format: "%.2f",(stopCoord.distance(from: userLocation) / 1000))) km")
+                            Text("\(String(format: "%.2f",(stopCoord.distance(from: location) / 1000))) km")
                                 .foregroundColor(Color("DarkBlue"))
                         }
                         .padding(.trailing)
