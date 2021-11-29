@@ -24,7 +24,7 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var centerCoordinate:CLLocationCoordinate2D?
     @Published var locationAuthError = ["", ""]
     @Published var isAlertPresented = false
-    @Published var userLocation:CLLocationCoordinate2D?
+    @Published var userLocation:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 1.3521, longitude: 103.8198)
     @State var hasSetRegion = false
     
     func checkIfLocationEnabled() {
@@ -57,7 +57,7 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             isAlertPresented = true
         case .authorizedAlways, .authorizedWhenInUse:
             region = MKCoordinateRegion(center: locationManager.location?.coordinate ?? CLLocationCoordinate2D(latitude: 1.3521, longitude: 103.8198), latitudinalMeters: 1000, longitudinalMeters: 1000)
-            userLocation = locationManager.location?.coordinate
+            userLocation = (locationManager.location?.coordinate)!
             locationManager.startUpdatingLocation()
         @unknown default:
             break
@@ -70,7 +70,7 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
-            let coord = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+            userLocation = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         }
     }
 }
