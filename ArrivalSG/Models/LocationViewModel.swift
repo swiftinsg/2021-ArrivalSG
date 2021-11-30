@@ -57,7 +57,7 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             isAlertPresented = true
         case .authorizedAlways, .authorizedWhenInUse:
             region = MKCoordinateRegion(center: locationManager.location?.coordinate ?? CLLocationCoordinate2D(latitude: 1.3521, longitude: 103.8198), latitudinalMeters: 1000, longitudinalMeters: 1000)
-            userLocation = (locationManager.location?.coordinate)!
+            userLocation = (locationManager.location?.coordinate) ?? CLLocationCoordinate2D(latitude: 1.3521, longitude: 103.8198)
             locationManager.startUpdatingLocation()
         @unknown default:
             break

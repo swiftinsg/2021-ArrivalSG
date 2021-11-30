@@ -46,9 +46,9 @@ struct ContentView: View {
                     }
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
-                    if (favouritedOpen) {
-                        FavouritedScreen(shownBusStops: $shownBusStops, userLocation: $locationModel.userLocation)
-                    }
+//                    if (favouritedOpen) {
+//                        FavouritedScreen(shownBusStops: $shownBusStops, userLocation: $locationModel.userLocation)
+//                    }
                     
                     if (currLocationOpen) {
                         CurrLocationScreen(shownBusStops: $shownBusStops, userLocation: $locationModel.userLocation)
@@ -89,29 +89,29 @@ struct OverlayControls: View {
     var body: some View {
         // Buttons in the top right hand corner
         VStack {
-            VStack(spacing: 15) {
-                Button {
-                    if (currLocationOpen == false) {
-                        currLocationOpen = true
-                        favouritedOpen = false
-                    }
-                } label: {
-                    Image(systemName: "location")
-                }
-                Divider()
-                Button {
-                    if (favouritedOpen == false) {
-                        favouritedOpen = true
-                        currLocationOpen = false
-                    }
-                } label: {
-                    Image(systemName: "heart")
-                }
-            }
-            .frame(width: 50)
-            .padding(.vertical, 12)
-            .background(Color(uiColor:  .white))
-            .cornerRadius(8)
+//            VStack(spacing: 15) {
+//                Button {
+//                    if (currLocationOpen == false) {
+//                        currLocationOpen = true
+//                        favouritedOpen = false
+//                    }
+//                } label: {
+//                    Image(systemName: "location")
+//                }
+//                Divider()
+//                Button {
+//                    if (favouritedOpen == false) {
+//                        favouritedOpen = true
+//                        currLocationOpen = false
+//                    }
+//                } label: {
+//                    Image(systemName: "heart")
+//                }
+//            }
+//            .frame(width: 50)
+//            .padding(.vertical, 12)
+//            .background(Color(uiColor:  .white))
+//            .cornerRadius(8)
             
             Button {
                 isSettingsOpen.toggle()
@@ -375,15 +375,13 @@ struct BusView: View {
     @State var favouriteBusStops: [Int] = []
     @State var userLocation: CLLocationCoordinate2D
     
-    let timer = Timer.publish(every: 55, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
     
     @ObservedObject var fetchStopData = FetchBuses()
     @ObservedObject var userSettings = UserSettings()
     
     @State private var busData: [String: Any] = [:]
-    
     var body: some View {
-        
         let stopName = stopData["Name"]!
         let roadName = stopData["RoadName"]!
         let busStopCode = Int(stopData["BusStopCode"]!)!
@@ -472,12 +470,12 @@ struct BusView: View {
                                        let services = servicesData as? [[String: Any]] {
                                         
                                         ForEach(0..<services.count) { serviceIndex in
-//                                            if services.count - 1 > serviceIndex {
+                                            if services.count > serviceIndex {
                                                 let service = services[serviceIndex]
                                                 let serviceNo = service["ServiceNo"] as! String
                                                 Text(serviceNo)
                                                     .foregroundColor(Color("DarkBlue"))
-//                                            }
+                                            }
                                         }
                                     }
                                 }
@@ -485,26 +483,26 @@ struct BusView: View {
                         }
                         Spacer()
                         VStack{
-                            Button {
-                                if (favouriteBusStops.contains(busStopCode)) {
-                                    favouriteBusStops.remove(at: favouriteBusStops.firstIndex(of: busStopCode)!)
-                                } else {
-                                    favouriteBusStops.append(busStopCode)
-                                }
-                            } label: {
-                                if (favouriteBusStops.contains(busStopCode)) {
-                                    Image(systemName: "heart.fill")
-                                        .font(.system(size: 35))
-                                        .foregroundColor(Color.red)
-                                } else {
-                                    Image(systemName: "heart")
-                                        .font(.system(size: 35))
-                                        .foregroundColor(Color.gray)
-                                }
-                            }
-                            .onChange(of: favouriteBusStops) { _ in
-                                userSettings.favouritedBusStops = favouriteBusStops
-                            }
+//                            Button {
+//                                if (favouriteBusStops.contains(busStopCode)) {
+//                                    favouriteBusStops.remove(at: favouriteBusStops.firstIndex(of: busStopCode)!)
+//                                } else {
+//                                    favouriteBusStops.append(busStopCode)
+//                                }
+//                            } label: {
+//                                if (favouriteBusStops.contains(busStopCode)) {
+//                                    Image(systemName: "heart.fill")
+//                                        .font(.system(size: 35))
+//                                        .foregroundColor(Color.red)
+//                                } else {
+//                                    Image(systemName: "heart")
+//                                        .font(.system(size: 35))
+//                                        .foregroundColor(Color.gray)
+//                                }
+//                            }
+//                            .onChange(of: favouriteBusStops) { _ in
+//                                userSettings.favouritedBusStops = favouriteBusStops
+//                            }
                             
                             Spacer()
                             
