@@ -46,13 +46,13 @@ struct MapView: UIViewRepresentable {
                             return String(val["Longitude"]! as! Double)
                         }
                     }())!)
-                    return checkPtWithin(pt: pt) <= 1
+                    return checkPtWithin(pt: pt) <= 0.46
                 }
-                
                 
                 for i in 0..<filteredAnnotations.count {
                     let newLocation = MKPointAnnotation()
                     newLocation.title = filteredAnnotations[i]["Name"] as? String
+                    newLocation.subtitle = "\(String(describing: filteredAnnotations[i]["BusStopCode"]!)), \(String(describing: filteredAnnotations[i]["RoadName"]!))"
                     newLocation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees( filteredAnnotations[i]["Latitude"] as! String)!, longitude: CLLocationDegrees( filteredAnnotations[i]["Longitude"] as! String)!)
                     uiView.addAnnotation(newLocation)
                     temp.append(filteredAnnotations[i].mapValues { value -> String in
@@ -67,6 +67,19 @@ struct MapView: UIViewRepresentable {
                         }
                     })
                 }
+                
+//                var visibleAnnotations = uiView.annotations(in: uiView.visibleMapRect).map { obj -> MKAnnotation in return obj as! MKAnnotation }
+//                
+//                visibleAnnotations = visibleAnnotations.sorted(by: {a, b in
+//                    CLLocation(latitude: a.coordinate.latitude, longitude: a.coordinate.longitude).distance(from: centralLocation) < CLLocation(latitude: b.coordinate.latitude, longitude: b.coordinate.longitude).distance(from: centralLocation)
+//                })
+//                
+//                for i in 0..<visibleAnnotations.count {
+//                    if let subtitle = visibleAnnotations[i].subtitle as? String {
+//                        let subtitleComponents = subtitle.components(separatedBy: ", ")
+//                        shownBusStops.append(["Name": (visibleAnnotations[i].title as? String)!, "BusStopCode": (subtitleComponents[0] as? String)!, "RoadName": (subtitleComponents[1] as? String)!, "Latitude": "\(visibleAnnotations[i].coordinate.latitude)", "Longitude": "\(visibleAnnotations[i].coordinate.longitude)"])
+//                    }
+//                }
                 
                 shownBusStops = temp.sorted(by: {a, b in
                     CLLocation(latitude: CLLocationDegrees({ () -> String in
