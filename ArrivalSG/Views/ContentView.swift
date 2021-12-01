@@ -47,11 +47,11 @@ struct ContentView: View {
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
                     if (favouritedOpen) {
-                        FavouritedScreen(shownBusStops: $shownBusStops, userLocation: $locationModel.userLocation)
+                        FavouritedScreen(shownBusStops: $shownBusStops, userLocation: $locationModel.userLocation,  favouritedBusStops: $userSettings.favouritedBusStops)
                     }
                     
                     if (currLocationOpen) {
-                        CurrLocationScreen(shownBusStops: $shownBusStops, userLocation: $locationModel.userLocation)
+                        CurrLocationScreen(shownBusStops: $shownBusStops, userLocation: $locationModel.userLocation, favouritedBusStops: $userSettings.favouritedBusStops)
                     }
                 }
                 
@@ -248,6 +248,7 @@ struct FavouritedScreen: View {
     
     @Binding var shownBusStops: [[String:String]]
     @Binding var userLocation: CLLocationCoordinate2D
+    @Binding var favouritedBusStops: [Int]
     
     @State var busData:[[String:Any]] = []
     @State var isDefaultsExpanded = [false]
@@ -262,7 +263,7 @@ struct FavouritedScreen: View {
                 VStack {
                     ForEach(favouritedBusStopData, id: \.self
                     ){ stopData in
-                        BusView(stopData: stopData, favouriteBusStops: userSettings.favouritedBusStops, userLocation: userLocation)
+                        BusView(stopData: stopData, favouriteBusStops: $favouritedBusStops, userLocation: userLocation)
                             .padding(.horizontal)
                     }
                 }
@@ -322,6 +323,7 @@ struct CurrLocationScreen: View {
     
     @Binding var shownBusStops: [[String:String]]
     @Binding var userLocation: CLLocationCoordinate2D
+    @Binding var favouritedBusStops: [Int]
     
     @State var isDefaultsExpanded = [false]
     @State var busData:[[String:Any]] = []
@@ -333,7 +335,7 @@ struct CurrLocationScreen: View {
                 if (shownBusStops.count != 0) {
                     ForEach(shownBusStops, id: \.self
                     ){ stopData in
-                        BusView(stopData: stopData, favouriteBusStops: userSettings.favouritedBusStops, userLocation: userLocation)
+                        BusView(stopData: stopData, favouriteBusStops: $favouritedBusStops, userLocation: userLocation)
                             .padding(.horizontal)
                     }
                 } else {
@@ -357,7 +359,7 @@ struct CurrLocationScreen: View {
 struct BusView: View {
     
     var stopData: [String: String]
-    @State var favouriteBusStops: [Int] = []
+    @Binding var favouriteBusStops: [Int]
     @State var userLocation: CLLocationCoordinate2D
     @State var refresh = false
     
