@@ -96,7 +96,11 @@ struct OverlayControls: View {
                         favouritedOpen = false
                     }
                 } label: {
-                    Image(systemName: "location")
+                    if (currLocationOpen) {
+                        Image(systemName: "location.fill")
+                    } else {
+                        Image(systemName: "location")
+                    }
                 }
                 Divider()
                 Button {
@@ -105,7 +109,11 @@ struct OverlayControls: View {
                         currLocationOpen = false
                     }
                 } label: {
-                    Image(systemName: "heart")
+                    if (favouritedOpen) {
+                        Image(systemName: "heart.fill")
+                    } else {
+                        Image(systemName: "heart")
+                    }
                 }
             }
             .frame(width: 50)
