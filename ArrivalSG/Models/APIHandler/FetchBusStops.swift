@@ -12,6 +12,7 @@ class FetchBusStops: ObservableObject {
     @Published var stops: [BusStopLoc]?
     var stopsData:[BusStopLoc] = []
     var stopsDataDouble:[BusStopLocDouble] = []
+    
     var apiKey: String {
       get {
         // 1

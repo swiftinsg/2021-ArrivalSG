@@ -17,8 +17,10 @@
 		594A76332742285500E29B23 /* TrainDisruption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A76322742285500E29B23 /* TrainDisruption.swift */; };
 		594A76352742285F00E29B23 /* TrainMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A76342742285F00E29B23 /* TrainMap.swift */; };
 		594A7637274228AC00E29B23 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594A7636274228AC00E29B23 /* TabBar.swift */; };
+		59616D7D27D9BBBE0028D40F /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 59616D7C27D9BBBE0028D40F /* Secrets.plist */; };
+		596BADA727E08C8800F7E958 /* FetchCarparkAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 596BADA627E08C8700F7E958 /* FetchCarparkAvailability.swift */; };
+		596BADA927E08CD600F7E958 /* CarparkAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 596BADA827E08CD600F7E958 /* CarparkAvailability.swift */; };
 		596D867E27521B0E00AE37CB /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 596D867D27521B0E00AE37CB /* SwiftDate */; };
-		5970A52F2753B74600CB952B /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5970A52E2753B74600CB952B /* Secrets.plist */; };
 		59B48BF72742412D00554628 /* FetchBusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF62742412D00554628 /* FetchBusStops.swift */; };
 		59B48BF92742494A00554628 /* FetchBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BF82742494A00554628 /* FetchBuses.swift */; };
 		59B48BFE274261F800554628 /* BusStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B48BFD274261F800554628 /* BusStops.swift */; };
@@ -41,7 +43,9 @@
 		594A76322742285500E29B23 /* TrainDisruption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainDisruption.swift; sourceTree = "<group>"; };
 		594A76342742285F00E29B23 /* TrainMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainMap.swift; sourceTree = "<group>"; };
 		594A7636274228AC00E29B23 /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
-		5970A52E2753B74600CB952B /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
+		59616D7C27D9BBBE0028D40F /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
+		596BADA627E08C8700F7E958 /* FetchCarparkAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCarparkAvailability.swift; sourceTree = "<group>"; };
+		596BADA827E08CD600F7E958 /* CarparkAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarparkAvailability.swift; sourceTree = "<group>"; };
 		59B48BF62742412D00554628 /* FetchBusStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchBusStops.swift; sourceTree = "<group>"; };
 		59B48BF82742494A00554628 /* FetchBuses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchBuses.swift; sourceTree = "<group>"; };
 		59B48BFA2742599700554628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -84,8 +88,8 @@
 		593D638C27420DD000FDF440 /* ArrivalSG */ = {
 			isa = PBXGroup;
 			children = (
+				59616D7C27D9BBBE0028D40F /* Secrets.plist */,
 				59B48BFA2742599700554628 /* Info.plist */,
-				5970A52E2753B74600CB952B /* Secrets.plist */,
 				59F58B322743C12100E93DDE /* Models */,
 				59E0C933274E9013004249BD /* Structs */,
 				594A76312742283D00E29B23 /* Views */,
@@ -124,6 +128,7 @@
 				59B48BF62742412D00554628 /* FetchBusStops.swift */,
 				59B48BF82742494A00554628 /* FetchBuses.swift */,
 				59F58B2C2743BFFC00E93DDE /* TrainDisruptions.swift */,
+				596BADA627E08C8700F7E958 /* FetchCarparkAvailability.swift */,
 			);
 			path = APIHandler;
 			sourceTree = "<group>";
@@ -133,6 +138,7 @@
 			children = (
 				59B48BFD274261F800554628 /* BusStops.swift */,
 				59F58B2E2743C03500E93DDE /* TrainDisruptionsData.swift */,
+				596BADA827E08CD600F7E958 /* CarparkAvailability.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -214,7 +220,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				593D639527420DD300FDF440 /* Preview Assets.xcassets in Resources */,
-				5970A52F2753B74600CB952B /* Secrets.plist in Resources */,
+				59616D7D27D9BBBE0028D40F /* Secrets.plist in Resources */,
 				593D639227420DD300FDF440 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -228,6 +234,7 @@
 			files = (
 				593D639727420DD300FDF440 /* Persistence.swift in Sources */,
 				59F58B2F2743C03500E93DDE /* TrainDisruptionsData.swift in Sources */,
+				596BADA727E08C8800F7E958 /* FetchCarparkAvailability.swift in Sources */,
 				5929449F2742AE3C004F628A /* UserSettings.swift in Sources */,
 				593D639A27420DD300FDF440 /* ArrivalSG.xcdatamodeld in Sources */,
 				593D639027420DD000FDF440 /* ContentView.swift in Sources */,
@@ -241,6 +248,7 @@
 				59F58B2D2743BFFC00E93DDE /* TrainDisruptions.swift in Sources */,
 				59F58B2B2743B73C00E93DDE /* LocationViewModel.swift in Sources */,
 				594A7637274228AC00E29B23 /* TabBar.swift in Sources */,
+				596BADA927E08CD600F7E958 /* CarparkAvailability.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

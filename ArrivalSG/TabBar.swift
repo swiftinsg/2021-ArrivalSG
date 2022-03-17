@@ -26,8 +26,10 @@ struct TabBar: View {
         @ObservedObject var userSettings = UserSettings()
         @ObservedObject var fetchStops = FetchBusStops()
         @ObservedObject var fetchStopData = FetchBuses()
+        @ObservedObject var carparkAvail = CarparkAvailability()
         userSettings.isFirstOpen = false
         
+        // Fetch Bus Stops
         try await fetchStops.fetchBusStops()
         let stops = fetchStops.stops
         busStopLoc.removeAll()
@@ -39,6 +41,11 @@ struct TabBar: View {
         
         userSettings.sgBusStopLoc = busStopLoc
         userSettings.sgBusStops = busStopArr
+        
+        // Fetch Carpark Availability
+        try await carparkAvail.fetchCarparkAvailability()
+        userSettings.carparkAvailability = carparkAvail.carparkAvailability ?? [CarparkAvailabilityMData(CarParkID: "", Area: "", Development: "", Location: "", AvailableLots: 0, LotType: "", Agency: "")]
+        
         reloadData()
         
         func reloadData() {
