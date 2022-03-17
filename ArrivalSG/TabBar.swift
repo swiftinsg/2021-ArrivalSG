@@ -111,6 +111,12 @@ struct TabBar: View {
                     Image(systemName: "xmark.octagon")
                 }
                 .preferredColorScheme(.light)
+            CarparkAvailabilityView()
+                .tag(3)
+                .tabItem {
+                    Text("Carpark")
+                    Image(systemName: "car.2.fill")
+                }
         }
     }
 }

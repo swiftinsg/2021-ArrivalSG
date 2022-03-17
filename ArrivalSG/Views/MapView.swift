@@ -12,13 +12,16 @@ import SwiftUI
 struct MapView: UIViewRepresentable {
     @Binding var centreCoordinate: CLLocationCoordinate2D
     @Binding var showNewStops: Bool
+    @Binding var showCarparks: Bool
     @State var locationModel = LocationViewModel()
     @ObservedObject var userSettings = UserSettings()
     @Binding var shownBusStops : [[String:String]]
+    @Binding var shownCarparks: [CarparkAvailabilityMData]
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         uiView.showsUserLocation = true
         
+        // Update Showed Bus Stops
         if showNewStops {
             print("Showing new stops")
             let busStopLoc = userSettings.sgBusStopLoc
@@ -68,19 +71,6 @@ struct MapView: UIViewRepresentable {
                     })
                 }
                 
-//                var visibleAnnotations = uiView.annotations(in: uiView.visibleMapRect).map { obj -> MKAnnotation in return obj as! MKAnnotation }
-//                
-//                visibleAnnotations = visibleAnnotations.sorted(by: {a, b in
-//                    CLLocation(latitude: a.coordinate.latitude, longitude: a.coordinate.longitude).distance(from: centralLocation) < CLLocation(latitude: b.coordinate.latitude, longitude: b.coordinate.longitude).distance(from: centralLocation)
-//                })
-//                
-//                for i in 0..<visibleAnnotations.count {
-//                    if let subtitle = visibleAnnotations[i].subtitle as? String {
-//                        let subtitleComponents = subtitle.components(separatedBy: ", ")
-//                        shownBusStops.append(["Name": (visibleAnnotations[i].title as? String)!, "BusStopCode": (subtitleComponents[0] as? String)!, "RoadName": (subtitleComponents[1] as? String)!, "Latitude": "\(visibleAnnotations[i].coordinate.latitude)", "Longitude": "\(visibleAnnotations[i].coordinate.longitude)"])
-//                    }
-//                }
-                
                 shownBusStops = temp.sorted(by: {a, b in
                     CLLocation(latitude: CLLocationDegrees({ () -> String in
                         if let lat = a["Latitude"]! as? String {
@@ -111,6 +101,49 @@ struct MapView: UIViewRepresentable {
             }
         }
         showNewStops = false
+        
+        // Update Showed Carparks
+        if showCarparks {
+            print("Showing new carparks")
+            let carparkAvail = userSettings.carparkAvailability
+            
+            let centralLocation = CLLocation(latitude: uiView.centerCoordinate.latitude, longitude: uiView.centerCoordinate.longitude)
+            func checkPtWithin(pt: CLLocation) -> Double {
+                let distCentreToPt = pt.distance(from: centralLocation) / 1000 // In km
+                return distCentreToPt
+            }
+            
+            uiView.removeAnnotations(uiView.annotations)
+            var filteredAnnotations = carparkAvail.filter { val in
+                var temp = val.Location.components(separatedBy: " ")
+                var locationOfCarpark = [Double(temp[0]), Double(temp[1])]
+                let pt = CLLocation(latitude: CLLocationDegrees({ () -> String in
+                    if let lat = locationOfCarpark[0]! as? String {
+                        return lat
+                    } else {
+                        return String(locationOfCarpark[0]! as! Double)
+                    }
+                }())! , longitude: CLLocationDegrees({ () -> String in
+                    if let lon = locationOfCarpark[1]! as? String {
+                        return lon
+                    } else {
+                        return String(locationOfCarpark[1]! as! Double)
+                    }
+                }())!)
+                return checkPtWithin(pt: pt) <= 1.00 // Show Carparks within a 1km radius
+            }
+            
+            for i in 0..<filteredAnnotations.count {
+                let newLocation = MKPointAnnotation()
+                newLocation.title = filteredAnnotations[i].Development
+                newLocation.subtitle = "\(String(describing: filteredAnnotations[i].CarParkID)) - \(String(describing: filteredAnnotations[i].AvailableLots))"
+                newLocation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees( filteredAnnotations[i].Location.components(separatedBy: " ")[0])!, longitude: CLLocationDegrees( filteredAnnotations[i].Location.components(separatedBy: " ")[1])!)
+                uiView.addAnnotation(newLocation)
+                shownCarparks.append(filteredAnnotations[i])
+            }
+            
+        }
+        showCarparks = false
     }
     
     func makeUIView(context: Context) -> MKMapView {
@@ -141,7 +174,4 @@ class Coordinator: NSObject, MKMapViewDelegate, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
     }
-}
-class ShownStops: ObservableObject {
-    @Published var shownBusStops: [Int] = []
 }

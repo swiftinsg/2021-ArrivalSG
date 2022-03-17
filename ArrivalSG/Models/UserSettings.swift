@@ -63,36 +63,31 @@ class UserSettings: ObservableObject {
             userDefaults.set(data, forKey: "carparkAvailability")
         }
     }
-
+    
     
     init() {
+        let decoder = JSONDecoder()
+
         self.sgBusStops = userDefaults.object(forKey: "sgBusStops") as? [Int] ?? []
         self.busStopData = userDefaults.object(forKey: "busStopData") as? [[String:Any]] ?? [[:]]
         self.sgBusStopLoc = userDefaults.object(forKey: "sgBusStopLoc") as? [[String:Any]] ?? [[:]]
         self.favouritedBusStops = userDefaults.object(forKey: "favouritedBusStops") as? [Int] ?? []
-        if (true) { // Just for some separation
-            let data = userDefaults.object(forKey: "trainDisruptions") as? Data
-            let decoder = JSONDecoder()
-            if let data = data {
-                let disruptions = try? decoder.decode(TrainDisruptionsData.self, from: data)
-                self.trainDisruptions = disruptions ?? TrainDisruptionsData(Status: 1, Message: [msg(Content: "", CreatedDate: "")], AffectedSegments: [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")])
-            } else {
-                self.trainDisruptions = TrainDisruptionsData(Status: 1, Message: [msg(Content: "", CreatedDate: "")], AffectedSegments: [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")])
-            }
+        let trainDisruptionsDat = userDefaults.object(forKey: "trainDisruptions") as? Data
+        if let trainDisruptionsDat = trainDisruptionsDat {
+            let disruptions = try? decoder.decode(TrainDisruptionsData.self, from: trainDisruptionsDat)
+            self.trainDisruptions = disruptions ?? TrainDisruptionsData(Status: 1, Message: [msg(Content: "", CreatedDate: "")], AffectedSegments: [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")])
+        } else {
+            self.trainDisruptions = TrainDisruptionsData(Status: 1, Message: [msg(Content: "", CreatedDate: "")], AffectedSegments: [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")])
         }
         self.trainDisruptions = userDefaults.object(forKey: "trainDisruptions") as? TrainDisruptionsData ?? TrainDisruptionsData(Status: 1, Message: [msg(Content: "", CreatedDate: "")], AffectedSegments: [affectedSeg(Line: "", Direction: "", Stations: "", FreePublicBus: "", FreeMRTShuttle: "", MRTShuttleDirection: "")])
         self.isFirstOpen = userDefaults.object(forKey: "isFirstOpen") as? Bool ?? true
         self.lastUpdatedBus = userDefaults.object(forKey: "lastUpdatedBus") as? Date ?? Date.now
-        if (true) { // Code Readability Purposes
-            let data = userDefaults.data(forKey: "carparkAvailability")
-            let decoder = JSONDecoder()
-            if let data = data {
-                let parkingAvail = try? decoder.decode(CarparkAvailabilityData.self, from: data)
-                self.carparkAvailability = parkingAvail as? [CarparkAvailabilityMData] ?? [CarparkAvailabilityMData(CarParkID: "", Area: "", Development: "", Location: "", AvailableLots: 0, LotType: "", Agency: "")]
-            } else {
-                self.carparkAvailability = [CarparkAvailabilityMData(CarParkID: "", Area: "", Development: "", Location: "", AvailableLots: 0, LotType: "", Agency: "")]
-            }
+        let carparkAvailabilityDat = userDefaults.data(forKey: "carparkAvailability")
+        if let carparkAvailabilityDat = carparkAvailabilityDat {
+            let parkingAvail = try? decoder.decode([CarparkAvailabilityMData].self, from: carparkAvailabilityDat)
+            self.carparkAvailability = parkingAvail ?? [CarparkAvailabilityMData(CarParkID: "", Area: "", Development: "", Location: "", AvailableLots: 0, LotType: "", Agency: "")]
+        } else {
+            self.carparkAvailability = [CarparkAvailabilityMData(CarParkID: "", Area: "", Development: "", Location: "", AvailableLots: 0, LotType: "", Agency: "")]
         }
-        self.carparkAvailability = userDefaults.object(forKey: "carparkAvailability") as? [CarparkAvailabilityMData] ?? [CarparkAvailabilityMData(CarParkID: "", Area: "", Development: "", Location: "", AvailableLots: 0, LotType: "", Agency: "")]
     }
 }

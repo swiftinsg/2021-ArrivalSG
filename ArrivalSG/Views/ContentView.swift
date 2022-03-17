@@ -13,7 +13,6 @@ import SwiftDate
 struct ContentView: View {
     @ObservedObject var fetchStops = FetchBusStops()
     @ObservedObject var userSettings = UserSettings()
-    @ObservedObject var shownStops = ShownStops()
     
     // Variables
     @State var locationModel = LocationViewModel()
@@ -24,7 +23,9 @@ struct ContentView: View {
     @State var currLocationOpen = true
     @State var favouritedOpen = false
     @State var isShowNewStops = false
+    @State var isShowCarparks = false // VALUE IS A CONSTANT FALSE. DO NOT UPDATE VALUE
     @State var shownBusStops: [[String:String]] = []
+    @State var shownCarparks: [CarparkAvailabilityMData] = [] // VALUE IS A CONSTANT FALSE. DO NOT UPDATE VALUE
     
     @State var refresh: Bool = false
     
@@ -38,7 +39,7 @@ struct ContentView: View {
         // Map
         GeometryReader { geometry in
             ZStack {
-                MapView(centreCoordinate: $centreCoordinate, showNewStops: $isShowNewStops, shownBusStops: $shownBusStops)
+                MapView(centreCoordinate: $centreCoordinate, showNewStops: $isShowNewStops, showCarparks: $isShowCarparks, shownBusStops: $shownBusStops, shownCarparks: $shownCarparks)
                     .edgesIgnoringSafeArea(.all)
                     .accentColor(Color(.systemPink))
                     .onChange(of: shownBusStops) { _ in
@@ -78,9 +79,7 @@ struct ContentView: View {
     }
 }
 
-struct OverlayControls: View {
-    @ObservedObject var showStops = ShownStops()
-    
+struct OverlayControls: View {    
     @Binding var isSettingsOpen: Bool
     @Binding var currLocationOpen: Bool
     @Binding var favouritedOpen: Bool
@@ -258,7 +257,6 @@ struct SettingsPopup: View {
 
 struct FavouritedScreen: View {
     @ObservedObject var userSettings = UserSettings()
-    @ObservedObject var shownStops = ShownStops()
     @ObservedObject var fetchStopData = FetchBuses()
     
     @Binding var shownBusStops: [[String:String]]
