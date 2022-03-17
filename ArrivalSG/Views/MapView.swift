@@ -103,6 +103,7 @@ struct MapView: UIViewRepresentable {
         showNewStops = false
         
         // Update Showed Carparks
+        var tempData: [CarparkAvailabilityMData] = []
         if showCarparks {
             print("Showing new carparks")
             let carparkAvail = userSettings.carparkAvailability
@@ -136,14 +137,15 @@ struct MapView: UIViewRepresentable {
             for i in 0..<filteredAnnotations.count {
                 let newLocation = MKPointAnnotation()
                 newLocation.title = filteredAnnotations[i].Development
-                newLocation.subtitle = "\(String(describing: filteredAnnotations[i].CarParkID)) - \(String(describing: filteredAnnotations[i].AvailableLots))"
+                newLocation.subtitle = "\(String(describing: filteredAnnotations[i].CarParkID))"
                 newLocation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees( filteredAnnotations[i].Location.components(separatedBy: " ")[0])!, longitude: CLLocationDegrees( filteredAnnotations[i].Location.components(separatedBy: " ")[1])!)
                 uiView.addAnnotation(newLocation)
-                shownCarparks.append(filteredAnnotations[i])
+                tempData.append(filteredAnnotations[i])
             }
-            
+            shownCarparks = tempData
         }
         showCarparks = false
+        
     }
     
     func makeUIView(context: Context) -> MKMapView {

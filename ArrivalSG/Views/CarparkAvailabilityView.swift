@@ -23,6 +23,7 @@ struct CarparkAvailabilityView: View {
     @State var isShowNewStops = false // VALUE IS A CONSTANT FALSE. DO NOT UPDATE VALUE2
     @State var shownBusStops: [[String:String]] = [] // VALUE IS A CONSTANT FALSE. DO NOT UPDATE VALUE
     @State var shownCarparks: [CarparkAvailabilityMData] = []
+    @State var isDefaultsExpanded = [false]
     
     @State var refresh: Bool = false
     
@@ -31,7 +32,7 @@ struct CarparkAvailabilityView: View {
     init() {
         locationModel.checkIfLocationEnabled()
     }
-
+    
     var body: some View {
         // Map
         GeometryReader { geometry in
@@ -44,7 +45,26 @@ struct CarparkAvailabilityView: View {
                     }
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
-                    Text("Click 'Reload' in an area with Carparks!")
+                    ScrollView {
+                        VStack {
+                            if (shownCarparks.count != 0) {
+                                ListCarparks(carparkData: shownCarparks)
+                                    .padding(.horizontal)
+                            } else {
+                                Text("Click 'Reload' in an area with Bus Stops!")
+                            }
+                        }
+                        .onChange(of: shownCarparks){ _ in
+                            var x = [false]
+                            for _ in 0..<shownCarparks.count{
+                                x.append(false)
+                            }
+                            isDefaultsExpanded = x
+                        }
+                        
+                        Spacer()
+                            .frame(height: 100)
+                    }
                 }
                 
                 VStack(alignment: .leading) {
@@ -88,14 +108,74 @@ struct CarparkOverlayControls: View {
 
 struct ListCarparks: View {
     let timer = Timer.publish(every: 120, on: .main, in: .common).autoconnect() // Carpark Availability will update every 2 minutes
+    var carparkData: [CarparkAvailabilityMData]
+    
+    struct formattedData: Codable, Hashable {
+        var CarParkID: String
+        var Area: String
+        var Development: String
+        var AvailableLots: [String:String]
+        var LotType: String
+        var Agency: String
+    }
+    
+    @State var formattedCarparkData: [formattedData] = []
+    
+    func reloadData() async throws {
+        @ObservedObject var carparkAvail = CarparkAvailability()
+        @ObservedObject var userSettings = UserSettings()
+        try await carparkAvail.fetchCarparkAvailability()
+        userSettings.carparkAvailability = carparkAvail.carparkAvailability ?? [CarparkAvailabilityMData(CarParkID: "", Area: "", Development: "", Location: "", AvailableLots: 0, LotType: "", Agency: "")]
+    }
     
     var body: some View {
-        // Carpark DisclosureGroup goes here
-        VStack {
-            
+        VStack(alignment: .leading) {
+            ForEach(formattedCarparkData, id: \.self) { carData in
+                Text("\(carData.Development) - \(carData.CarParkID as? String ?? "")")
+                    .font(.system(size: 19))
+                    .foregroundColor(Color(.label))
+                    .bold()
+                VStack(alignment: .leading) {
+                    Text("Car Lots: \(carData.AvailableLots["C"] ?? "0")")
+                        .foregroundColor(Color(.label))
+                        .opacity(0.8)
+                    Text("Heavy Lots: \(carData.AvailableLots["H"] ?? "0")")
+                        .foregroundColor(Color(.label))
+                        .opacity(0.8)
+                    Text("Motorcycle Lots: \(carData.AvailableLots["Y"] ?? "0")")
+                        .foregroundColor(Color(.label))
+                        .opacity(0.8)
+                }
+                Divider()
+            }
         }
         .onReceive(timer) { _ in
-            // Reload Data goes here
+            Task {
+                try? await reloadData()
+            }
+        }
+        .onAppear {
+            let data = carparkData
+            var completedID:[String] = []
+            for i in 0..<carparkData.count {
+                if !completedID.contains(carparkData[i].CarParkID)  {
+                    var temp: formattedData = formattedData(CarParkID: "", Area: "", Development: "", AvailableLots: [:], LotType: "", Agency: "")
+                    var availLot = ["C": "0", "H": "0", "Y": "0"]
+                    temp.CarParkID = data[i].CarParkID
+                    temp.Agency = data[i].Agency
+                    temp.Development = data[i].Development
+                    temp.Area = data[i].Area
+                    availLot[data[i].LotType] = String(data[i].AvailableLots)
+                    for j in 0..<data.count {
+                        if data[i].CarParkID == data[j].CarParkID && data[i] != data[j] {
+                            availLot[data[j].LotType] = String(data[j].AvailableLots)
+                        }
+                    }
+                    temp.AvailableLots = availLot
+                    completedID.append(data[i].CarParkID)
+                    formattedCarparkData.append(temp)
+                }
+            }
         }
     }
 }
