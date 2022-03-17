@@ -35,7 +35,7 @@ struct MapView: UIViewRepresentable {
             uiView.removeAnnotations(uiView.annotations)
             if (busStopLoc.count != 1) {
                 var temp: [[String:String]] = []
-                var filteredAnnotations = busStopLoc.filter { val in
+                let filteredAnnotations = busStopLoc.filter { val in
                     let pt = CLLocation(latitude: CLLocationDegrees({ () -> String in
                         if let lat = val["Latitude"]! as? String {
                             return lat
@@ -73,28 +73,28 @@ struct MapView: UIViewRepresentable {
                 
                 shownBusStops = temp.sorted(by: {a, b in
                     CLLocation(latitude: CLLocationDegrees({ () -> String in
-                        if let lat = a["Latitude"]! as? String {
+                        if let lat = a["Latitude"] {
                             return lat
                         } else {
-                            return String(a["Latitude"]! as! Double)
+                            return String(a["Latitude"]!)
                         }
                     }())! , longitude: CLLocationDegrees({ () -> String in
-                        if let lon = a["Longitude"]! as? String {
+                        if let lon = a["Longitude"] {
                             return lon
                         } else {
-                            return String(a["Longitude"]! as! Double)
+                            return String(a["Longitude"]!)
                         }
                     }())!).distance(from: centralLocation) < CLLocation(latitude: CLLocationDegrees({ () -> String in
-                        if let lat = b["Latitude"]! as? String {
+                        if let lat = b["Latitude"] {
                             return lat
                         } else {
-                            return String(b["Latitude"]! as! Double)
+                            return String(b["Latitude"]!)
                         }
                     }())! , longitude: CLLocationDegrees({ () -> String in
-                        if let lon = b["Longitude"]! as? String {
+                        if let lon = b["Longitude"] {
                             return lon
                         } else {
-                            return String(b["Longitude"]! as! Double)
+                            return String(b["Longitude"]!)
                         }
                     }())!).distance(from: centralLocation)
                 })
@@ -115,20 +115,20 @@ struct MapView: UIViewRepresentable {
             }
             
             uiView.removeAnnotations(uiView.annotations)
-            var filteredAnnotations = carparkAvail.filter { val in
-                var temp = val.Location.components(separatedBy: " ")
-                var locationOfCarpark = [Double(temp[0]), Double(temp[1])]
+            let filteredAnnotations = carparkAvail.filter { val in
+                let temp = val.Location.components(separatedBy: " ")
+                let locationOfCarpark = [Double(temp[0]), Double(temp[1])]
                 let pt = CLLocation(latitude: CLLocationDegrees({ () -> String in
                     if let lat = locationOfCarpark[0]! as? String {
                         return lat
                     } else {
-                        return String(locationOfCarpark[0]! as! Double)
+                        return String(locationOfCarpark[0]!)
                     }
                 }())! , longitude: CLLocationDegrees({ () -> String in
                     if let lon = locationOfCarpark[1]! as? String {
                         return lon
                     } else {
-                        return String(locationOfCarpark[1]! as! Double)
+                        return String(locationOfCarpark[1]!)
                     }
                 }())!)
                 return checkPtWithin(pt: pt) <= 1.00 // Show Carparks within a 1km radius
@@ -142,7 +142,34 @@ struct MapView: UIViewRepresentable {
                 uiView.addAnnotation(newLocation)
                 tempData.append(filteredAnnotations[i])
             }
-            shownCarparks = tempData
+            
+            shownCarparks = tempData.sorted(by: {a, b in
+                CLLocation(latitude: CLLocationDegrees({ () -> String in
+                    if let lat = a.Location.components(separatedBy: " ")[0] as? String {
+                        return lat
+                    } else {
+                        return String(a.Location.components(separatedBy: " ")[0])
+                    }
+                }())! , longitude: CLLocationDegrees({ () -> String in
+                    if let lon = a.Location.components(separatedBy: " ")[1] as? String {
+                        return lon
+                    } else {
+                        return String(a.Location.components(separatedBy: " ")[1])
+                    }
+                }())!).distance(from: centralLocation) < CLLocation(latitude: CLLocationDegrees({ () -> String in
+                    if let lat = b.Location.components(separatedBy: " ")[0] as? String {
+                        return lat
+                    } else {
+                        return String(b.Location.components(separatedBy: " ")[0])
+                    }
+                }())! , longitude: CLLocationDegrees({ () -> String in
+                    if let lon = b.Location.components(separatedBy: " ")[1] as? String  {
+                        return lon
+                    } else {
+                        return String(b.Location.components(separatedBy: " ")[1])
+                    }
+                }())!).distance(from: centralLocation)
+            })
         }
         showCarparks = false
         

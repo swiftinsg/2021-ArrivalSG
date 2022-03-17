@@ -48,10 +48,10 @@ struct CarparkAvailabilityView: View {
                     ScrollView {
                         VStack {
                             if (shownCarparks.count != 0) {
-                                ListCarparks(carparkData: shownCarparks)
+                                ListCarparks(carparkData: shownCarparks, userLocation: locationModel.userLocation)
                                     .padding(.horizontal)
                             } else {
-                                Text("Click 'Reload' in an area with Bus Stops!")
+                                Text("Click 'Reload' in an area with Carparks!")
                             }
                         }
                         .onChange(of: shownCarparks){ _ in
@@ -114,12 +114,14 @@ struct ListCarparks: View {
         var CarParkID: String
         var Area: String
         var Development: String
+        var Location: String
         var AvailableLots: [String:String]
         var LotType: String
         var Agency: String
     }
     
     @State var formattedCarparkData: [formattedData] = []
+    @State var userLocation: CLLocationCoordinate2D
     
     func reloadData() async throws {
         @ObservedObject var carparkAvail = CarparkAvailability()
@@ -131,21 +133,25 @@ struct ListCarparks: View {
     var body: some View {
         VStack(alignment: .leading) {
             ForEach(formattedCarparkData, id: \.self) { carData in
-                Text("\(carData.Development) - \(carData.CarParkID as? String ?? "")")
-                    .font(.system(size: 19))
-                    .foregroundColor(Color(.label))
-                    .bold()
-                VStack(alignment: .leading) {
-                    Text("Car Lots: \(carData.AvailableLots["C"] ?? "0")")
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(carData.Development) - \(carData.CarParkID)")
+                        .font(.system(size: 19))
                         .foregroundColor(Color(.label))
-                        .opacity(0.8)
-                    Text("Heavy Lots: \(carData.AvailableLots["H"] ?? "0")")
-                        .foregroundColor(Color(.label))
-                        .opacity(0.8)
-                    Text("Motorcycle Lots: \(carData.AvailableLots["Y"] ?? "0")")
-                        .foregroundColor(Color(.label))
-                        .opacity(0.8)
+                        .bold()
+                    VStack(alignment: .leading) {
+                        Text("Car Lots: \(carData.AvailableLots["C"] ?? "0")")
+                            .foregroundColor(Color(.label))
+                            .opacity(0.8)
+                        Text("Heavy Lots: \(carData.AvailableLots["H"] ?? "0")")
+                            .foregroundColor(Color(.label))
+                            .opacity(0.8)
+                        Text("Motorcycle Lots: \(carData.AvailableLots["Y"] ?? "0")")
+                            .foregroundColor(Color(.label))
+                            .opacity(0.8)
+                    }
                 }
+                Text("\(String(format: "%.2f", (CLLocation(latitude: Double(carData.Location.components(separatedBy: " ")[0])!, longitude: Double(carData.Location.components(separatedBy: " ")[1])!).distance(from: CLLocation(latitude: userLocation.latitude, longitude: userLocation.longitude)))/1000)) km")
+                    .foregroundColor(Color("DarkBlue"))
                 Divider()
             }
         }
@@ -159,12 +165,13 @@ struct ListCarparks: View {
             var completedID:[String] = []
             for i in 0..<carparkData.count {
                 if !completedID.contains(carparkData[i].CarParkID)  {
-                    var temp: formattedData = formattedData(CarParkID: "", Area: "", Development: "", AvailableLots: [:], LotType: "", Agency: "")
+                    var temp: formattedData = formattedData(CarParkID: "", Area: "", Development: "", Location: "", AvailableLots: [:], LotType: "", Agency: "")
                     var availLot = ["C": "0", "H": "0", "Y": "0"]
                     temp.CarParkID = data[i].CarParkID
                     temp.Agency = data[i].Agency
                     temp.Development = data[i].Development
                     temp.Area = data[i].Area
+                    temp.Location = data[i].Location
                     availLot[data[i].LotType] = String(data[i].AvailableLots)
                     for j in 0..<data.count {
                         if data[i].CarParkID == data[j].CarParkID && data[i] != data[j] {

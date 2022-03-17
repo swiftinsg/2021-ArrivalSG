@@ -42,9 +42,9 @@ class FetchBuses: ObservableObject {
                             let nextBus = currServices["NextBus"] as? [String:String]
                             let nextBus2 = currServices["NextBus2"] as? [String:String]
                             let nextBus3 = currServices["NextBus3"] as? [String:String]
-                            newServices.append(["ServiceNo": currServices["ServiceNo"], "Operator": currServices["Operator"], "NextBus": nextBus, "NextBus2": nextBus2, "NextBus3": nextBus3])
+                            newServices.append(["ServiceNo": currServices["ServiceNo"]!, "Operator": currServices["Operator"]!, "NextBus": nextBus!, "NextBus2": nextBus2!, "NextBus3": nextBus3!])
                         }
-                        self.stopsData = ["BusStopCode": busStopCode as? String, "Services": newServices]
+                        self.stopsData = ["BusStopCode": busStopCode!, "Services": newServices]
                         
                         return completion(.success(self.stopsData))
                     }

@@ -151,11 +151,15 @@ struct SettingsPopup: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 3) {
-            Text("Settings")
-                .bold()
-                .font(.title)
-                .foregroundColor(.black)
-                .padding()
+            VStack(alignment: .center, spacing: 3) {
+                Text("Settings")
+                    .bold()
+                    .font(.title)
+                    .foregroundColor(.black)
+                Text("Do not close this screen when reloading data.")
+                    .multilineTextAlignment(.center)
+            }
+            .padding()
             VStack {
                 Button {
                     Task {
@@ -171,12 +175,12 @@ struct SettingsPopup: View {
                 .disabled(buttonDisabled == true)
                 Text(infoText)
             }
-            Text("Information")
-                .bold()
-                .font(.title2)
-                .foregroundColor(.black)
-                .padding()
             VStack {
+                Text("Information")
+                    .bold()
+                    .font(.title2)
+                    .foregroundColor(.black)
+                    .padding()
                 List {
                     Section(header: Text("Bus Occupancy")) {
                         Text("For Bus Arrivals, the Bus Arrival Background has a deeper purple the more packed the Bus is.")
@@ -194,6 +198,12 @@ struct SettingsPopup: View {
                     
                     Section(header: Text("Sorting of Bus Stops")) {
                         Text("Bus Stops are sorted by the distance from the Middle of the Screen. (NOT the UserLocation)")
+                        Text("Bus Stops are shown in a 460m radius")
+                    }
+                    
+                    Section(header: Text("Sorting of Carparks")) {
+                        Text("Carparks are sorted by the distance from the Middle of the Screen. (NOT the UserLocation)")
+                        Text("Carparks are shown in a 1km/1000m radius")
                     }
                 }
                 .foregroundColor(.black)
@@ -202,9 +212,10 @@ struct SettingsPopup: View {
         .frame(height: 500)
         .background(.white)
         .cornerRadius(10)
-        .padding(.leading, 5)
-        .padding(.trailing, 5)
+        .padding(.leading, 3)
+        .padding(.trailing, 3)
         .padding()
+        .shadow(radius: 5)
     }
     
     func prepareDataReload() async throws {
