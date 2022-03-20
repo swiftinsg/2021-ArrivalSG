@@ -70,7 +70,10 @@ struct ContentView: View {
                 }
                 
                 if (userSettings.isFirstOpen) {
-                    
+                    userFirstOpenView()
+                        .onAppear {
+                            print("Im open!")
+                        }
                 }
                 
             }.alert(isPresented: $locationModel.isAlertPresented) {
