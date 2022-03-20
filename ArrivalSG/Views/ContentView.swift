@@ -25,7 +25,7 @@ struct ContentView: View {
     @State var isShowNewStops = false
     @State var isShowCarparks = false // VALUE IS A CONSTANT FALSE. DO NOT UPDATE VALUE
     @State var shownBusStops: [[String:String]] = []
-    @State var shownCarparks: [CarparkAvailabilityMData] = [] // VALUE IS A CONSTANT FALSE. DO NOT UPDATE VALUE
+    @State var shownCarparks: [formattedCarparkData] = [] // VALUE IS A CONSTANT FALSE. DO NOT UPDATE VALUE
     
     @State var refresh: Bool = false
     
@@ -68,6 +68,11 @@ struct ContentView: View {
                     }
                     Spacer()
                 }
+                
+                if (userSettings.isFirstOpen) {
+                    
+                }
+                
             }.alert(isPresented: $locationModel.isAlertPresented) {
                 Alert(title: Text(locationModel.locationAuthError[0]), message: Text(locationModel.locationAuthError[1]), dismissButton: .destructive(Text("Ok")))
             }
@@ -166,7 +171,7 @@ struct SettingsPopup: View {
                         try? await prepareDataReload()
                     }
                 } label: {
-                    Text("Reload Bus Data")
+                    Text("Reload App Data")
                 }
                 .padding()
                 .foregroundColor(.white)
@@ -571,6 +576,25 @@ struct BusView: View {
     }
 }
 
+struct userFirstOpenView: View {
+    var body: some View {
+        VStack(alignment: .center, spacing: 3) {
+            Text("Welcome to ArrivalSG!")
+                .bold()
+                .font(.title)
+                .foregroundColor(.black)
+            Text("The app is currently loading data, please hold on. This screen will close automatically after all data has been loaded.")
+                .multilineTextAlignment(.center)
+        }
+        .frame(height: 500)
+        .background(.white)
+        .cornerRadius(10)
+        .padding(.leading, 3)
+        .padding(.trailing, 3)
+        .padding()
+        .shadow(radius: 5)
+    }
+}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

@@ -16,7 +16,7 @@ struct MapView: UIViewRepresentable {
     @State var locationModel = LocationViewModel()
     @ObservedObject var userSettings = UserSettings()
     @Binding var shownBusStops : [[String:String]]
-    @Binding var shownCarparks: [CarparkAvailabilityMData]
+    @Binding var shownCarparks: [formattedCarparkData]
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         uiView.showsUserLocation = true
@@ -143,7 +143,7 @@ struct MapView: UIViewRepresentable {
                 tempData.append(filteredAnnotations[i])
             }
             
-            shownCarparks = tempData.sorted(by: {a, b in
+            tempData = tempData.sorted(by: {a, b in
                 CLLocation(latitude: CLLocationDegrees({ () -> String in
                     if let lat = a.Location.components(separatedBy: " ")[0] as? String {
                         return lat
@@ -170,9 +170,32 @@ struct MapView: UIViewRepresentable {
                     }
                 }())!).distance(from: centralLocation)
             })
+            
+            var completedID:[String] = []
+            var formattedData: [formattedCarparkData] = []
+            for i in 0..<tempData.count {
+                if !completedID.contains(tempData[i].CarParkID)  {
+                    var temp: formattedCarparkData = formattedCarparkData(CarParkID: "", Area: "", Development: "", Location: "", AvailableLots: [:], LotType: "", Agency: "")
+                    var availLot = ["C": "0", "H": "0", "Y": "0"]
+                    temp.CarParkID = tempData[i].CarParkID
+                    temp.Agency = tempData[i].Agency
+                    temp.Development = tempData[i].Development
+                    temp.Area = tempData[i].Area
+                    temp.Location = tempData[i].Location
+                    availLot[tempData[i].LotType] = String(tempData[i].AvailableLots)
+                    for j in 0..<tempData.count {
+                        if tempData[i].CarParkID == tempData[j].CarParkID && tempData[i] != tempData[j] {
+                            availLot[tempData[j].LotType] = String(tempData[j].AvailableLots)
+                        }
+                    }
+                    temp.AvailableLots = availLot
+                    completedID.append(tempData[i].CarParkID)
+                    formattedData.append(temp)
+                }
+            }
+            shownCarparks = formattedData
         }
         showCarparks = false
-        
     }
     
     func makeUIView(context: Context) -> MKMapView {

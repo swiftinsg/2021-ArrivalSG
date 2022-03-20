@@ -22,7 +22,7 @@ struct CarparkAvailabilityView: View {
     @State var isShowCarparks = false
     @State var isShowNewStops = false // VALUE IS A CONSTANT FALSE. DO NOT UPDATE VALUE2
     @State var shownBusStops: [[String:String]] = [] // VALUE IS A CONSTANT FALSE. DO NOT UPDATE VALUE
-    @State var shownCarparks: [CarparkAvailabilityMData] = []
+    @State var shownCarparks: [formattedCarparkData] = []
     @State var isDefaultsExpanded = [false]
     
     @State var refresh: Bool = false
@@ -40,9 +40,6 @@ struct CarparkAvailabilityView: View {
                 MapView(centreCoordinate: $centreCoordinate, showNewStops: $isShowNewStops, showCarparks: $isShowCarparks, shownBusStops: $shownBusStops, shownCarparks: $shownCarparks)
                     .edgesIgnoringSafeArea(.all)
                     .accentColor(Color(.systemPink))
-                    .onChange(of: shownBusStops) { _ in
-                        
-                    }
                 
                 SnapDrawer(large: .paddingToTop(150), medium: .fraction(0.4), tiny: .height(100), allowInvisible: false) { state in
                     ScrollView {
@@ -108,7 +105,7 @@ struct CarparkOverlayControls: View {
 
 struct ListCarparks: View {
     let timer = Timer.publish(every: 120, on: .main, in: .common).autoconnect() // Carpark Availability will update every 2 minutes
-    var carparkData: [CarparkAvailabilityMData]
+    var carparkData: [formattedCarparkData]
     
     struct formattedData: Codable, Hashable {
         var CarParkID: String
@@ -120,9 +117,8 @@ struct ListCarparks: View {
         var Agency: String
     }
     
-    @State var formattedCarparkData: [formattedData] = []
     @State var userLocation: CLLocationCoordinate2D
-    
+
     func reloadData() async throws {
         @ObservedObject var carparkAvail = CarparkAvailability()
         @ObservedObject var userSettings = UserSettings()
@@ -132,7 +128,7 @@ struct ListCarparks: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            ForEach(formattedCarparkData, id: \.self) { carData in
+            ForEach(carparkData, id: \.self) { carData in
                 VStack(alignment: .leading, spacing: 4) {
                     Text("\(carData.Development) - \(carData.CarParkID)")
                         .font(.system(size: 19))
@@ -158,30 +154,6 @@ struct ListCarparks: View {
         .onReceive(timer) { _ in
             Task {
                 try? await reloadData()
-            }
-        }
-        .onAppear {
-            let data = carparkData
-            var completedID:[String] = []
-            for i in 0..<carparkData.count {
-                if !completedID.contains(carparkData[i].CarParkID)  {
-                    var temp: formattedData = formattedData(CarParkID: "", Area: "", Development: "", Location: "", AvailableLots: [:], LotType: "", Agency: "")
-                    var availLot = ["C": "0", "H": "0", "Y": "0"]
-                    temp.CarParkID = data[i].CarParkID
-                    temp.Agency = data[i].Agency
-                    temp.Development = data[i].Development
-                    temp.Area = data[i].Area
-                    temp.Location = data[i].Location
-                    availLot[data[i].LotType] = String(data[i].AvailableLots)
-                    for j in 0..<data.count {
-                        if data[i].CarParkID == data[j].CarParkID && data[i] != data[j] {
-                            availLot[data[j].LotType] = String(data[j].AvailableLots)
-                        }
-                    }
-                    temp.AvailableLots = availLot
-                    completedID.append(data[i].CarParkID)
-                    formattedCarparkData.append(temp)
-                }
             }
         }
     }

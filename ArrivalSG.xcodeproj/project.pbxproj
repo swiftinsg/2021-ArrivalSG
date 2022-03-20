@@ -383,7 +383,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ArrivalSG/Preview Content\"";
-				DEVELOPMENT_TEAM = XL5JK4F896;
+				DEVELOPMENT_TEAM = 46YLK6L3QN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ArrivalSG/Info.plist;
@@ -399,7 +399,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = sg.tk.arrivalsg2;
+				PRODUCT_BUNDLE_IDENTIFIER = ethan.arrivalsg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -415,7 +415,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ArrivalSG/Preview Content\"";
-				DEVELOPMENT_TEAM = XL5JK4F896;
+				DEVELOPMENT_TEAM = 46YLK6L3QN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ArrivalSG/Info.plist;
@@ -431,7 +431,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = sg.tk.arrivalsg2;
+				PRODUCT_BUNDLE_IDENTIFIER = ethan.arrivalsg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

@@ -20,3 +20,13 @@ struct CarparkAvailabilityMData: Codable, Hashable {
     let LotType: String
     let Agency: String
 }
+
+struct formattedCarparkData: Codable, Hashable {
+    var CarParkID: String
+    var Area: String
+    var Development: String
+    var Location: String
+    var AvailableLots: [String:String]
+    var LotType: String
+    var Agency: String
+}
