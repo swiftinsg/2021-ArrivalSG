@@ -71,11 +71,8 @@ struct ContentView: View {
                 
                 if (userSettings.isFirstOpen) {
                     userFirstOpenView()
-                        .onAppear {
-                            print("Im open!")
-                        }
                 }
-                
+                                
             }.alert(isPresented: $locationModel.isAlertPresented) {
                 Alert(title: Text(locationModel.locationAuthError[0]), message: Text(locationModel.locationAuthError[1]), dismissButton: .destructive(Text("Ok")))
             }
@@ -183,13 +180,17 @@ struct SettingsPopup: View {
                 .disabled(buttonDisabled == true)
                 Text(infoText)
             }
-            VStack {
+            VStack(spacing: 0) {
                 Text("Information")
                     .bold()
                     .font(.title2)
                     .foregroundColor(.black)
                     .padding()
                 List {
+                    Section(header: Text("Disclaimer")) {
+                        Text("In an event that no buses are showing, please close and reopen the app.")
+                            .bold()
+                    }
                     Section(header: Text("Bus Occupancy")) {
                         Text("For Bus Arrivals, the Bus Arrival Background has a deeper purple the more packed the Bus is.")
                             .bold()
@@ -581,21 +582,26 @@ struct BusView: View {
 
 struct userFirstOpenView: View {
     var body: some View {
-        VStack(alignment: .center, spacing: 3) {
+        VStack(alignment: .center, spacing: 5) {
             Text("Welcome to ArrivalSG!")
                 .bold()
                 .font(.title)
                 .foregroundColor(.black)
-            Text("The app is currently loading data, please hold on. This screen will close automatically after all data has been loaded.")
-                .multilineTextAlignment(.center)
+            VStack(alignment: .center, spacing: 2) {
+                Text("The app is currently loading data, please hold on. This screen will close automatically after all data has been loaded.")
+                    .multilineTextAlignment(.center)
+                    .padding()
+                Text("In an event that no buses are showing, please close and reopen the app.")
+                    .multilineTextAlignment(.center)
+                    .padding()
+            }
+            .padding()
         }
-        .frame(height: 500)
+        .frame(height: 450)
         .background(.white)
-        .cornerRadius(10)
-        .padding(.leading, 3)
-        .padding(.trailing, 3)
+        .cornerRadius(50)
         .padding()
-        .shadow(radius: 5)
+        .shadow(radius: 7)
     }
 }
 
